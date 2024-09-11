@@ -29,3 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   return MemberActivity;
 };
+
+
+
+//house_code              fk ยังไม่ได้เพิ่ม
