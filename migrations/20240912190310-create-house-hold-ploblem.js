@@ -2,32 +2,47 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('MemberActivitie', {
+    await queryInterface.createTable('HouseHoldProblem', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      activity_name: {
-        type: Sequelize.STRING
-      },activity_type:{
+      name_problem: { 
         type: Sequelize.STRING
       },
-      achievement:{
+      details_problem: {
         type: Sequelize.STRING
       },
-      start_date:{
+      type_problem: {
+        type: Sequelize.STRING
+      },
+      indicators: {
+        type: Sequelize.STRING
+      },
+      type_household: {
+        type: Sequelize.STRING
+      },
+      details_household: {
+        type: Sequelize.STRING
+      },
+      survey_data: {
         type: Sequelize.DATE
       },
-      operator:{
+      problem_solving: {
         type: Sequelize.STRING
       },
-      is_poor_households_TPMAP:{
-        type: Sequelize.BOOLEAN, // Set as a boolean
-        defaultValue: false      // Optional: set a default value
+      details_solving: {
+        type: Sequelize.STRING
       },
-      houseId:{
+      desire: {
+        type: Sequelize.STRING
+      },
+      houseId: {
+        type: Sequelize.INTEGER
+      },
+      teamServeyId: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -40,7 +55,8 @@ module.exports = {
       }
     });
   },
+  
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('MemberActivitie');
+    await queryInterface.dropTable('HouseHoldProblem');
   }
 };

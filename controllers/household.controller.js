@@ -81,7 +81,6 @@ const findOneHouse = async (req, res) => {
 }
 
 const create = async (req, res) => {
-  
  // Validate request body
  const { error, value } = CreateHouseholdSchema.validate(req.body);
 
@@ -91,7 +90,6 @@ const create = async (req, res) => {
          error: error.details
      });
  }
-
  const houseObj = {
      house_code: value.house_code,
      host_title: value.host_title,

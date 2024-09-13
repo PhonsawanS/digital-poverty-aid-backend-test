@@ -4,6 +4,7 @@ const router = express.Router();
 const authRoute = require('./auth/auth.route')
 const memberactivityRoute = require('./MemberActivitie/memberActivitie.route');
 const informantRoute = require('./Informant/informant.route')
+const houseHoldProblemRoute = require('./HouseHoldProblem/houseHoldProblem.route')
 
 const RouterList = [
     {
@@ -17,6 +18,10 @@ const RouterList = [
     {
         path: '/informant',  // เพิ่มเส้นทางใหม่
         route: informantRoute
+    },
+    {
+        path: '/houseHoldProblem',
+        route:houseHoldProblemRoute
     }
 ];
 
