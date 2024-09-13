@@ -6,6 +6,8 @@ const formRoute = require('./form/form.route')
 const householdRoute = require('./household/household.route')
 const memberHouseRoute = require('./memberHousehold/member.household.route')
 const teamServeyRoute = require('./teamservey/teamservey.route')
+const memberactivityRoute = require('./MemberActivitie/memberActivitie.route');
+const informantRoute = require('./Informant/informant.route')
 
 const RouterList = [
     {
@@ -27,8 +29,14 @@ const RouterList = [
     {
         path: '/team-servey',
         route: teamServeyRoute
+    },{
+        path: '/memberactivity',  // เพิ่มเส้นทางใหม่
+        route: memberactivityRoute
     },
-    
+    {
+        path: '/informant',  // เพิ่มเส้นทางใหม่
+        route: informantRoute
+    }
 ];
 
 RouterList.forEach((route) => {
