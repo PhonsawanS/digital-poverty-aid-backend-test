@@ -15,6 +15,7 @@ exports.getInformant = () => {
 exports.findOneById = async (id) => {
   return informant_model.findOne({
     where: { id: id },
+    include: form_model 
   });
 };
 

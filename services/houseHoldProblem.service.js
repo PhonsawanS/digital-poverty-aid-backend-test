@@ -1,10 +1,14 @@
 const { where } = require("sequelize");
 const db = require("../models");
 const houseHoldProblem_model = db.HouseHoldProblem;
+const household_model = db.Household;
+const team_servery = db.TeamServey
 
 exports.gethouseHoldProblem = () => {
     try {
-        return houseHoldProblem_model.findAll();
+        return houseHoldProblem_model.findAll({
+          include: [household_model, team_servery], 
+        });
       } catch (err) {
         return err;
       }
@@ -13,6 +17,7 @@ exports.gethouseHoldProblem = () => {
 exports.findOneById = async (id) => {
     return houseHoldProblem_model.findOne({
       where: { id: id },
+      include: [household_model, team_servery],
     });
 };
   
