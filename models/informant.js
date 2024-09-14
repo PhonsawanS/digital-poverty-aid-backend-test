@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Informant.belongsTo(models.Form, { foreignKey: 'formId' });
     }
   }
   Informant.init({
@@ -23,8 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     number_total_fam: DataTypes.INTEGER,  
     total_live_fam: DataTypes.INTEGER,    
     total_not_live_fam: DataTypes.INTEGER, 
-    form_id: DataTypes.INTEGER             
-    
+    formId: DataTypes.INTEGER,            
   }, {
     sequelize,
     freezeTableName: true,

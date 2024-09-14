@@ -8,6 +8,7 @@ const memberHouseRoute = require('./memberHousehold/member.household.route')
 const teamServeyRoute = require('./teamservey/teamservey.route')
 const memberactivityRoute = require('./MemberActivitie/memberActivitie.route');
 const informantRoute = require('./Informant/informant.route')
+const houseHoldProblemRoute = require('./HouseHoldProblem/houseHoldProblem.route')
 
 const RouterList = [
     {
@@ -36,6 +37,10 @@ const RouterList = [
     {
         path: '/informant',  // เพิ่มเส้นทางใหม่
         route: informantRoute
+    },
+    {
+        path: '/houseHoldProblem',
+        route:houseHoldProblemRoute
     }
 ];
 

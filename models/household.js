@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Household.belongsTo(models.Form,{foreignKey:'formId'}),
       Household.hasOne(models.MemberHousehold,{foreignKey:'houseId'})
+      Household.hasOne(models.MemberActivity,{foreignKey:'houseId'})
+      Household.hasOne(models.HouseHoldProblem,{foreignKey:'houseId'})
     }
   }
   Household.init({
