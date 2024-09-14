@@ -1,11 +1,12 @@
 const { where } = require("sequelize");
 const db = require("../models");
 const informant_model = db.Informant;
+const form_model = db.Form;
 
 
 exports.getInformant = () => {
     try {
-        return informant_model.findAll();
+        return informant_model.findAll({ include: form_model });
       } catch (err) {
         return err;
       }
