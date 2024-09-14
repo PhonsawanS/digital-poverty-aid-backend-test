@@ -36,7 +36,7 @@ module.exports = {
       total_not_live_fam: {
         type: Sequelize.INTEGER
       },
-      form_id: {
+      formId: {
         type: Sequelize.INTEGER
       },
       createdAt: {

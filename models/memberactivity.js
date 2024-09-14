@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      MemberActivity.belongsTo(models.Household,{foreignKey:'houseId'})
     }
   }
   MemberActivity.init({
@@ -19,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     achievement: DataTypes.STRING,
     start_date: DataTypes.DATE,
     operator: DataTypes.STRING,
-    is_poor_households_TPMAP: DataTypes.BOOLEAN
+    is_poor_households_TPMAP: DataTypes.BOOLEAN,
+    houseId: DataTypes.INTEGER,      
   }, {
 
     sequelize,
@@ -32,4 +34,3 @@ module.exports = (sequelize, DataTypes) => {
 
 
 
-//house_code              fk ยังไม่ได้เพิ่ม
