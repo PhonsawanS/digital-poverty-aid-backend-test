@@ -1,11 +1,11 @@
 const { where } = require("sequelize");
 const db = require("../models");
 const memberactivity_model = db.MemberActivity;
-
+const household_model = db.Household;
 
 exports.getMemberActivity = () => {
     try {
-        return memberactivity_model.findAll();
+        return memberactivity_model.findAll({ include: household_model });
       } catch (err) {
         return err;
       }
@@ -14,6 +14,7 @@ exports.getMemberActivity = () => {
 exports.findOneById = async (id) => {
   return memberactivity_model.findOne({
     where: { id: id },
+    include: household_model
   });
 };
 
