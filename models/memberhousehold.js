@@ -7,6 +7,7 @@ module.exports = (sequelize) => {
   class MemberHousehold extends Model {
 
     static associate(models) {
+      MemberHousehold.hasOne(models.HumanCapital,{foreignKey:'member_house_id'}),
       MemberHousehold.belongsTo(models.Household,{foreignKey:'houseId'})
     }
 
@@ -32,7 +33,11 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    age:{ 
+    age_yaer:{ 
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    age_month:{ 
       type: DataTypes.INTEGER,
       allowNull: false,
     },
