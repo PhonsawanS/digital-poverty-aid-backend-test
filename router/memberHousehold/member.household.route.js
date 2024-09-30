@@ -12,4 +12,6 @@ router
     .patch("/update/:id", MemberHousController.updateMember)
     .delete("/delete/:id", MemberHousController.deleteMember)
 
+    .post("/create-capital", MemberHousController.createCombined)
+
 module.exports = router;
