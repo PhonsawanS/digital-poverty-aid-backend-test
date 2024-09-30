@@ -9,6 +9,8 @@ const teamServeyRoute = require('./teamservey/teamservey.route')
 const memberactivityRoute = require('./MemberActivitie/memberActivitie.route');
 const informantRoute = require('./Informant/informant.route')
 const houseHoldProblemRoute = require('./HouseHoldProblem/houseHoldProblem.route')
+const humancapitalRoute = require('./Humancapital/humancapital.route')
+const socialWelfareRoute = require('./SocialWelfare/SocialWelfare.route')
 
 const RouterList = [
     {
@@ -41,6 +43,14 @@ const RouterList = [
     {
         path: '/houseHoldProblem',
         route:houseHoldProblemRoute
+    },
+    {
+        path: '/human-capital',
+        route:humancapitalRoute
+    },
+    {
+        path: '/social-welfare',
+        route:socialWelfareRoute
     }
 ];
 
