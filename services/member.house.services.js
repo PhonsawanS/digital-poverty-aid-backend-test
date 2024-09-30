@@ -2,6 +2,8 @@ const { where } = require("sequelize");
 const db = require("../models");
 const memberHouse_model = db.MemberHousehold;
 const household_model = db.Household;
+const humanCapital_model = db.HumanCapital;
+const socialWelfare_model = db.SocialWelfare
 
 
 exports.getMember = () => {
@@ -52,4 +54,73 @@ exports.deleted = async (id) => {
     .catch((err) => {
       return err;
     });
+};
+
+exports.createCombined = async (data) => {
+  try {
+    // เริ่ม transaction
+    const result = await db.sequelize.transaction(async (t) => {
+      // สร้างข้อมูลใน MemberHousehold
+      const memberHousehold = await memberHouse_model.create(
+        {
+          title: data.title,
+          fname: data.fname,
+          lname: data.lname,
+          sex: data.sex,
+          national_id: data.national_id,
+          age_yaer: data.age_yaer,
+          age_month: data.age_month,
+          birthdate: data.birthdate,
+          status_in_house: data.status_in_house,
+          health: data.health,
+          career: data.career,
+          houseId: data.houseId,
+        },
+        { transaction: t }
+      );
+
+      // สร้างข้อมูลใน HumanCapital
+      const humanCapital = await humanCapital_model.create(
+        {
+          max_education: data.max_education,
+          current_edu_level: data.current_edu_level,
+          edu_status: data.edu_status,
+          work_status: data.work_status,
+          work_can_made_income: data.work_can_made_income,
+          agv_income: data.agv_income,
+          can_write_TH: data.can_write_TH,
+          can_read_TH: data.can_read_TH,
+          can_speak_TH: data.can_speak_TH,
+          form_id: data.form_id,
+          member_house_id: memberHousehold.id,
+        },
+        { transaction: t }
+      );
+
+      // สร้างข้อมูลใน SocialWelfare (หลายรายการ)
+      const socialWelfarePromises = data.SocialWelfare.map(async (welfareData) => {
+        return await socialWelfare_model.create(
+          {
+            welfare: welfareData.welfare,
+            amount: welfareData.amount,
+            frequency: welfareData.frequency,
+            human_capital_id: humanCapital.id,
+          },
+          { transaction: t }
+        );
+      });
+
+      const socialWelfareArray = await Promise.all(socialWelfarePromises);
+
+      return {
+        memberHousehold,
+        humanCapital,
+        socialWelfareArray,
+      };
+    });
+
+    return result;
+  } catch (err) {
+    throw new Error(err.message);
+  }
 };
