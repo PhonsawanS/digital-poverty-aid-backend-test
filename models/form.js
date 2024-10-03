@@ -7,8 +7,9 @@ module.exports = (sequelize, DataTypes) => {
    
     static associate(models) {
       Form.hasOne(models.Household,{foreignKey:'formId'})
-      // Form.hasOne(models.TeamServey,{foreignKey:'formId'})
+      Form.hasOne(models.TeamServey,{foreignKey:'formId'})
       Form.hasOne(models.Informant,{foreignKey:'formId'})
+      Form.hasOne(models.Financialcapital,{foreignKey:'formId'})
     }
   }
   Form.init({

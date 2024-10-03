@@ -15,10 +15,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Saving.init({
-    is_has_saving: DataTypes.BOOLEAN,
-    saving_type:DataTypes.STRING,
-    amount: DataTypes.FLOAT,
-    finan_capital_id: DataTypes.INTEGER,
+    is_has_saving:{
+      type:DataTypes.BOOLEAN
+    } ,
+    saving_type:{
+      type:DataTypes.STRING
+    },
+    amount:{
+      type:DataTypes.FLOAT
+    } ,
+    finan_capital_id:{
+      type:DataTypes.INTEGER,
+    } 
   }, {
     sequelize,
     freezeTableName: true,

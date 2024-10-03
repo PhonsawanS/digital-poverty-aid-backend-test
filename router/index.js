@@ -18,6 +18,7 @@ const nonAGIincomeRoute = require('./NonAGIincome/nonAGIincome.route')
 const houseHoldexpensesRoute = require('./Householdexpenses/householdexpenses.route')
 const debtRoute = require('./Debt/Debt.router')
 const creditsourcesRoute = require('./Creditsources/Creditsources.router')
+const agriculturalincomeRoute = require('./agriculturalincome/agriculturalincome.route')
 
 const RouterList = [
     {
@@ -88,7 +89,11 @@ const RouterList = [
     {
         path: '/creditsources',
         route:creditsourcesRoute
-    }
+    },
+    {
+        path: '/agriculturalincome',
+        route:agriculturalincomeRoute
+    },
 ];
 
 RouterList.forEach((route) => {

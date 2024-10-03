@@ -10,10 +10,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       property_type: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       finan_capital_id:{
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Financialcapital', // ชื่อของตารางที่ถูกอ้างอิง
+          key: 'id' // ชื่อคีย์ที่ถูกอ้างอิง
+        },
+        onUpdate: 'CASCADE', // อัปเดตเมื่อมีการเปลี่ยนแปลง
+        onDelete: 'SET NULL', // ตั้งค่าเป็น NULL หากบันทึกใน Financialcapital ถูกลบ
       },
       createdAt: {
         allowNull: false,

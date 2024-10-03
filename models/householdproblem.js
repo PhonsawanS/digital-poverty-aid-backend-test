@@ -16,18 +16,42 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   HouseHoldProblem.init({
-    name_problem: DataTypes.STRING,
-    details_problem: DataTypes.STRING,
-    type_problem: DataTypes.STRING,
-    indicators:DataTypes.STRING,
-    type_household: DataTypes.STRING,
-    details_household: DataTypes.STRING,
-    survey_data: DataTypes.DATE,
-    problem_solving: DataTypes.STRING,
-    details_solving: DataTypes.STRING,
-    desire: DataTypes.STRING,
-    houseId: DataTypes.INTEGER,
-    teamServeyId: DataTypes.INTEGER,
+    name_problem:{
+      type:DataTypes.STRING
+    },
+    details_problem:{
+      type:DataTypes.STRING
+    },
+    type_problem:{
+      type:DataTypes.STRING
+    } ,
+    indicators:{
+      type:DataTypes.STRING
+    },
+    type_household:{
+      type:DataTypes.STRING
+    } ,
+    details_household:{
+      type:DataTypes.STRING
+    } ,
+    survey_data:{
+      type:DataTypes.DATE,
+    },
+    problem_solving:{
+      type: DataTypes.STRING
+    },
+    details_solving:{
+      type:DataTypes.STRING
+    },
+    desire:{
+      type:DataTypes.STRING
+    },
+    houseId:{
+      type: DataTypes.INTEGER
+    },
+    teamServeyId:{
+      type:DataTypes.INTEGER
+    } ,
   }, {
     sequelize,
     freezeTableName: true,

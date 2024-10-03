@@ -1,19 +1,5 @@
 const occupationalpropertyService =require('../services/occupationalproperty.service')
-const Joi = require('joi');
-
-
-//Create Validators
-const CreateSchema = Joi.object({
-    property_type: Joi.string().required(),
-    formId: Joi.number().integer().required().optional()
-});
-
-//Update Validators
-const UpdateSchema = Joi.object({
-    property_type: Joi.string().required().optional(),
-    formId: Joi.number().integer().optional()
-});
-
+const {CreateSchema,UpdateSchema} = require('../validators/occupationalproperty/occupationalproperty.validator')
 
 const OccupationalpropertylList = async (req, res) => {
     await occupationalpropertyService.get()

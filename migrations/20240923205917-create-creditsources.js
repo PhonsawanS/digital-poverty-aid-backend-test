@@ -10,23 +10,32 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       form: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false // ฟิลด์นี้จะต้องมีค่า
       },
-      outstanding_amount:{
-        type: Sequelize.FLOAT
+      outstanding_amount: {
+        type: Sequelize.FLOAT,
+        allowNull: false, // ฟิลด์นี้จะต้องมีค่า
       },
-      debt_id:{
-        type: Sequelize.INTEGER
-      },
-      createdAt: {
+      debt_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        type: Sequelize.DATE
+        references: {
+          model: 'Debt', // ชื่อของโมเดลที่เชื่อมโยง
+          key: 'id' // ชื่อของฟิลด์ที่เชื่อมโยงในโมเดล Debt
+        },
+        onUpdate: 'CASCADE', // เมื่ออัปเดตจะทำการอัปเดตที่เชื่อมโยงด้วย
+        onDelete: 'SET NULL' // เมื่อถูกลบจะตั้งค่าเป็น NULL
       },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
+        createdAt: {
+          allowNull: false,
+          type: Sequelize.DATE
+        },
+        updatedAt: {
+          allowNull: false,
+          type: Sequelize.DATE
+        }
+      });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('creditsources');
