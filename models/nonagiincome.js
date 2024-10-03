@@ -15,10 +15,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   NonAGIincome.init({
-    income_type : DataTypes.STRING,
-    amount_per_yaer: DataTypes.FLOAT,
-    cost_per_year: DataTypes.FLOAT,
-    finan_capital_id: DataTypes.INTEGER,
+    income_type:{
+      type: DataTypes.STRING,
+    }, 
+    amount_per_yaer:{
+      type: DataTypes.FLOAT
+    },
+    cost_per_year:{
+      type:DataTypes.FLOAT,
+    } ,
+    finan_capital_id:{
+      type: DataTypes.INTEGER,
+    }
   }, {
     sequelize,
     freezeTableName: true,

@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Informant extends Model {
     /**
@@ -14,22 +15,54 @@ module.exports = (sequelize, DataTypes) => {
       Informant.belongsTo(models.Form, { foreignKey: 'formId' });
     }
   }
+
   Informant.init({
-    fname: DataTypes.STRING,
-    lname: DataTypes.STRING,
-    title: DataTypes.STRING,
-    national_id: DataTypes.STRING,
-    phone: DataTypes.STRING,
-    address: DataTypes.STRING,
-    number_total_fam: DataTypes.INTEGER,  
-    total_live_fam: DataTypes.INTEGER,    
-    total_not_live_fam: DataTypes.INTEGER, 
-    formId: DataTypes.INTEGER,            
+    fname: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    lname: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    national_id: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    number_total_fam: {
+      type: DataTypes.INTEGER,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },  
+    total_live_fam: {
+      type: DataTypes.INTEGER,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },    
+    total_not_live_fam: {
+      type: DataTypes.INTEGER,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    }, 
+    formId: {
+      type: DataTypes.INTEGER,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },            
   }, {
     sequelize,
     freezeTableName: true,
-    modelName:'Informant',
-    tableName:'Informant'
+    modelName: 'Informant',
+    tableName: 'Informant'
   });
+  
   return Informant;
 };

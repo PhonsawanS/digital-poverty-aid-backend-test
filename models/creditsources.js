@@ -15,9 +15,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   creditsources.init({
-    form: DataTypes.STRING,
-    outstanding_amount: DataTypes.FLOAT,
-    debt_id:DataTypes.INTEGER
+    form: {
+      type: DataTypes.STRING,
+      allowNull: false // ถ้าฟิลด์นี้ไม่ต้องการให้เป็น null สามารถเปลี่ยนเป็น false ได้
+    },
+    outstanding_amount: {
+      type: DataTypes.FLOAT,
+      allowNull: false // ถ้าฟิลด์นี้ไม่ต้องการให้เป็น null สามารถเปลี่ยนเป็น false ได้
+    },
+    debt_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   }, {
     sequelize,
     freezeTableName: true,

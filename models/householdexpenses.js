@@ -15,9 +15,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Householdexpenses.init({
-    expenses_type: DataTypes.STRING,
-    amount_per_month:DataTypes.FLOAT,
-    finan_capital_id: DataTypes.INTEGER,
+    expenses_type:{
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    amount_per_month:{
+      type:DataTypes.FLOAT,
+      allowNull: false,
+    },
+    finan_capital_id:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   }, {
     sequelize,
     freezeTableName: true,
