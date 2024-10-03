@@ -39,8 +39,7 @@ module.exports = {
           model: 'Household', // ชื่อของตารางที่ถูกอ้างอิง
           key: 'id' // ชื่อคีย์ที่ถูกอ้างอิง
         },
-        onUpdate: 'CASCADE', // อัปเดตเมื่อมีการเปลี่ยนแปลง
-        onDelete: 'SET NULL', // ตั้งค่าเป็น NULL หากบันทึกใน Household ถูกลบ
+        onDelete: 'CASCADE', // ตั้งค่าเป็น NULL หากบันทึกใน Household ถูกลบ
       },
       createdAt: {
         allowNull: false,
