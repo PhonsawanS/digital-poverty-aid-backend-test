@@ -19,6 +19,8 @@ const houseHoldexpensesRoute = require('./Householdexpenses/householdexpenses.ro
 const debtRoute = require('./Debt/Debt.router')
 const creditsourcesRoute = require('./Creditsources/Creditsources.router')
 const agriculturalincomeRoute = require('./agriculturalincome/agriculturalincome.route')
+const unrestIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
+const suggestions = require('./Suggestions/Suggestions.route')
 
 const RouterList = [
     {
@@ -94,6 +96,14 @@ const RouterList = [
         path: '/agriculturalincome',
         route:agriculturalincomeRoute
     },
+    {
+        path: '/unrestIn-3Southern',
+        route:unrestIn3Southern
+    },
+    {
+        path: '/suggestions',
+        route:suggestions
+    }
 ];
 
 RouterList.forEach((route) => {

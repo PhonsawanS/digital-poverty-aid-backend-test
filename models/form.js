@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       Form.hasOne(models.TeamServey,{foreignKey:'formId'})
       Form.hasOne(models.Informant,{foreignKey:'formId'})
       Form.hasOne(models.Financialcapital,{foreignKey:'formId'})
+      Form.hasOne(models.UnrestIn3Southern,{foreignKey:'form_id'})
+      Form.hasOne(models.Suggestions,{foreignKey:'form_id'})
     }
   }
   Form.init({
