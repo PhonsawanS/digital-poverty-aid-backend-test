@@ -9,16 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      title: {
+        type: Sequelize.STRING
+      },
       fname: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       lname: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      title: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       national_id: {
@@ -29,31 +26,20 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      address: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      number_total_fam: {
-        allowNull: false,
+      fam_total_member: {
         type: Sequelize.INTEGER
       },
-      total_live_fam: {
-        allowNull: false,
+      fam_total_live: {
         type: Sequelize.INTEGER
       },
-      total_not_live_fam: {
-        allowNull: false,
+      total_has_name_not_live: {
         type: Sequelize.INTEGER
       },
-      formId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Form', // ชื่อของตารางที่ถูกอ้างอิง
-          key: 'id' // ชื่อคีย์ที่ถูกอ้างอิง
-        },
-        onUpdate: 'CASCADE', // อัปเดตเมื่อมีการเปลี่ยนแปลง
-        onDelete: 'SET NULL', // ตั้งค่าเป็น NULL หากบันทึกใน Financialcapital ถูกลบ
+      live_but_has_no_name_in_fam: {
+        type: Sequelize.INTEGER
+      },
+      form_id: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

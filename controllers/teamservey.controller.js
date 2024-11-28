@@ -4,23 +4,23 @@ const teamserveyService = require('../services/teamservey.services')
 
 // Create Validator 
 const teamServeySchema = Joi.object({
+    title: Joi.string().required(),
     fname: Joi.string().required(),
     lname: Joi.string().required(),
     agency: Joi.string().required(),
-    job_position: Joi.string().required(),
-    phone: Joi.string().length(10).required(), // ตรวจสอบว่ามี 10 ตัวอักษร
-    formId: Joi.number().integer().optional()
+    phone: Joi.string().length(10).required(),
+    form_id: Joi.number().integer().optional()
 });
 
 
 // Update Validator
 const updateteamServeySchema = Joi.object({
-    fname: Joi.string().required().optional(),
-    lname: Joi.string().required().optional(),
-    agency: Joi.string().required().optional(),
-    job_position: Joi.string().required().optional(),
-    phone: Joi.string().length(10).required().optional(), // ตรวจสอบว่ามี 13 ตัวอักษร
-    formId: Joi.number().integer().optional()
+    title: Joi.string().optional(),
+    fname: Joi.string().optional(),
+    lname: Joi.string().optional(),
+    agency: Joi.string().optional(),
+    phone: Joi.string().length(10).optional(),
+    form_id: Joi.number().integer().optional()
 });
 
 
@@ -75,12 +75,12 @@ const create = async (req, res) => {
     }
 
     const teamserveyObj = {
+        title: value.title,
         fname: value.fname,
         lname: value.lname,
         agency: value.agency,
-        job_position: value.job_position,
         phone: value.phone,
-        formId: value.formId
+        form_id: value.form_id
     };
 
     await teamserveyService.create(teamserveyObj)
@@ -116,12 +116,12 @@ const update = async (req, res) => {
     }
 
     const teamserveyObj = {
+        title: value.title,
         fname: value.fname,
         lname: value.lname,
         agency: value.agency,
-        job_position: value.job_position,
         phone: value.phone,
-        formId: value.formId
+        form_id: value.form_id
     };
 
     await teamserveyService.update(teamserveyObj, id)
