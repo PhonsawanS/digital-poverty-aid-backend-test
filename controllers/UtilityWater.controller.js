@@ -1,9 +1,11 @@
-const memberHouseService = require("../services/member.house.services");
-const { memberSchema, updateMemberSchema,combinedSchema} = require("../validators/MemberHousehold/member.house.validator"); //Validator
+const utilityWaterService = require('../services/UtilityWater.service')
+const {createSchema,updateSchema } = require('../validators/UtilityWater/UtilityWater.validator')
+
+
 
 const List = async (req, res) => {
-  await memberHouseService
-    .getMember()
+  await utilityWaterService
+    .getUtilWater()
     .then((data) => {
       res.send({
         data: data,
@@ -20,8 +22,8 @@ const List = async (req, res) => {
       });
     });
 };
-const findOneMember = async (req, res) => {
-  await memberHouseService
+const findOne = async (req, res) => {
+  await utilityWaterService
     .findOneById(req.params.id)
     .then((data) => {
       res.send({
@@ -43,7 +45,7 @@ const findOneMember = async (req, res) => {
 
 const create = async (req, res) => {
   // Validate ข้อมูลจาก req.body ก่อน
-  const { error, value } = memberSchema.validate(req.body);
+  const { error, value } = createSchema.validate(req.body);
 
   if (error) {
     return res.status(400).send({
@@ -52,53 +54,28 @@ const create = async (req, res) => {
     });
   }
   //ส่ง value ไปสร้างตามฟิลด์
-  const data = await memberHouseService.create(value);
+  const data = await utilityWaterService.create(value);
   res.send({ data, msg: "success", status: 200 });
 };
 
-//Create 3 table
-const createCombined = async (req, res) => {
-  try {
-    const { error, value } = combinedSchema.validate(req.body);
-    if (error) {
-      return res.status(400).send({ msg: "Validation error", error: error.details });
-    }
-
-    // เรียกใช้ Service เพื่อสร้างข้อมูลรวม
-    const result = await memberHouseService.createCombined(value); //ส่งค่าที่ Validate ผ่านแล้ว
-
-    res.status(201).send({
-      msg: "success",
-      status: 201,
-      data: {
-        memberHousehold: result.memberHousehold,
-        humanCapital: result.humanCapital,
-        SocialWelfare: result.socialWelfareArray,
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ msg: "error", status: 500, err: err.message });
-  }
-};
 
 
-const updateMember = async (req, res) => {
+const updateUtilWater = async (req, res) => {
     try {
-        const { error, value } = updateMemberSchema.validate(req.body);
+        const { error, value } = updateSchema.validate(req.body);
         if (error) {
             return res.status(400).send({ msg: "Validation error", error: error.details });
         }
         
-        const data = await memberHouseService.update(value, req.params.id);
+        const data = await utilityWaterService.update(value, req.params.id);
         res.send({ data, msg: "success", status: 200 });
     } catch (err) {
         res.status(500).send({ data: null, msg: "error", status: 500, err });
     }
 };
 
-const deleteMember = async (req, res) => {
-  await memberHouseService
+const deleteUtilWater = async (req, res) => {
+  await utilityWaterService
     .deleted(req.params.id)
     .then((data) => {
       res.send({
@@ -120,9 +97,8 @@ const deleteMember = async (req, res) => {
 
 module.exports = {
   List,
-  findOneMember,
+  findOne,
   create,
-  updateMember,
-  deleteMember,
-  createCombined,
+  updateUtilWater,
+  deleteUtilWater
 };

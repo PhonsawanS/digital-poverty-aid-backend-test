@@ -57,6 +57,14 @@ module.exports = (sequelize) => {
       type: DataTypes.ARRAY(DataTypes.STRING), // ARRAY(Str)
       allowNull: false,
     },
+    is_leader: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false, 
+    },
+    still_poor: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false, 
+    },
     houseId: {
       type: DataTypes.INTEGER,
       allowNull: true,

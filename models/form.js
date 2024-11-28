@@ -6,14 +6,20 @@ module.exports = (sequelize, DataTypes) => {
   class Form extends Model {
    
     static associate(models) {
-      Form.hasOne(models.Household,{foreignKey:'formId'})
-      // Form.hasOne(models.TeamServey,{foreignKey:'formId'})
-      Form.hasOne(models.Informant,{foreignKey:'formId'})
+      Form.hasOne(models.Household,{foreignKey:'form_id'})
+      Form.hasOne(models.TeamServey,{foreignKey:'form_id'})
+      Form.hasOne(models.Informant,{foreignKey:'form_id'}),
+      Form.hasOne(models.HumanCapital,{foreignKey:'form_id'})
+      Form.hasOne(models.PhysicalCapital,{foreignKey:'formId'})
+      Form.hasOne(models.UnresIn3Southern,{foreignKey:'form_id'})
     }
   }
   Form.init({
-    time_start: DataTypes.DATE,  
-    time_end: DataTypes.DATE 
+    time_rec: DataTypes.DATE,  
+    recder_title: DataTypes.STRING,
+    recder_fname: DataTypes.STRING, 
+    recder_lname: DataTypes.STRING, 
+    recder_phone: DataTypes.STRING,  
   }, {
     sequelize,
     freezeTableName: true,

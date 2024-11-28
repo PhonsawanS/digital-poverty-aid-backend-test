@@ -24,6 +24,10 @@ module.exports = {
       host_national_id: {
         type: Sequelize.STRING,
       },
+      has_greenBook: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+      },
       green_book_id: {
         type: Sequelize.STRING,
         allowNull: true,
@@ -55,14 +59,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      total_house_member: {
-        type: Sequelize.INTEGER,
-      },
-      total_house_activity: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-      },
-      formId: {
+      form_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "Form", // อ้างอิงไปยังตาราง Users
