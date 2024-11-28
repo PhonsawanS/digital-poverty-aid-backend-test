@@ -7,7 +7,7 @@ const TeamServeyController = require('../../controllers/teamservey.controller')
 
 
 router
-    .get("/lists", TeamServeyController.List)
+    .get("/list", TeamServeyController.List)
     .get("/findOne/:id", TeamServeyController.findOne)
     .post("/create", TeamServeyController.create)
     .patch("/update/:id", TeamServeyController.update)

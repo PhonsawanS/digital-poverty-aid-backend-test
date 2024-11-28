@@ -18,6 +18,11 @@ const nonAGIincomeRoute = require('./NonAGIincome/nonAGIincome.route')
 const houseHoldexpensesRoute = require('./Householdexpenses/householdexpenses.route')
 const debtRoute = require('./Debt/Debt.router')
 const creditsourcesRoute = require('./Creditsources/Creditsources.router')
+const physicalCapitalRoute = require('./PhysicalCapital/PhysicalCapital.route')
+const houseHygineRoute = require('./HouseHygiene/HouseHygiene.route')
+const utilWaterRoute = require('./UtilityWater/UtilityWater.route')
+const urbanAreaRoute = require('./UrbanArea/UrbanArea.route')
+const unresIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
 const agriculturalincomeRoute = require('./agriculturalincome/agriculturalincome.route')
 const unrestIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
 const suggestions = require('./Suggestions/Suggestions.route')
@@ -93,6 +98,25 @@ const RouterList = [
         route:creditsourcesRoute
     },
     {
+        path: '/physical-capital',
+        route:physicalCapitalRoute
+    },
+    {
+        path: '/house-hygiene',
+        route:houseHygineRoute
+    },
+    {
+        path: '/util-water',
+        route:utilWaterRoute
+    },
+    {
+        path: '/urban-area',
+        route:urbanAreaRoute
+    },
+    {
+        path: '/unresIn-3Southern',
+        route:unresIn3Southern
+    }
         path: '/agriculturalincome',
         route:agriculturalincomeRoute
     },

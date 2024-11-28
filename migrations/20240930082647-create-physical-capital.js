@@ -2,73 +2,93 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('MemberHousehold', {
+    await queryInterface.createTable('PhysicalCapital', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
+      pin_latitude: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      pin_longitude: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      is_has_house: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      fname: {
+      house_rent: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
+      },
+      house_status_law: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      lname: {
+      house_status: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      sex: {
+      electricity_status: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      national_id: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      age_yaer: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      age_month: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      birthdate: {
-        type: Sequelize.DATEONLY, // ใช้ DATEONLY สำหรับการเก็บวันเกิด
-        allowNull: false, // หรือ false ถ้าต้องการให้วันเกิดเป็นข้อมูลที่ต้องกรอก
-      },
-      status_in_house: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      health: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      career: {
-        type: Sequelize.ARRAY(Sequelize.STRING), // ใช้ ARRAY ของ STRING
-        allowNull: false,
-      },
-      is_leader: {
+      alternative_energy: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false, 
+        allowNull: false,
       },
-      still_poor: {
+      has_home_phone: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false, 
+        allowNull: false,
       },
-      houseId:{
+      phone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      water_for_agriculture: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      house_access_road: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      workplace_access_road: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      use_tech_get_benrfit_gov: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
+      benefit_form_tech : {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
+      news: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        allowNull: false,
+      },
+      agricultural_land:{
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        allowNull: false,
+      },
+      land_use_issuse :{
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        allowNull: false,
+      },
+      formId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Household", // อ้างอิงไปยังตาราง Users
+          model: "Form", 
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "SET NULL", // ถ้า Form ถูกลบ Household จะไม่ถูกลบ แต่ formId จะถูกตั้งค่าเป็น NULL
+        onDelete: "SET NULL",
       },
       createdAt: {
         allowNull: false,
@@ -81,6 +101,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('MemberHousehold');
+    await queryInterface.dropTable('PhysicalCapital');
   }
 };

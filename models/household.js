@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class Household extends Model {
   
     static associate(models) {
-      Household.belongsTo(models.Form,{foreignKey:'formId'}),
+      Household.belongsTo(models.Form,{foreignKey:'form_id'}),
       Household.hasOne(models.MemberHousehold,{foreignKey:'houseId'})
       Household.hasOne(models.MemberActivity,{foreignKey:'houseId'})
       Household.hasOne(models.HouseHoldProblem,{foreignKey:'houseId'})
@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     host_fname: DataTypes.STRING,
     host_lname: DataTypes.STRING,
     host_national_id: DataTypes.STRING,
+    has_greenBook: DataTypes.BOOLEAN,
     green_book_id: DataTypes.STRING,
     postcode: DataTypes.INTEGER,
     subdistrict: DataTypes.STRING,
@@ -27,9 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     village: DataTypes.STRING,
     alley: DataTypes.STRING,
     road: DataTypes.STRING,
-    total_house_member: DataTypes.INTEGER,
-    total_house_activity: DataTypes.INTEGER,
-    formId: DataTypes.INTEGER
+    form_id: DataTypes.INTEGER
   }, {
     sequelize,
     freezeTableName: true,

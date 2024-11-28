@@ -8,6 +8,7 @@ const CreateHouseholdSchema = Joi.object({
     host_fname: Joi.string().required(),
     host_lname: Joi.string().required(),
     host_national_id: Joi.string().length(13).required(), // 13 characters validation
+    has_greenBook: Joi.boolean().required(),
     green_book_id: Joi.string().optional(),
     postcode: Joi.string().required(),
     subdistrict: Joi.string().required(),
@@ -17,8 +18,7 @@ const CreateHouseholdSchema = Joi.object({
     village: Joi.string().optional(),
     alley: Joi.string().optional(),
     road: Joi.string().optional(),
-    total_house_member: Joi.number().integer().required(),
-    total_house_activity: Joi.number().integer().required()
+    form_id: Joi.number().optional()
 });
 
 //Update Validators
@@ -28,6 +28,7 @@ const UpdateHouseholdSchema = Joi.object({
     host_fname: Joi.string().optional(),
     host_lname: Joi.string().optional(),
     host_national_id: Joi.string().length(13).optional(), // 13 characters validation
+    has_greenBook: Joi.boolean().optional(),
     green_book_id: Joi.string().optional(),
     postcode: Joi.string().optional(),
     subdistrict: Joi.string().optional(),
@@ -37,8 +38,7 @@ const UpdateHouseholdSchema = Joi.object({
     village: Joi.string().optional(),
     alley: Joi.string().optional(),
     road: Joi.string().optional(),
-    total_house_member: Joi.number().integer().optional(),
-    total_house_activity: Joi.number().integer().optional()
+    form_id: Joi.number().optional()
 });
 
 
@@ -96,6 +96,7 @@ const create = async (req, res) => {
      host_fname: value.host_fname,
      host_lname: value.host_lname,
      host_national_id: value.host_national_id,
+     has_greenBook:value.has_greenBook,
      green_book_id: value.green_book_id,
      postcode: value.postcode,
      subdistrict: value.subdistrict,
@@ -105,8 +106,7 @@ const create = async (req, res) => {
      village: value.village,
      alley: value.alley,
      road: value.road,
-     total_house_member: value.total_house_member,
-     total_house_activity: value.total_house_activity
+     form_id: value.form_id,
  };
     await householdService.create(houseObj)
         .then(data => {
@@ -141,22 +141,22 @@ const updateHouse = async (req, res) => {
  }
 
  const houseObj = {
-     house_code: value.house_code,
-     host_title: value.host_title,
-     host_fname: value.host_fname,
-     host_lname: value.host_lname,
-     host_national_id: value.host_national_id,
-     green_book_id: value.green_book_id,
-     postcode: value.postcode,
-     subdistrict: value.subdistrict,
-     district: value.district,
-     province: value.province,
-     house_number: value.house_number,
-     village: value.village,
-     alley: value.alley,
-     road: value.road,
-     total_house_member: value.total_house_member,
-     total_house_activity: value.total_house_activity
+    house_code: value.house_code,
+    host_title: value.host_title,
+    host_fname: value.host_fname,
+    host_lname: value.host_lname,
+    host_national_id: value.host_national_id,
+    has_greenBook:value.has_greenBook,
+    green_book_id: value.green_book_id,
+    postcode: value.postcode,
+    subdistrict: value.subdistrict,
+    district: value.district,
+    province: value.province,
+    house_number: value.house_number,
+    village: value.village,
+    alley: value.alley,
+    road: value.road,
+    form_id: value.form_id,
  };
     await householdService.update(houseObj, id)
         .then(data => {

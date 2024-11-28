@@ -1,8 +1,10 @@
 const unrestIn3SouthernService = require("../services/UnrestIn3Southern.services")
+
 const { unresSchema, updateunresSchema} = require("../validators/UnrestIn3Southern/UnrestIn3Southern.validator"); //Validator
 
 const List = async (req, res) => {
     await unrestIn3SouthernService
+
       .getUnres()  //เรียกเข้าฟังก์ชัน
       .then((data) => {
         res.send({
@@ -56,6 +58,7 @@ const List = async (req, res) => {
     res.send({ data, msg: "success", status: 200 });
   };
   
+ 
   const updateUnres = async (req, res) => {
       try {
           const { error, value } = updateunresSchema.validate(req.body);
@@ -97,5 +100,6 @@ const List = async (req, res) => {
     create,
     updateUnres,
     deleteUnres,
+
   };
   
