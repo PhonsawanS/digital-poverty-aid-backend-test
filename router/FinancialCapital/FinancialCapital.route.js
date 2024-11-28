@@ -9,7 +9,6 @@ router
     .post("/create", FinancialCapitalController.createFinancialCapital)
     .patch("/update/:id", FinancialCapitalController.updateFinancialCapital)
     .delete("/delete/:id", FinancialCapitalController.deleteFinancialCapital)
-    .post("/createWith", FinancialCapitalController.createFinancialCapitalWithSavings)
-    .patch("/updateWith/:id", FinancialCapitalController.updateFinancialCapitalWithSavings)
+    .post("/createWith", FinancialCapitalController.createCombined)
 
 module.exports = router;

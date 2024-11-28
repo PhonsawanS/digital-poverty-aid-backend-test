@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class MemberActivity extends Model {
     /**
@@ -11,26 +12,44 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      MemberActivity.belongsTo(models.Household,{foreignKey:'houseId'})
+      MemberActivity.belongsTo(models.Household, { foreignKey: 'houseId' });
     }
   }
-  MemberActivity.init({
-    activity_name: DataTypes.STRING,
-    activity_type: DataTypes.STRING,
-    achievement: DataTypes.STRING,
-    start_date: DataTypes.DATE,
-    operator: DataTypes.STRING,
-    is_poor_households_TPMAP: DataTypes.BOOLEAN,
-    houseId: DataTypes.INTEGER,      
-  }, {
 
+  MemberActivity.init({
+    activity_name: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    activity_type: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    achievement: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    start_date: {
+      type: DataTypes.DATE,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    operator: {
+      type: DataTypes.STRING,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    is_poor_households_TPMAP: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },
+    houseId: {
+      type: DataTypes.INTEGER,
+      allowNull: false // ไม่อนุญาตให้เป็น null
+    },      
+  }, {
     sequelize,
     freezeTableName: true,
     modelName: 'MemberActivity',
-    tableName: 'MemberActivitie'
   });
+  
   return MemberActivity;
 };
-
-
-

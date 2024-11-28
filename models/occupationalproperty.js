@@ -15,8 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Occupationalproperty.init({
-    property_type: DataTypes.STRING,
-    finan_capital_id: DataTypes.INTEGER
+    property_type:{
+      type:DataTypes.STRING
+    } ,
+    finan_capital_id:{
+      type:DataTypes.INTEGER
+    } 
   }, {
     sequelize,
     freezeTableName: true,

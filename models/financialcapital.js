@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Financialcapital.hasOne(models.Agriculturalincome,{foreignKey:'finan_capital_id'})
       Financialcapital.hasOne(models.Debt,{foreignKey:'finan_capital_id'})
       Financialcapital.hasOne(models.Householdexpenses,{foreignKey:'finan_capital_id'})
       Financialcapital.hasOne(models.NonAGIincome,{foreignKey:'finan_capital_id'})
@@ -20,7 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Financialcapital.init({
-    formId: DataTypes.INTEGER
+    formId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   }, {
     freezeTableName: true,
     sequelize,

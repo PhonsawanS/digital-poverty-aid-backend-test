@@ -19,9 +19,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       national_id: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       phone: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       fam_total_member: {

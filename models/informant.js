@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Informant extends Model {
 
@@ -10,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       Informant.belongsTo(models.Form, { foreignKey: 'form_id' });
     }
   }
+
   Informant.init({
     title: DataTypes.STRING,
     fname: DataTypes.STRING,
@@ -21,11 +23,13 @@ module.exports = (sequelize, DataTypes) => {
     total_has_name_not_live: DataTypes.INTEGER, 
     live_but_has_no_name_in_fam: DataTypes.INTEGER, 
     form_id: DataTypes.INTEGER,            
+
   }, {
     sequelize,
     freezeTableName: true,
-    modelName:'Informant',
-    tableName:'Informant'
+    modelName: 'Informant',
+    tableName: 'Informant'
   });
+  
   return Informant;
 };

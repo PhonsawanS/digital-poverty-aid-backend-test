@@ -1,5 +1,7 @@
 const informantService = require('../services/Informant.service')
 const Joi = require('joi');
+const {UpdateInformantSchema,CreateInformantSchema} = require('../validators/informant/informant.validator')
+
 
 //Create Validators
 const CreateInformantSchema = Joi.object({
@@ -29,6 +31,8 @@ const UpdateInformantSchema = Joi.object({
     live_but_has_no_name_in_fam: Joi.number().integer().optional(),
     form_id: Joi.number().integer().optional()
 });
+
+
 
 
 

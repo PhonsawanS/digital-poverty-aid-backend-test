@@ -16,9 +16,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Debt.init({
-    firstis_has_debt: DataTypes.FLOAT,
-    description:DataTypes.STRING,
-    finan_capital_id: DataTypes.INTEGER,
+    firstis_has_debt: {
+      type: DataTypes.FLOAT,
+      allowNull: false // เปลี่ยนตามความต้องการ
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false // เปลี่ยนตามความต้องการ
+    },
+    finan_capital_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false // เปลี่ยนตามความต้องการ
+    }
   }, {
     sequelize,
     freezeTableName:true,

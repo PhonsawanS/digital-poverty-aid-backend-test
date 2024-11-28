@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Form.hasOne(models.HumanCapital,{foreignKey:'form_id'})
       Form.hasOne(models.PhysicalCapital,{foreignKey:'formId'})
       Form.hasOne(models.UnresIn3Southern,{foreignKey:'form_id'})
+
     }
   }
   Form.init({
