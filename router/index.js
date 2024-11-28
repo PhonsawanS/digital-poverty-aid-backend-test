@@ -24,6 +24,8 @@ const utilWaterRoute = require('./UtilityWater/UtilityWater.route')
 const urbanAreaRoute = require('./UrbanArea/UrbanArea.route')
 const unresIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
 const agriculturalincomeRoute = require('./agriculturalincome/agriculturalincome.route')
+const unrestIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
+const suggestions = require('./Suggestions/Suggestions.route')
 
 const RouterList = [
     {
@@ -118,6 +120,14 @@ const RouterList = [
         path: '/agriculturalincome',
         route:agriculturalincomeRoute
     },
+    {
+        path: '/unrestIn-3Southern',
+        route:unrestIn3Southern
+    },
+    {
+        path: '/suggestions',
+        route:suggestions
+    }
 ];
 
 RouterList.forEach((route) => {

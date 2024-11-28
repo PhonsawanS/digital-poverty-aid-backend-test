@@ -1,11 +1,9 @@
-const unrestIn3SouthernService = require("../services/UnrestIn3Southern.services")
-
-const { unresSchema, updateunresSchema} = require("../validators/UnrestIn3Southern/UnrestIn3Southern.validator"); //Validator
+const suggestionsService = require("../services/Suggestions.service")
+const { suggesSchema, updatesuggesSchema} = require("../validators/Suggestions/Suggestions.validator"); //Validator
 
 const List = async (req, res) => {
-    await unrestIn3SouthernService
-
-      .getUnres()  //เรียกเข้าฟังก์ชัน
+    await suggestionsService
+      .getSugges()  //เรียกเข้าฟังก์ชัน
       .then((data) => {
         res.send({
           data: data,
@@ -22,8 +20,8 @@ const List = async (req, res) => {
         });
       });
   };
-  const findOneUnres = async (req, res) => {
-    await unrestIn3SouthernService
+  const findOneSugges = async (req, res) => {
+    await suggestionsService
       .findOneById(req.params.id)
       .then((data) => {
         res.send({
@@ -45,7 +43,7 @@ const List = async (req, res) => {
   
   const create = async (req, res) => {
     // Validate ข้อมูลจาก req.body ก่อน
-    const { error, value } = unresSchema.validate(req.body);
+    const { error, value } = suggesSchema.validate(req.body);
   
     if (error) {
       return res.status(400).send({
@@ -54,27 +52,26 @@ const List = async (req, res) => {
       });
     }
     //ส่ง value ไปสร้างตามฟิลด์
-    const data = await unrestIn3SouthernService.create(value);
+    const data = await suggestionsService.create(value);
     res.send({ data, msg: "success", status: 200 });
   };
   
- 
-  const updateUnres = async (req, res) => {
+  const updateSugges = async (req, res) => {
       try {
-          const { error, value } = updateunresSchema.validate(req.body);
+          const { error, value } = updatesuggesSchema.validate(req.body);
           if (error) {
               return res.status(400).send({ msg: "Validation error", error: error.details });
           }
           
-          const data = await unrestIn3SouthernService.update(value, req.params.id);
+          const data = await suggestionsService.update(value, req.params.id);
           res.send({ data, msg: "success", status: 200 });
       } catch (err) {
           res.status(500).send({ data: null, msg: "error", status: 500, err });
       }
   };
   
-  const deleteUnres = async (req, res) => {
-    await unrestIn3SouthernService
+  const deleteSugges = async (req, res) => {
+    await suggestionsService
       .deleted(req.params.id)
       .then((data) => {
         res.send({
@@ -96,10 +93,9 @@ const List = async (req, res) => {
   
   module.exports = {
     List,
-    findOneUnres,
+    findOneSugges,
     create,
-    updateUnres,
-    deleteUnres,
-
+    updateSugges,
+    deleteSugges
   };
   
