@@ -24,6 +24,14 @@ const utilWaterRoute = require('./UtilityWater/UtilityWater.route')
 const urbanAreaRoute = require('./UrbanArea/UrbanArea.route')
 const unresIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
 const agriculturalincomeRoute = require('./agriculturalincome/agriculturalincome.route')
+const socialcapitalRoute = require('./Socialcapital/socialcapital.route')
+const activitygrouptypeRoute = require('./Activitygrouptype/activitygrouptype.route')
+const activitytypeRoute = require('./Activityrtype/activitytype.route')
+const naturalresourcecapitalRoute = require('./Naturalresourcecapital/naturalresourcecapital')
+const pbresourceforliveRoute = require('./Pbresourceforlive/pbresourceforlive.route')
+const pbincomeRoute = require('./Pbresourceforincome/pbresourceforincome.route')
+const farmlandindisasterareasRoute = require('./Farmlandindisasterareas/farmlandindisasterareas.route')
+const houseindisasterareasRoute = require('../router/Houseindisasterareas/houseindisasterareas.route')
 const unrestIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
 const suggestions = require('./Suggestions/Suggestions.route')
 
@@ -47,55 +55,55 @@ const RouterList = [
     {
         path: '/team-servey',
         route: teamServeyRoute
-    },{
-        path: '/memberactivity', 
+    }, {
+        path: '/memberactivity',
         route: memberactivityRoute
     },
     {
-        path: '/informant',  
+        path: '/informant',
         route: informantRoute
     },
     {
         path: '/houseHoldProblem',
-        route:houseHoldProblemRoute
+        route: houseHoldProblemRoute
     },
     {
         path: '/human-capital',
-        route:humancapitalRoute
+        route: humancapitalRoute
     },
     {
         path: '/social-welfare',
-        route:socialWelfareRoute
+        route: socialWelfareRoute
     },
     {
         path: '/financialCapital',
-        route:financialcapitalRoute
+        route: financialcapitalRoute
     },
     {
         path: '/occupationalproperty',
-        route:occupationalpropertyRoute
+        route: occupationalpropertyRoute
     },
     {
         path: '/saving',
-        route:savingRoute
+        route: savingRoute
     }
     ,
     {
         path: '/nonAGI',
-        route:nonAGIincomeRoute
+        route: nonAGIincomeRoute
     }
     ,
     {
         path: '/houseHoldexpenses',
-        route:houseHoldexpensesRoute
+        route: houseHoldexpensesRoute
     },
     {
         path: '/debt',
-        route:debtRoute
+        route: debtRoute
     },
     {
         path: '/creditsources',
-        route:creditsourcesRoute
+        route: creditsourcesRoute
     },
     {
         path: '/physical-capital',
@@ -118,7 +126,39 @@ const RouterList = [
         route:unresIn3Southern
     }
         path: '/agriculturalincome',
-        route:agriculturalincomeRoute
+        route: agriculturalincomeRoute
+    },
+    {
+        path: '/socialcapital',
+        route: socialcapitalRoute
+    },
+    {
+        path: '/activitygrouptype',
+        route: activitygrouptypeRoute
+    },
+    {
+        path: '/activitytype',
+        route: activitytypeRoute
+    },
+    {
+        path: '/naturalresourcecapital',
+        route: naturalresourcecapitalRoute
+    },
+    {
+        path: '/pbresourceforlive',
+        route: pbresourceforliveRoute
+    },
+    {
+        path: '/pbincome',
+        route: pbincomeRoute
+    },
+    {
+        path: '/farmlandindisasterareas',
+        route: farmlandindisasterareasRoute
+    },
+    {
+        path: '/houseindisasterareas',
+        route:houseindisasterareasRoute
     },
     {
         path: '/unrestIn-3Southern',

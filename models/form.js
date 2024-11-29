@@ -12,9 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       Form.hasOne(models.HumanCapital,{foreignKey:'form_id'})
       Form.hasOne(models.PhysicalCapital,{foreignKey:'formId'})
       Form.hasOne(models.Financialcapital,{foreignKey:'formId'})
+      Form.hasOne(models.Socialcapital,{foreignKey:'formId'})
+      Form.hasOne(models.Naturalresourcecapital,{foreignKey:'formId'})
       Form.hasOne(models.UnrestIn3Southern,{foreignKey:'form_id'})
       Form.hasOne(models.Suggestions,{foreignKey:'form_id'})
-
 
     }
   }
