@@ -124,7 +124,7 @@ const RouterList = [
     {
         path: '/unresIn-3Southern',
         route:unresIn3Southern
-    }
+    },{
         path: '/agriculturalincome',
         route: agriculturalincomeRoute
     },
