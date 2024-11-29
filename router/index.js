@@ -18,6 +18,11 @@ const nonAGIincomeRoute = require('./NonAGIincome/nonAGIincome.route')
 const houseHoldexpensesRoute = require('./Householdexpenses/householdexpenses.route')
 const debtRoute = require('./Debt/Debt.router')
 const creditsourcesRoute = require('./Creditsources/Creditsources.router')
+const physicalCapitalRoute = require('./PhysicalCapital/PhysicalCapital.route')
+const houseHygineRoute = require('./HouseHygiene/HouseHygiene.route')
+const utilWaterRoute = require('./UtilityWater/UtilityWater.route')
+const urbanAreaRoute = require('./UrbanArea/UrbanArea.route')
+const unresIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
 const agriculturalincomeRoute = require('./agriculturalincome/agriculturalincome.route')
 const socialcapitalRoute = require('./Socialcapital/socialcapital.route')
 const activitygrouptypeRoute = require('./Activitygrouptype/activitygrouptype.route')
@@ -27,6 +32,9 @@ const pbresourceforliveRoute = require('./Pbresourceforlive/pbresourceforlive.ro
 const pbincomeRoute = require('./Pbresourceforincome/pbresourceforincome.route')
 const farmlandindisasterareasRoute = require('./Farmlandindisasterareas/farmlandindisasterareas.route')
 const houseindisasterareasRoute = require('../router/Houseindisasterareas/houseindisasterareas.route')
+const unrestIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
+const suggestions = require('./Suggestions/Suggestions.route')
+
 const RouterList = [
     {
         path: '/auth',
@@ -98,6 +106,25 @@ const RouterList = [
         route: creditsourcesRoute
     },
     {
+        path: '/physical-capital',
+        route:physicalCapitalRoute
+    },
+    {
+        path: '/house-hygiene',
+        route:houseHygineRoute
+    },
+    {
+        path: '/util-water',
+        route:utilWaterRoute
+    },
+    {
+        path: '/urban-area',
+        route:urbanAreaRoute
+    },
+    {
+        path: '/unresIn-3Southern',
+        route:unresIn3Southern
+    }
         path: '/agriculturalincome',
         route: agriculturalincomeRoute
     },
@@ -133,6 +160,14 @@ const RouterList = [
         path: '/houseindisasterareas',
         route:houseindisasterareasRoute
     },
+    {
+        path: '/unrestIn-3Southern',
+        route:unrestIn3Southern
+    },
+    {
+        path: '/suggestions',
+        route:suggestions
+    }
 ];
 
 RouterList.forEach((route) => {

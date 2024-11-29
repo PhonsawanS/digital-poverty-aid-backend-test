@@ -11,14 +11,20 @@ dayjs.extend(timezone);
 
 //Create  Validators
 const CreateFormSchema = Joi.object({
-  time_start: Joi.date().required(), // Ensures that time_start is a valid date and required
-  time_end: Joi.date().required()    // Ensures that time_end is a valid date and required
+  time_rec: Joi.date().required(), // Ensures that time_start is a valid date and required
+  recder_title: Joi.string().required(),
+  recder_fname: Joi.string().required(), 
+  recder_lname: Joi.string().required(), 
+  recder_phone: Joi.string().required(),  
 });
 
 //Update Validators
 const UpdateFormSchema = Joi.object({
-  time_start: Joi.date().required().optional(), // Ensures that time_start is a valid date and required
-  time_end: Joi.date().required().optional()    // Ensures that time_end is a valid date and required
+  time_rec: Joi.date().optional(), // Ensures that time_start is a valid date and required
+  recder_title: Joi.string().optional(),
+  recder_fname: Joi.string().optional(), 
+  recder_lname: Joi.string().optional(), 
+  recder_phone: Joi.string().optional(),  
 });
 
 const formList = async (req, res) => {
@@ -72,8 +78,11 @@ const create = async (req, res) => {
       });
   }
   const formObj = {
-      time_start: dayjs.tz(value.time_start, "Asia/Bangkok").toDate(),
-      time_end: dayjs.tz(value.time_end, "Asia/Bangkok").toDate(),
+      time_rec: dayjs.tz(value.time_start, "Asia/Bangkok").toDate(),
+      recder_title: (value.recder_title),
+      recder_fname: (value.recder_fname),
+      recder_lname: (value.recder_lname),
+      recder_phone: (value.recder_phone),
   };
 
 
@@ -111,9 +120,12 @@ const updateForm = async (req, res) => {
   }
 
   const formObj = {
-      time_start: value.time_start,
-      time_end: value.time_end,
-  };
+    time_rec: dayjs.tz(value.time_start, "Asia/Bangkok").toDate(),
+    recder_title: (value.recder_title),
+    recder_fname: (value.recder_fname),
+    recder_lname: (value.recder_lname),
+    recder_phone: (value.recder_phone),
+};
 
 
   await formService

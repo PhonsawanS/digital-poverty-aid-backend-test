@@ -2,41 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('TeamServey', {
+    await queryInterface.createTable('HouseHygiene', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      item_storage: {
+        type: Sequelize.STRING
       },
-      fname: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      drainage_system: {
+        type: Sequelize.STRING
       },
-      lname: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      toilet: {
+        type: Sequelize.STRING
       },
-      agency: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      garbage: {
+        type: Sequelize.STRING
       },
-      phone: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      form_id:{
+      phy_capital_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Form", 
+          model: "PhysicalCapital", 
           key: "id",
         },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL", 
+        onDelete:'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -49,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('TeamServey');
+    await queryInterface.dropTable('HouseHygiene');
   }
 };

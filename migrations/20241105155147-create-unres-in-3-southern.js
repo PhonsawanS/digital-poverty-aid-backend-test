@@ -2,27 +2,22 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Form', {
+    await queryInterface.createTable('UnresIn3Southerns', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      time_rec: {
-        type: Sequelize.DATE
-      },
-       recder_title  : {
+      effect: {
         type: Sequelize.STRING
       },
-      recder_fname: {
-        type: Sequelize.STRING
+      form_id: {
+        type: Sequelize.INTEGER
       },
-      recder_lname: {
-        type: Sequelize.STRING
-      },
-      recder_phone: {
-        type: Sequelize.STRING
+      effect_in_life:{
+        type: Sequelize.ARRAY(Sequelize.STRING) // ใช้ ARRAY ของ STRING
+        
       },
       createdAt: {
         allowNull: false,
@@ -35,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Form');
+    await queryInterface.dropTable('UnresIn3Southerns');
   }
 };

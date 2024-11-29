@@ -6,10 +6,14 @@ module.exports = (sequelize, DataTypes) => {
   class TeamServey extends Model {
    
     static associate(models) {
-      TeamServey.belongsTo(models.Form,{foreignKey:'formId'})
+      TeamServey.belongsTo(models.Form,{foreignKey:'form_id'})
     }
   }
   TeamServey.init({
+    title: { 
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     fname: { 
       type: DataTypes.STRING,
       allowNull: false,
@@ -22,15 +26,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    job_position: { 
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     phone: { 
       type: DataTypes.STRING,
       allowNull: false,
     },
-    formId: {
+    form_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     }

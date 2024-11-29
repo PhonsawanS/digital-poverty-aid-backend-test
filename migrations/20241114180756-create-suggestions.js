@@ -2,41 +2,28 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('TeamServey', {
+    await queryInterface.createTable('Suggestions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
-        type: Sequelize.STRING,
+      suggest_informer: {
         allowNull: false,
+        type: Sequelize.STRING
       },
-      fname: {
-        type: Sequelize.STRING,
+      suggest_surway_team: {  
         allowNull: false,
+        type: Sequelize.STRING
       },
-      lname: {
-        type: Sequelize.STRING,
+      resource: {
         allowNull: false,
+        type: Sequelize.ARRAY(Sequelize.STRING)  //เก็บเป็น ARREY
       },
-      agency: {
-        type: Sequelize.STRING,
+      form_id: {
         allowNull: false,
-      },
-      phone: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      form_id:{
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Form", 
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL", 
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -49,6 +36,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('TeamServey');
+    await queryInterface.dropTable('Suggestions');
   }
 };
