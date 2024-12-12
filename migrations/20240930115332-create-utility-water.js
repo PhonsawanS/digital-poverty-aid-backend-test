@@ -10,10 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       plumbing_water: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.STRING, //change type
         allowNull: false,
       },
-      sufficiency: {
+      water_other_sources: {  //เปลี่ยนชื่อ field
         type: Sequelize.STRING,
         allowNull: false,
       },

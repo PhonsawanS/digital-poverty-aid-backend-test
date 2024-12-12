@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   UtilityWater.init({
-    plumbing_water: DataTypes.BOOLEAN,
-    sufficiency: DataTypes.STRING,
+    plumbing_water: DataTypes.STRING,
+    water_other_sources: DataTypes.STRING,
     water_purchase: DataTypes.BOOLEAN,
     phy_capital_id: DataTypes.INTEGER,
   }, {

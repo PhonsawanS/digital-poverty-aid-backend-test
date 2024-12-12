@@ -9,9 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      property_type: {
+      is_has_property:{
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.BOOLEAN
+      },
+      property_type: {
+        allowNull: true,
+        type: Sequelize.ARRAY(Sequelize.STRING)
       },
       finan_capital_id:{
         allowNull: false,

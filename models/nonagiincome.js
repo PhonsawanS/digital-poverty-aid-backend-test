@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     income_type:{
       type: DataTypes.STRING,
     }, 
-    amount_per_yaer:{
+    amount_per_year:{
       type: DataTypes.FLOAT
     },
     cost_per_year:{

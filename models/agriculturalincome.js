@@ -27,18 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ARRAY(DataTypes.STRING),  
       allowNull: false,
     },
-    work: {                    
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    work_area: {              
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    rent: {                    
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
     finan_capital_id: {         // เชื่อมโยงกับ Financialcapital
       type: DataTypes.INTEGER,
       allowNull: false,  // ต้องมีการเชื่อมโยง

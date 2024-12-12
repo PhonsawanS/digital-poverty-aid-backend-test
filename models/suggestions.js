@@ -2,13 +2,13 @@
 const { Model, DataTypes } = require('sequelize'); // เพิ่ม DataTypes ที่นี่
 
 module.exports = (sequelize) => {
-  class Suggestions extends Model {
+  class Suggestion extends Model {
     static associate(models) {
-      Suggestions.belongsTo(models.Form, {foreignKey: 'form_id'});
+      Suggestion.belongsTo(models.Form, {foreignKey: 'form_id'});
       
     }
   }
-  Suggestions.init({
+  Suggestion.init({
     suggest_informer:{type: DataTypes.STRING},
     suggest_surway_team: {type:DataTypes.STRING},
     resource: {type:DataTypes.ARRAY(DataTypes.STRING)},
@@ -16,7 +16,8 @@ module.exports = (sequelize) => {
 
   }, {
     sequelize,
-    modelName: 'Suggestions',
+    modelName: 'Suggestion',
+    freezeTableName: true,
   });
-  return Suggestions;
+  return Suggestion;
 };

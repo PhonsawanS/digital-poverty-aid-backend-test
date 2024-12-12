@@ -9,8 +9,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstis_has_debt: {
-        type: Sequelize.FLOAT,
+      is_has_debt: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
       },
       description: {

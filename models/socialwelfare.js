@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class SocialWelfare extends Model {
    
     static associate(models) {
-      SocialWelfare.belongsTo(models.HumanCapital,{foreignKey:'human_capital_id'})
+      SocialWelfare.belongsTo(models.MemberHousehold,{foreignKey:'member_house_id'})
     }
   }
   SocialWelfare.init({
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    human_capital_id: { 
+    member_house_id: { 
       type: DataTypes.INTEGER,
       allowNull: false,
     },

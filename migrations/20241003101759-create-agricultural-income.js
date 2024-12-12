@@ -21,18 +21,6 @@ module.exports = {
         type: Sequelize.ARRAY(Sequelize.STRING),  // เก็บข้อมูล array ของการจับปลา
         allowNull: false
       },
-      work: {
-        type: Sequelize.TEXT,  // ข้อมูลเกี่ยวกับงาน
-        allowNull: false
-      },
-      work_area: {
-        type: Sequelize.TEXT,  // ข้อมูลเกี่ยวกับพื้นที่การทำงาน
-        allowNull: false
-      },
-      rent: {
-        type: Sequelize.FLOAT,  // ค่าเช่า
-        allowNull: false
-      },
       finan_capital_id: {
         type: Sequelize.INTEGER,  // foreign key เชื่อมโยงกับ Financialcapital
         allowNull: false,

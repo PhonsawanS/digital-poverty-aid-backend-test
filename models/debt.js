@@ -11,22 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Debt.hasOne(models.creditsources,{foreignKey:'debt_id'})
+      Debt.hasMany(models.Creditsources,{foreignKey:'debt_id'})
       Debt.belongsTo(models.Financialcapital, { foreignKey: 'finan_capital_id' });
     }
   }
   Debt.init({
-    firstis_has_debt: {
-      type: DataTypes.FLOAT,
-      allowNull: false // เปลี่ยนตามความต้องการ
+    is_has_debt: {
+      type: DataTypes.BOOLEAN,  //เปลี่ยนชื่อ/type
+      allowNull: false 
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false // เปลี่ยนตามความต้องการ
+      allowNull: false 
     },
     finan_capital_id: {
       type: DataTypes.INTEGER,
-      allowNull: false // เปลี่ยนตามความต้องการ
+      allowNull: false 
     }
   }, {
     sequelize,

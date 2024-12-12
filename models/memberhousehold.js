@@ -7,8 +7,9 @@ module.exports = (sequelize) => {
   class MemberHousehold extends Model {
 
     static associate(models) {
-      MemberHousehold.hasOne(models.HumanCapital,{foreignKey:'member_house_id'}),
+      MemberHousehold.belongsTo(models.Form,{foreignKey:'form_id'}),
       MemberHousehold.belongsTo(models.Household,{foreignKey:'houseId'})
+      MemberHousehold.hasMany(models.SocialWelfare,{foreignKey:'member_house_id'})
     }
 
   }
@@ -54,7 +55,44 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     career: {
-      type: DataTypes.ARRAY(DataTypes.STRING), // ARRAY(Str)
+      type: DataTypes.ARRAY(DataTypes.STRING), 
+      allowNull: false,
+    },
+    work_can_made_income: {
+      type: DataTypes.ARRAY(DataTypes.STRING), 
+      allowNull: false,
+    },
+    //แก้ไข
+    max_education: { 
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    current_edu_level: { 
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    edu_status: { 
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    work_status: { 
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    agv_income: { 
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    can_write_TH: { 
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    can_read_TH: { 
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    can_speak_TH: { 
+      type: DataTypes.STRING,
       allowNull: false,
     },
     is_leader: {
@@ -63,9 +101,13 @@ module.exports = (sequelize) => {
     },
     still_poor: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false, 
+      defaultValue: true, 
     },
     houseId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    form_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     }
