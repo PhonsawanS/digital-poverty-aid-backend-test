@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      amount_per_yaer:{
+      amount_per_year:{
         allowNull: false,
         type: Sequelize.FLOAT
       },

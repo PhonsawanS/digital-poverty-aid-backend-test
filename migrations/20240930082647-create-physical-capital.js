@@ -27,7 +27,7 @@ module.exports = {
       },
       house_status_law: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       house_status: {
         type: Sequelize.STRING,
@@ -38,8 +38,8 @@ module.exports = {
         allowNull: false,
       },
       alternative_energy: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
+        type: Sequelize.STRING, //change type
+        allowNull: true,
       },
       has_home_phone: {
         type: Sequelize.BOOLEAN,
@@ -47,27 +47,27 @@ module.exports = {
       },
       phone: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       water_for_agriculture: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       house_access_road: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       workplace_access_road: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
-      use_tech_get_benrfit_gov: {
+      use_tech_get_benefit_gov: {  //bene*
         type: Sequelize.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
       benefit_form_tech : {
         type: Sequelize.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
       news: {
         type: Sequelize.ARRAY(Sequelize.STRING),
@@ -81,7 +81,7 @@ module.exports = {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
-      formId: {
+      form_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "Form", 

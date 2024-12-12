@@ -21,11 +21,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      human_capital_id: {
+      member_house_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references:{
-          model:'HumanCapital',
+          model:'MemberHousehold',
           key: 'id'
         },
         onDelete:'CASCADE'  //โดนลบตามหากทุน 1 โดนลบ

@@ -53,13 +53,49 @@ module.exports = {
         type: Sequelize.ARRAY(Sequelize.STRING), // ใช้ ARRAY ของ STRING
         allowNull: false,
       },
+      work_can_made_income: {
+        type: Sequelize.ARRAY(Sequelize.STRING), // ใช้ ARRAY ของ STRING
+        allowNull: false,
+      },
+      max_education: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      current_edu_level: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      edu_status: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      work_status: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      agv_income: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      can_write_TH: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      can_read_TH: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      can_speak_TH: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       is_leader: {
         type: Sequelize.BOOLEAN,
         defaultValue: false, 
       },
       still_poor: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false, 
+        defaultValue: true, 
       },
       houseId:{
         type: Sequelize.INTEGER,
@@ -68,7 +104,16 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "SET NULL", // ถ้า Form ถูกลบ Household จะไม่ถูกลบ แต่ formId จะถูกตั้งค่าเป็น NULL
+        onDelete: "CASCADE", 
+      },
+      form_id:{
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Form", 
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL", 
       },
       createdAt: {
         allowNull: false,

@@ -15,9 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Occupationalproperty.init({
+    is_has_property:{
+      type:DataTypes.BOOLEAN
+    },
     property_type:{
-      type:DataTypes.STRING
-    } ,
+      type:DataTypes.ARRAY(DataTypes.STRING)
+    },
     finan_capital_id:{
       type:DataTypes.INTEGER
     } 

@@ -10,13 +10,14 @@ module.exports = (sequelize) => {
 
   UnrestIn3Southern.init({
     effect: { type: DataTypes.STRING },
-    form_id: { type: DataTypes.INTEGER }, // แก้จาก INTEGR เป็น INTEGER
     urgent_to_do: { type: DataTypes.STRING },
     effect_in_life: { type: DataTypes.ARRAY(DataTypes.STRING) },
-    effect_in_work: { type: DataTypes.ARRAY(DataTypes.STRING) }
+    effect_in_work: { type: DataTypes.ARRAY(DataTypes.STRING) },
+    form_id: { type: DataTypes.INTEGER }
   }, {
     sequelize,
     modelName: 'UnrestIn3Southern',
+    freezeTableName: true,
   });
 
   return UnrestIn3Southern;

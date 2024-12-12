@@ -35,6 +35,8 @@ const houseindisasterareasRoute = require('../router/Houseindisasterareas/housei
 const unrestIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
 const suggestions = require('./Suggestions/Suggestions.route')
 
+const formInsertAll = require('./FormInsertAll/form.insert.all')
+
 const RouterList = [
     {
         path: '/auth',
@@ -167,6 +169,10 @@ const RouterList = [
     {
         path: '/suggestions',
         route:suggestions
+    },
+    {
+        path: '/formInsertAll',
+        route:formInsertAll
     }
 ];
 

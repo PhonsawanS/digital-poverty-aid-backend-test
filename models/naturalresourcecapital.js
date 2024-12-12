@@ -12,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Naturalresourcecapital.belongsTo(models.Form, { foreignKey: 'formId' });
-      Naturalresourcecapital.hasOne(models.PBresourceforlive,{foreignKey:'national_res_id'})
-      Naturalresourcecapital.hasOne(models.PBresourceforincome,{foreignKey:'national_res_id'})
-      Naturalresourcecapital.hasOne(models.Farmlandindisasterareas,{foreignKey:'national_res_id'})
-      Naturalresourcecapital.hasOne(models.HouseInDisasterAreas,{foreignKey:'national_res_id'})
+      Naturalresourcecapital.hasMany(models.PBresourceforlive,{foreignKey:'national_res_id'})
+      Naturalresourcecapital.hasMany(models.PBresourceforincome,{foreignKey:'national_res_id'})
+      Naturalresourcecapital.hasMany(models.Farmlandindisasterareas,{foreignKey:'national_res_id'})
+      Naturalresourcecapital.hasMany(models.HouseInDisasterAreas,{foreignKey:'national_res_id'})
     }
   }
   Naturalresourcecapital.init({
