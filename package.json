@@ -8,7 +8,7 @@
     "start": "nodemon ./bin/www",
     "migrate": "npx sequelize-cli db:migrate",
     "down": "npx sequelize-cli db:migrate:undo",
-    "undoAll":"npx sequelize-cli db:migrate:undo:all"
+    "undoAll": "npx sequelize-cli db:migrate:undo:all"
   },
   "author": "",
   "license": "ISC",

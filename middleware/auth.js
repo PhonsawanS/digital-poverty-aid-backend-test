@@ -29,7 +29,7 @@ exports.auth = async (req, res, next) => {
   }
 };
 
-//สำหรับเช็ค Role ที่เข้ามาว่ามีสิทธ์มั้ย
+//ยังไม่ได้แก้ไข
 exports.allowRole = (allowedRoles)=>{
   
   return (req,res,next)=>{

@@ -34,6 +34,7 @@ const farmlandindisasterareasRoute = require('./Farmlandindisasterareas/farmland
 const houseindisasterareasRoute = require('../router/Houseindisasterareas/houseindisasterareas.route')
 const unrestIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
 const suggestions = require('./Suggestions/Suggestions.route')
+const user = require('./User/User.route')
 
 const formInsertAll = require('./FormInsertAll/form.insert.all')
 
@@ -173,6 +174,10 @@ const RouterList = [
     {
         path: '/formInsertAll',
         route:formInsertAll
+    },
+    {
+        path: '/user',
+        route:user
     }
 ];
 
