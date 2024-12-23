@@ -18,11 +18,15 @@ exports.auth = async (req, res, next) => {
     }
 
     //verify auth token
-    const decoded = jwt.verify(authToken, secret);
-    req.user = decoded;  // กำหนดข้อมูลที่ถอดรหัสมาไปใส่ค่าใน req.user
+    jwt.verify(authToken, secret,(err,user)=>{
+      if(err){
+        return res.status(403).send({message:err.name === 'TokenExpiredError' ? "Token expired" : "Invalid token",status:403})
+      }
+      req.user = user;  
+      next(); //บอกว่าทำงานเสร็จแล้วทำวานอื่นต่อไปได้
+    }
+  );
     
-    next(); //บอกว่าทำงานเสร็จแล้วทำวานอื่นต่อไปได้
-
   } catch (e) {
     console.log(e);
     res.send("Invalid token");
