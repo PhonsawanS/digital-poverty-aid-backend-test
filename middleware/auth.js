@@ -33,27 +33,19 @@ exports.auth = async (req, res, next) => {
   }
 };
 
-//ยังไม่ได้แก้ไข
 exports.allowRole = (allowedRoles)=>{
   
   return (req,res,next)=>{
     
     try{
-      // check token
-      const authHeader = req.headers["authorization"];
-      let authToken = "";
-
-      if(authHeader){
-        authToken = authHeader.split(" ")[1]; // separate token
-      }else{
-        throw new Error("Invalid authorization")
+      // นำ user ที่ decode จาก auth มาใช้งาน
+      if(!req.user || !req.user.role){
+        res.status(403)
+        return res.send({message:'Unauthorize'})
       }
 
-      const decoded = jwt.decode(authToken,secret);
-      req.user = decoded.user;
-
       // คัด role ที่ไม่ได้รับอนุญาติออก
-      if (!allowedRoles.includes(decoded.role)) {
+      if (!allowedRoles.includes(req.user.role)) {
         return res.status(403).json({ message: "Unauthorized" });
       }
 
