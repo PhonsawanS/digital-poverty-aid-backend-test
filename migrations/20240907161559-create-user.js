@@ -33,10 +33,15 @@ module.exports = {
         type: Sequelize.STRING
       },
       role: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue:null
       },
       status: {
         type: Sequelize.STRING
+      },
+      approveBy: {
+        type: Sequelize.INTEGER,
+        allowNull:true
       },
       createdAt: {
         allowNull: false,
