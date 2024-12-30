@@ -8,7 +8,9 @@
     "start": "nodemon ./bin/www",
     "migrate": "npx sequelize-cli db:migrate",
     "down": "npx sequelize-cli db:migrate:undo",
-    "undoAll": "npx sequelize-cli db:migrate:undo:all"
+    "undoAll": "npx sequelize-cli db:migrate:undo:all",
+    "seed": "npx sequelize-cli db:seed:all",
+    "reset": "npm run undoAll && npm run migrate && npm run seed"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +22,7 @@
     "express": "^4.19.2",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.16",
     "nodemon": "^3.1.4",
     "pg": "^8.12.0",
     "pg-promise": "^11.9.1",
