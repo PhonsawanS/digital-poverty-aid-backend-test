@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.STRING,
     role: DataTypes.STRING,
     status: DataTypes.STRING,
+    approveBy: DataTypes.INTEGER,
   }, {
     sequelize,
     freezeTableName: true,
