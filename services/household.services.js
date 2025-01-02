@@ -50,3 +50,34 @@ exports.deleted = async (id) => {
       return err;
     });
 };
+
+
+// Service function: นับจำนวนข้อมูลใน household_model
+exports.countHouseholds = async () => {
+  try {
+    // ใช้ Sequelize's count() method เพื่อคำนวณจำนวนแถวทั้งหมดใน household_model
+    return await household_model.count();
+  } catch (err) {
+    // หากเกิดข้อผิดพลาด ให้พิมพ์ข้อความแสดงข้อผิดพลาดลงใน console และส่ง error กลับไป
+    console.log(err);
+    return err;
+  }
+};
+
+
+exports.countHouseholdsByDistrict = async () => {
+  try {
+    return await household_model.findAll({
+      attributes: [
+        'district',
+        [db.Sequelize.fn('COUNT', db.Sequelize.col('id')), 'count']
+      ],
+      group: ['district']
+    });
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+};
+
+

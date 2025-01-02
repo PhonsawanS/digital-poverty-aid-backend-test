@@ -124,3 +124,37 @@ exports.createCombined = async (data) => {
     throw new Error(err.message);
   }
 };
+
+//นับจำนวนข้อมูลใน memberHouse_model
+exports.countMemberHousehold = async () => {
+  try {
+    return await memberHouse_model.count();
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+
+
+// ใน service file
+exports.countMembersByDistrict = async () => {
+  try {
+    const data = await memberHouse_model.findAll({
+      include: {
+        model: household_model,
+        attributes: ["district"], // Only include the district field
+      },
+    });
+
+    const districtCounts = data.reduce((acc, member) => {
+      const district = member.Household?.district || "Unknown";
+      acc[district] = (acc[district] || 0) + 1;
+      return acc;
+    }, {});
+
+    return districtCounts;
+  } catch (error) {
+    throw new Error(`Error counting members by district: ${error.message}`);
+  }
+};

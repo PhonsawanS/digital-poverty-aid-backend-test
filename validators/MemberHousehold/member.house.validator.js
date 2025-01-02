@@ -12,9 +12,19 @@ const memberSchema = Joi.object({
     status_in_house: Joi.string().required(),
     health: Joi.string().required(),
     career: Joi.array().items(Joi.string()).required(),
+    work_can_made_income: Joi.array().required(),
+    max_education: Joi.string().required(),
+    current_edu_level: Joi.string().required(),
+    edu_status: Joi.string().required(),
+    work_status: Joi.string().required(),
+    agv_income: Joi.number().min(0).required(),
+    can_write_TH: Joi.string().required(),
+    can_read_TH: Joi.string().required(),
+    can_speak_TH: Joi.string().required(),
     is_leader: Joi.boolean().optional(),
     still_poor: Joi.boolean().optional(),
-    houseId: Joi.number().integer().optional()
+    houseId: Joi.number().integer().optional(),
+    form_id: Joi.number().optional()
 }); // นอกเหนือจากที่กำหนดจะกรองออกหมด
 
 const updateMemberSchema = Joi.object({

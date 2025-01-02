@@ -11,5 +11,6 @@ router
     .post("/create", HouseholdController.create)
     .patch("/update/:id", HouseholdController.updateHouse)
     .delete("/delete/:id", HouseholdController.deleteHouse)
-
+    .get("/count", HouseholdController.countHouseholds)
+    .get("/countByDistrict", HouseholdController.countHouseholdsByDistrict);
 module.exports = router;
