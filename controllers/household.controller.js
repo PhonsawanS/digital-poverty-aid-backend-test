@@ -81,33 +81,33 @@ const findOneHouse = async (req, res) => {
 }
 
 const create = async (req, res) => {
- // Validate request body
- const { error, value } = CreateHouseholdSchema.validate(req.body);
+    // Validate request body
+    const { error, value } = CreateHouseholdSchema.validate(req.body);
 
- if (error) {
-     return res.status(400).send({
-         msg: "Validation error",
-         error: error.details
-     });
- }
- const houseObj = {
-     house_code: value.house_code,
-     host_title: value.host_title,
-     host_fname: value.host_fname,
-     host_lname: value.host_lname,
-     host_national_id: value.host_national_id,
-     has_greenBook:value.has_greenBook,
-     green_book_id: value.green_book_id,
-     postcode: value.postcode,
-     subdistrict: value.subdistrict,
-     district: value.district,
-     province: value.province,
-     house_number: value.house_number,
-     village: value.village,
-     alley: value.alley,
-     road: value.road,
-     form_id: value.form_id,
- };
+    if (error) {
+        return res.status(400).send({
+            msg: "Validation error",
+            error: error.details
+        });
+    }
+    const houseObj = {
+        house_code: value.house_code,
+        host_title: value.host_title,
+        host_fname: value.host_fname,
+        host_lname: value.host_lname,
+        host_national_id: value.host_national_id,
+        has_greenBook: value.has_greenBook,
+        green_book_id: value.green_book_id,
+        postcode: value.postcode,
+        subdistrict: value.subdistrict,
+        district: value.district,
+        province: value.province,
+        house_number: value.house_number,
+        village: value.village,
+        alley: value.alley,
+        road: value.road,
+        form_id: value.form_id,
+    };
     await householdService.create(houseObj)
         .then(data => {
             res.send({
@@ -133,31 +133,31 @@ const updateHouse = async (req, res) => {
     // Validate request body
     const { error, value } = UpdateHouseholdSchema.validate(req.body);
 
- if (error) {
-     return res.status(400).send({
-         msg: "Validation error",
-         error: error.details
-     });
- }
+    if (error) {
+        return res.status(400).send({
+            msg: "Validation error",
+            error: error.details
+        });
+    }
 
- const houseObj = {
-    house_code: value.house_code,
-    host_title: value.host_title,
-    host_fname: value.host_fname,
-    host_lname: value.host_lname,
-    host_national_id: value.host_national_id,
-    has_greenBook:value.has_greenBook,
-    green_book_id: value.green_book_id,
-    postcode: value.postcode,
-    subdistrict: value.subdistrict,
-    district: value.district,
-    province: value.province,
-    house_number: value.house_number,
-    village: value.village,
-    alley: value.alley,
-    road: value.road,
-    form_id: value.form_id,
- };
+    const houseObj = {
+        house_code: value.house_code,
+        host_title: value.host_title,
+        host_fname: value.host_fname,
+        host_lname: value.host_lname,
+        host_national_id: value.host_national_id,
+        has_greenBook: value.has_greenBook,
+        green_book_id: value.green_book_id,
+        postcode: value.postcode,
+        subdistrict: value.subdistrict,
+        district: value.district,
+        province: value.province,
+        house_number: value.house_number,
+        village: value.village,
+        alley: value.alley,
+        road: value.road,
+        form_id: value.form_id,
+    };
     await householdService.update(houseObj, id)
         .then(data => {
             res.send({
@@ -197,11 +197,62 @@ const deleteHouse = async (req, res) => {
         });
 }
 
+// Controller function: ส่งผลลัพธ์การนับจำนวนข้อมูลกลับไปยัง client
+const countHouseholds = async (req, res) => {
+    // เรียกใช้ฟังก์ชัน countHouseholds() จาก service layer
+    await householdService.countHouseholds()
+        .then(data => {
+            // หากการนับสำเร็จ ส่งผลลัพธ์กลับไปยัง client ในรูป JSON
+            res.send({
+                count: data,       // จำนวนข้อมูลที่ได้จากการนับ
+                msg: "success",    // สถานะข้อความ "success"
+                status: 200,       // HTTP status code 200 หมายถึงการทำงานสำเร็จ
+                err: ''            // ไม่มีข้อผิดพลาด
+            });
+        })
+        .catch(err => {
+            // หากเกิดข้อผิดพลาด ส่งข้อความและ error กลับไปยัง client
+            res.send({
+                count: null,       // ไม่มีข้อมูลการนับ (null)
+                msg: "error",      // สถานะข้อความ "error"
+                status: 500,       // HTTP status code 500 หมายถึงเกิดข้อผิดพลาดในเซิร์ฟเวอร์
+                err: err           // รายละเอียดข้อผิดพลาด
+            });
+        });
+};
+
+// Controller Layer
+const countHouseholdsByDistrict = async (req, res) => {
+    try {
+        const data = await householdService.countHouseholdsByDistrict();
+        res.status(200).json({
+            data: data,
+            msg: "success",
+            status: 200,
+            err: ''
+        });
+    } catch (err) {
+        res.status(500).json({
+            data: null,
+            msg: "error",
+            status: 500,
+            err: err.message
+        });
+    }
+};
+
+
+
+
+
+
 
 module.exports = {
     houseList,
     findOneHouse,
     create,
     updateHouse,
-    deleteHouse
+    deleteHouse,
+    countHouseholds,
+    countHouseholdsByDistrict
 };
