@@ -1,5 +1,5 @@
 const memberHouseService = require("../services/member.house.services");
-const { memberSchema, updateMemberSchema,combinedSchema} = require("../validators/MemberHousehold/member.house.validator"); //Validator
+const { memberSchema, updateMemberSchema, combinedSchema } = require("../validators/MemberHousehold/member.house.validator"); //Validator
 
 const db = require('../models')
 const member_model = db.MemberHousehold
@@ -90,17 +90,17 @@ const createCombined = async (req, res) => {
 
 
 const updateMember = async (req, res) => {
-    try {
-        const { error, value } = updateMemberSchema.validate(req.body);
-        if (error) {
-            return res.status(400).send({ msg: "Validation error", error: error.details });
-        }
-        
-        const data = await memberHouseService.update(value, req.params.id);
-        res.send({ data, msg: "success", status: 200 });
-    } catch (err) {
-        res.status(500).send({ data: null, msg: "error", status: 500, err });
+  try {
+    const { error, value } = updateMemberSchema.validate(req.body);
+    if (error) {
+      return res.status(400).send({ msg: "Validation error", error: error.details });
     }
+
+    const data = await memberHouseService.update(value, req.params.id);
+    res.send({ data, msg: "success", status: 200 });
+  } catch (err) {
+    res.status(500).send({ data: null, msg: "error", status: 500, err });
+  }
 };
 
 const deleteMember = async (req, res) => {
@@ -220,6 +220,43 @@ const findByAge = async(req,res)=>{
   }
 }
 
+const conuntMemberHousehold = async (req, res) => {
+  await memberHouseService.countMemberHousehold()
+    .then(data => {
+      res.send({
+        data: data,
+        msg: "success",
+        status: 200,
+      });
+    })
+    .catch((err) => {
+      res.send({
+        data: null,
+        msg: "error",
+        status: 500,
+        err: err,
+      });
+    });
+}
+
+const getMembersCountByDistrict = async (req, res) => {
+  try {
+    const districtCounts = await memberHouseService.countMembersByDistrict();
+    res.status(200).json({
+      success: true,
+      data: districtCounts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Failed to retrieve members count by district: ${error.message}`,
+    });
+  }
+};
+
+
+
+
 module.exports = {
   List,
   findOneMember,
@@ -227,5 +264,7 @@ module.exports = {
   updateMember,
   deleteMember,
   createCombined,
-  findByAge
+  findByAge,
+  conuntMemberHousehold,
+  getMembersCountByDistrict,
 };

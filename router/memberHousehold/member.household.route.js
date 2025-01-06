@@ -14,7 +14,7 @@ router
 
     //find member
     .get('/findByAge/:minAge/:maxAge',MemberHousController.findByAge)
-
+    .get("/count", MemberHousController.conuntMemberHousehold)
     .post("/create-capital", MemberHousController.createCombined)
-
+    .get("/district-count", MemberHousController.getMembersCountByDistrict)
 module.exports = router;
