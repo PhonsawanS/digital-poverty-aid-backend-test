@@ -127,6 +127,7 @@ const create = async(req,res)=>{
                     lname: data.lname,
                     sex: data.sex,
                     national_id: data.national_id,
+                    phone: data.phone,
                     age_yaer: data.age_yaer,
                     age_month: data.age_month,
                     birthdate: data.birthdate,
