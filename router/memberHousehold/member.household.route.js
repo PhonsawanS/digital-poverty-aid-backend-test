@@ -12,6 +12,9 @@ router
     .patch("/update/:id", MemberHousController.updateMember)
     .delete("/delete/:id", MemberHousController.deleteMember)
 
+    //find member
+    .get('/findByAge/:minAge/:maxAge',MemberHousController.findByAge)
+
     .post("/create-capital", MemberHousController.createCombined)
 
 module.exports = router;
