@@ -4,6 +4,7 @@ const memberHouse_model = db.MemberHousehold;
 const household_model = db.Household;
 const humanCapital_model = db.HumanCapital;
 const socialWelfare_model = db.SocialWelfare
+const carrer_model = db.Career
 
 
 exports.getMember = () => {
@@ -15,10 +16,20 @@ exports.getMember = () => {
 };
 
 exports.findOneById = async (id) => {
-  return memberHouse_model.findOne({
+  
+  return  await memberHouse_model.findOne({
     where: { id: id },
-    include:household_model
-  });
+    include: [
+      household_model,
+      socialWelfare_model,
+      {
+        model: carrer_model,
+        separate: true,
+        order:[['createdAt', 'DESC']]
+      }
+    ],
+  
+  }) 
 };
 
 exports.create = async (houseObj) => {

@@ -86,7 +86,12 @@ const formSchema = Joi.object({
       })
     ),
 
-    career: Joi.array().items(Joi.string()).required(),
+    Career : Joi.array().items(
+      Joi.object({
+        career_type: Joi.string().required()
+      })
+    ),
+
     work_can_made_income: Joi.array().items(Joi.string()).required(),
     max_education: Joi.string().required(),
     current_edu_level: Joi.string().optional(),
@@ -94,6 +99,7 @@ const formSchema = Joi.object({
     edu_description: Joi.string().allow('').optional(),
     work_status: Joi.string().required(),
     agv_income: Joi.number().required(),
+    inflation: Joi.number().required(),
     can_write_TH: Joi.string().required(),
     can_read_TH: Joi.string().required(),
     can_speak_TH: Joi.string().required(),
