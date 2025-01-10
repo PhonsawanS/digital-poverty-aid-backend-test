@@ -18,6 +18,7 @@ const memberSchema = Joi.object({
   is_leader: Joi.boolean().optional(),
   still_poor: Joi.boolean().optional(),
   agv_income: Joi.number().required(),
+  inflation: Joi.number().required(),
   can_write_TH: Joi.string().required(),
   can_read_TH: Joi.string().required(),
   can_speak_TH: Joi.string().required(),

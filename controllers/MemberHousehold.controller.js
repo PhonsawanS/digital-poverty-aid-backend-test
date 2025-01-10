@@ -4,7 +4,8 @@ const { memberSchema, updateMemberSchema, combinedSchema } = require("../validat
 const db = require('../models')
 const member_model = db.MemberHousehold
 const household_model = db.Household
-const { Op } = require("sequelize");
+const member_finan_model = db.MemberFinancial
+const { Op, where } = require("sequelize");
 
 
 const List = async (req, res) => {
@@ -166,6 +167,7 @@ const findByAge = async(req,res)=>{
         }
       },
       attributes:[
+        'id',
         'title',
         'fname',
         'lname',
@@ -220,6 +222,22 @@ const findByAge = async(req,res)=>{
   }
 }
 
+const findCapital = async (req,res)=>{
+  try{
+    const { id } = req.params
+    const results = await member_finan_model.findAll({
+      where:{
+        member_house_id:id
+      }
+    })
+
+    return res.status(200).send({message:'success',results})
+
+  }catch(err){
+    return res.status(500).send({message:"Sever error",errors:err.message})
+  }
+}
+
 const conuntMemberHousehold = async (req, res) => {
   await memberHouseService.countMemberHousehold()
     .then(data => {
@@ -267,4 +285,5 @@ module.exports = {
   findByAge,
   conuntMemberHousehold,
   getMembersCountByDistrict,
+  findCapital
 };

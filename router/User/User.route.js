@@ -3,7 +3,6 @@ const router = express.Router()
 const UserController = require('../../controllers/User.controller')
 const { auth, allowRole } = require('../../middleware/auth')
 
-const MailController = require('../../controllers/MailerController/Mail.controller')
 
 
 router
