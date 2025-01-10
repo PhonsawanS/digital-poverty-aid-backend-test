@@ -36,6 +36,8 @@ const unrestIn3Southern = require('./UnrestIn3Southern/UnrestIn3Southern.route')
 const suggestions = require('./Suggestions/Suggestions.route')
 const user = require('./User/User.route')
 const mail = require('./Mail/Mail.route')
+const MemberFinancial = require('./MemberFinancial/memberFinancial.route')
+const Career = require('./Career/career.route')
 
 const formInsertAll = require('./FormInsertAll/form.insert.all')
 
@@ -183,7 +185,18 @@ const RouterList = [
     {
         path: '/mail',
         route:mail
-    }
+    },
+    {
+        path: '/member-financial',
+        route:MemberFinancial
+    },
+    {
+        path: '/career',
+        route:Career
+    },
+
+    
+    
 ];
 
 RouterList.forEach((route) => {
