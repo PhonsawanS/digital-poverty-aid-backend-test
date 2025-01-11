@@ -29,6 +29,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      phone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       age_yaer: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -47,10 +51,6 @@ module.exports = {
       },
       health: {
         type: Sequelize.STRING,
-        allowNull: false,
-      },
-      career: {
-        type: Sequelize.ARRAY(Sequelize.STRING), // ใช้ ARRAY ของ STRING
         allowNull: false,
       },
       work_can_made_income: {
@@ -74,6 +74,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       agv_income: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      inflation: {
         type: Sequelize.FLOAT,
         allowNull: false,
       },

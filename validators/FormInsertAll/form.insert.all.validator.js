@@ -53,7 +53,7 @@ const formSchema = Joi.object({
     title: Joi.string().required(),
     fname: Joi.string().required(),
     lname: Joi.string().required(),
-    national_id: Joi.string().length(13).required(), 
+    national_id: Joi.string().allow('').optional(), 
     phone: Joi.string().pattern(/^\d{10}$/).required(),
     fam_total_member: Joi.number().integer().required(),  
     fam_total_live: Joi.number().integer().required(),    
@@ -70,6 +70,7 @@ const formSchema = Joi.object({
     lname: Joi.string().required(),
     sex: Joi.string().required(),
     national_id: Joi.string().length(13).required(),
+    phone: Joi.string().required(),
     age_yaer: Joi.number().integer().min(0).required(),
     age_month: Joi.number().integer().min(0).required(),
     birthdate: Joi.date().required(),
@@ -85,7 +86,12 @@ const formSchema = Joi.object({
       })
     ),
 
-    career: Joi.array().items(Joi.string()).required(),
+    Career : Joi.array().items(
+      Joi.object({
+        career_type: Joi.string().required()
+      })
+    ),
+
     work_can_made_income: Joi.array().items(Joi.string()).required(),
     max_education: Joi.string().required(),
     current_edu_level: Joi.string().optional(),
@@ -93,6 +99,7 @@ const formSchema = Joi.object({
     edu_description: Joi.string().allow('').optional(),
     work_status: Joi.string().required(),
     agv_income: Joi.number().required(),
+    inflation: Joi.number().required(),
     can_write_TH: Joi.string().required(),
     can_read_TH: Joi.string().required(),
     can_speak_TH: Joi.string().required(),

@@ -10,6 +10,8 @@ module.exports = (sequelize) => {
       MemberHousehold.belongsTo(models.Form,{foreignKey:'form_id'}),
       MemberHousehold.belongsTo(models.Household,{foreignKey:'houseId'})
       MemberHousehold.hasMany(models.SocialWelfare,{foreignKey:'member_house_id'})
+      MemberHousehold.hasMany(models.MemberFinancial,{foreignKey:'member_house_id'})
+      MemberHousehold.hasMany(models.Career,{foreignKey:'member_house_id'})
     }
 
   }
@@ -34,6 +36,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    phone: { 
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     age_yaer:{ 
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -52,10 +58,6 @@ module.exports = (sequelize) => {
     },
     health: { 
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    career: {
-      type: DataTypes.ARRAY(DataTypes.STRING), 
       allowNull: false,
     },
     work_can_made_income: {
@@ -80,6 +82,10 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     agv_income: { 
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    inflation: { 
       type: DataTypes.FLOAT,
       allowNull: false,
     },

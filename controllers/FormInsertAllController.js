@@ -5,6 +5,7 @@ const teamservey_model = db.TeamServey
 const Informant_model = db.Informant
 const MemberHouse_model = db.MemberHousehold
 const SocialWelfare_model = db.SocialWelfare
+const Career_model = db.Career
 // 2 
 const PhysicalCapital_model = db.PhysicalCapital 
 const UrbanArea_model = db.UrbanArea
@@ -118,8 +119,10 @@ const create = async(req,res)=>{
             )
 
             const SocialWelfareArr = [] //รอสร้างข้อมูลเสร็จแล้วค่อยๆ push เข้ามา
+            const CareerArr = []
 
             const MemberHouseHoldPromise = await value.MemberHousehold.map(async(data)=>{
+
                 const memberHousehold =   await MemberHouse_model.create(
                     {
                     title: data.title,
@@ -127,12 +130,12 @@ const create = async(req,res)=>{
                     lname: data.lname,
                     sex: data.sex,
                     national_id: data.national_id,
+                    phone: data.phone,
                     age_yaer: data.age_yaer,
                     age_month: data.age_month,
                     birthdate: data.birthdate,
                     status_in_house: data.status_in_house,
                     health: data.health,
-                    career: data.career,
                     work_can_made_income: data.work_can_made_income,
                     max_education: data.max_education,
                     current_edu_level: data.current_edu_level,
@@ -140,6 +143,7 @@ const create = async(req,res)=>{
                     edu_description: data.edu_description,
                     work_status: data.work_status,
                     agv_income: data.agv_income,
+                    inflation:data.inflation,
                     can_write_TH: data.can_write_TH,
                     can_read_TH: data.can_read_TH,
                     can_speak_TH: data.can_speak_TH,
@@ -168,6 +172,21 @@ const create = async(req,res)=>{
                         return allSw
                     })
                     await Promise.all(SocialWelfarePromise)
+                }
+
+                if(data.Career){
+                    const CareerPromise = data.Career.map(async(career)=>{
+                        const result = await Career_model.create(
+                            {
+                                career_type: career.career_type,
+                                member_house_id: memberHousehold.id
+                            },
+                            {transaction:t},
+                        )
+                        CareerArr.push(result)
+                        return result
+                    })
+                    await Promise.all(CareerPromise)
                 }
 
                 return memberHousehold
@@ -459,6 +478,7 @@ const create = async(req,res)=>{
                 Informant,
                 MemberHouseHoldArr,
                 SocialWelfareArr,
+                CareerArr,
                 PhysicalCapital,
                 HouseHygiene,
                 UtilityWater,
