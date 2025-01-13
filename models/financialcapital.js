@@ -13,10 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Financialcapital.hasOne(models.Agriculturalincome,{foreignKey:'finan_capital_id'})
       Financialcapital.hasOne(models.Debt,{foreignKey:'finan_capital_id'})
-      Financialcapital.hasOne(models.Householdexpenses,{foreignKey:'finan_capital_id'})
-      Financialcapital.hasOne(models.NonAGIincome,{foreignKey:'finan_capital_id'})
+      Financialcapital.hasMany(models.Householdexpenses,{foreignKey:'finan_capital_id'})
+      Financialcapital.hasMany(models.NonAGIincome,{foreignKey:'finan_capital_id'})
       Financialcapital.hasOne(models.Occupationalproperty,{foreignKey:'finan_capital_id'})
-      Financialcapital.hasOne(models.Saving,{foreignKey:'finan_capital_id'})
+      Financialcapital.hasMany(models.Saving,{foreignKey:'finan_capital_id'})
       Financialcapital.belongsTo(models.Form, { foreignKey: 'formId' });
     }
   }
