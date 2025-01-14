@@ -5,14 +5,17 @@ const { auth,allowRole } = require('../../middleware/auth')
 
 
 router
+    //CRUD
     .get("/lists",auth, MemberHousController.List)
     .get("/findOne/:id",auth, MemberHousController.findOneMember)
     .post("/create",auth, MemberHousController.create)
     .patch("/update/:id",auth, MemberHousController.updateMember)
     .delete("/delete/:id",auth, MemberHousController.deleteMember)
 
-    //find member
+    //Others
     .get('/findByAge/:minAge/:maxAge',auth,MemberHousController.findByAge)
+    .get('/search-by-name',auth,MemberHousController.searchByName)
+    .get('/search-by-houseCode',auth,MemberHousController.searchByHouseCode)
     .get('/findCapital/:id',auth,MemberHousController.findCapital) 
     .get("/count", MemberHousController.conuntMemberHousehold)
     .post("/create-capital", MemberHousController.createCombined)
