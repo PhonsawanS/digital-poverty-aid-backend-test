@@ -1,12 +1,16 @@
 const memberHouseService = require("../services/member.house.services");
-const { memberSchema, updateMemberSchema, combinedSchema } = require("../validators/MemberHousehold/member.house.validator"); //Validator
+const {
+  memberSchema,
+  updateMemberSchema,
+  combinedSchema,
+} = require("../validators/MemberHousehold/member.house.validator"); //Validator
 
-const db = require('../models')
-const member_model = db.MemberHousehold
-const household_model = db.Household
-const member_finan_model = db.MemberFinancial
+const db = require("../models");
+const member_model = db.MemberHousehold;
+const household_model = db.Household;
+const member_finan_model = db.MemberFinancial;
 const { Op, where } = require("sequelize");
-
+const { options } = require("joi");
 
 const List = async (req, res) => {
   await memberHouseService
@@ -68,7 +72,9 @@ const createCombined = async (req, res) => {
   try {
     const { error, value } = combinedSchema.validate(req.body);
     if (error) {
-      return res.status(400).send({ msg: "Validation error", error: error.details });
+      return res
+        .status(400)
+        .send({ msg: "Validation error", error: error.details });
     }
 
     // เรียกใช้ Service เพื่อสร้างข้อมูลรวม
@@ -89,12 +95,13 @@ const createCombined = async (req, res) => {
   }
 };
 
-
 const updateMember = async (req, res) => {
   try {
     const { error, value } = updateMemberSchema.validate(req.body);
     if (error) {
-      return res.status(400).send({ msg: "Validation error", error: error.details });
+      return res
+        .status(400)
+        .send({ msg: "Validation error", error: error.details });
     }
 
     const data = await memberHouseService.update(value, req.params.id);
@@ -125,122 +132,234 @@ const deleteMember = async (req, res) => {
     });
 };
 
-const findByAge = async(req,res)=>{
-  try{ 
-    const today = new Date()
-    //convert year 
-    const yearBE = today.getFullYear()+ 543
-    const month = today.getMonth() +1
-    const day = today.getDate()
+const findByAge = async (req, res) => {
+  try {
+    const today = new Date();
+    //convert year
+    const yearBE = today.getFullYear() + 543;
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
 
+    let { minAge, maxAge } = req.params;
 
-    let {minAge , maxAge } = req.params
-    
-    let { page = 1 , limit=30} = req.query //Paginatetion
-    page = parseInt(page)
-    limit = parseInt(limit)
-    const offset = (page-1) * limit
+    let { page = 1, limit = 30 } = req.query; //Paginatetion
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const offset = (page - 1) * limit;
 
-    //หาวันที่ min,max 
-    const maxBirthDate = new Date()
-    maxBirthDate.setFullYear(today.getFullYear() - minAge)
+    //หาวันที่ min,max
+    const maxBirthDate = new Date();
+    maxBirthDate.setFullYear(today.getFullYear() - minAge);
     maxBirthDate.setMonth(today.getMonth());
     maxBirthDate.setDate(today.getDate() + 1);
 
     const minBirthDate = new Date();
-    minBirthDate.setFullYear(today.getFullYear() - maxAge - 1); //(อายุมาก->เลขปีน้อย) 
+    minBirthDate.setFullYear(today.getFullYear() - maxAge - 1); //(อายุมาก->เลขปีน้อย)
     minBirthDate.setMonth(today.getMonth());
     minBirthDate.setDate(today.getDate());
 
     // แปลง คศ->พศ
-    const startDateBE = new Date(minBirthDate)
-    startDateBE.setFullYear(minBirthDate.getFullYear() + 543)
-    
-    const endDateBE = new Date(maxBirthDate)
-    endDateBE.setFullYear(maxBirthDate.getFullYear() + 543)
+    const startDateBE = new Date(minBirthDate);
+    startDateBE.setFullYear(minBirthDate.getFullYear() + 543);
+
+    const endDateBE = new Date(maxBirthDate);
+    endDateBE.setFullYear(maxBirthDate.getFullYear() + 543);
 
     // ใช้ findAndCountAll เพื่อรับทั้งข้อมูลและจำนวนรวม
-    const {count , rows} = await member_model.findAndCountAll({
-      where:{
-        birthdate:{
-          [Op.between]:[startDateBE,endDateBE]
-        }
+    const { count, rows } = await member_model.findAndCountAll({
+      where: {
+        birthdate: {
+          [Op.between]: [startDateBE, endDateBE],
+        },
       },
-      attributes:[
-        'id',
-        'title',
-        'fname',
-        'lname',
-        'sex',
-        'status_in_house',
-        'health',
-        'work_status',
-        'phone',
-        'birthdate'
+      attributes: [
+        "id",
+        "title",
+        "fname",
+        "lname",
+        "sex",
+        "status_in_house",
+        "health",
+        "work_status",
+        "phone",
+        "birthdate",
       ],
-      include:[{
-        model:household_model,
-        attributes:['house_code','house_number','subdistrict','district','province','postcode']
-      }],
+      include: [
+        {
+          model: household_model,
+          attributes: [
+            "house_code",
+            "house_number",
+            "subdistrict",
+            "district",
+            "province",
+            "postcode",
+          ],
+        },
+      ],
       //ตรงนี้เพิ่มมา
       limit,
       offset,
-      order:[['birthdate','DESC']]
+      order: [["birthdate", "DESC"]],
+    });
+
+    const totalPages = Math.ceil(count / limit);
+
+    //return ไปแค่ช่วงอายุที่อยู่ในเกณฑ์เท่านั้น
+    const fillterResults = rows
+      .map((member) => {
+        const birthdate = new Date(member.birthdate);
+        let age = yearBE - birthdate.getFullYear();
+
+        if (
+          //ยังไม่ถึงวันเกิด -1
+          month < birthdate.getMonth() + 1 ||
+          (month === birthdate.getMonth() + 1 && day < birthdate.getDate())
+        ) {
+          age--;
+        }
+        return {
+          ...member.toJSON(),
+          age: age,
+        };
+      })
+      .filter((member) => member.age >= minAge && member.age <= maxAge);
+
+    return res
+      .status(200)
+      .send({
+        message: "success",
+        month,
+        day,
+        currentPage: page,
+        totalPages,
+        totalItems: count,
+        results: fillterResults,
+      });
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ message: "Sever errors", errors: err.message });
+  }
+};
+
+const searchByName = async (req, res) => {
+  try {
+    const { fname } = req.query;
+    let { page = 1, limit = 20 } = req.query;
+
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const offset = (page - 1) * limit; //เริ่มต้นการค้นหาที่ index...
+
+    if (!fname) {
+      return res.status(200).send({
+        message: "success",
+        currentPage: page,
+        totalPages: 0,
+        totalItems: 0,
+        results: [],
+      });
+    }
+
+    const { count , rows  } = await member_model.findAndCountAll({
+      where:{
+        fname:{
+          [Op.like]:`%${fname}%`
+        }
+      },
+      include:[{model:household_model}],
+      limit,
+      offset,
+      order:[['fname','ASC']] // เรียงตามตัวอักษร
+    })
+
+    const totalPages = Math.ceil(count/limit);
+
+    return res.status(200).send({
+      message:'success',
+      currentPage: page,
+      totalPages,
+      totalItems: count,
+      results: rows 
+    })
+
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: "Sever error", error: error.message });
+  }
+};
+
+const searchByHouseCode = async(req,res)=>{
+  try{
+    let {page = 1, limit = 20, code} = req.query; 
+    page = parseInt(page);
+    limit = parseInt(limit)
+    const offset = (page - 1) * limit;
+
+    if(!code){
+      return res.status(200).send({
+        message:'success',
+        currentPage:page,
+        totalItems:0,
+        totalPages:0,
+        results:[]
+      })
+    }
+
+    const {count , rows} = await member_model.findAndCountAll({
+      include:[
+        {
+          model: household_model,
+          where:{
+            house_code:{
+              [Op.iLike]:`%${code}%`
+            },
+          },
+        }
+      ],
+      limit,
+      offset,
+      distinct: true //หลีกเลี่ยงการนับซ้ำเพราะ include
     })
 
     const totalPages = Math.ceil(count / limit);
-    
-    //return ไปแค่ช่วงอายุที่อยู่ในเกณฑ์เท่านั้น
-    const fillterResults = rows.map(member=>{
-      const birthdate = new Date(member.birthdate)
-      let age = yearBE - birthdate.getFullYear()
 
-      if(//ยังไม่ถึงวันเกิด -1
-        month < (birthdate.getMonth()+1) ||
-        (month ===(birthdate.getMonth()+1) && (day < birthdate.getDate()))
-      ){
-        age--;
-      }
-      return {
-        ...member.toJSON(),
-        age:age
-      }
-    }).filter(member => member.age >= minAge && member.age <= maxAge);
-
-    
-
-    return res.status(200).send({message:'success',
-      month,
-      day,
+    return res.status(200).send({
+      message:'success',
       currentPage:page,
       totalPages,
-      totalItems:count,
-      results:fillterResults})
-  
-  }catch(err){
-    return res.status(500).send({message:"Sever errors",errors:err.message})
-  }
-}
-
-const findCapital = async (req,res)=>{
-  try{
-    const { id } = req.params
-    const results = await member_finan_model.findAll({
-      where:{
-        member_house_id:id
-      }
+      totalItems: count,
+      results:rows
     })
 
-    return res.status(200).send({message:'success',results})
-
-  }catch(err){
-    return res.status(500).send({message:"Sever error",errors:err.message})
+  }catch(error){
+    return res.status(500).send({message:'Sever error',error:error.message})
   }
 }
 
+const findCapital = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const results = await member_finan_model.findAll({
+      where: {
+        member_house_id: id,
+      },
+    });
+
+    return res.status(200).send({ message: "success", results });
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ message: "Sever error", errors: err.message });
+  }
+};
+
 const conuntMemberHousehold = async (req, res) => {
-  await memberHouseService.countMemberHousehold()
-    .then(data => {
+  await memberHouseService
+    .countMemberHousehold()
+    .then((data) => {
       res.send({
         data: data,
         msg: "success",
@@ -255,7 +374,7 @@ const conuntMemberHousehold = async (req, res) => {
         err: err,
       });
     });
-}
+};
 
 const getMembersCountByDistrict = async (req, res) => {
   try {
@@ -272,9 +391,6 @@ const getMembersCountByDistrict = async (req, res) => {
   }
 };
 
-
-
-
 module.exports = {
   List,
   findOneMember,
@@ -285,5 +401,7 @@ module.exports = {
   findByAge,
   conuntMemberHousehold,
   getMembersCountByDistrict,
-  findCapital
+  findCapital,
+  searchByName,
+  searchByHouseCode
 };

@@ -1,4 +1,7 @@
 const householdService = require('../services/household.services')
+const db = require('../models')
+const household_model = db.Household
+const { Op } = require("sequelize");
 const Joi = require('joi');
 
 //Create Validators
@@ -241,6 +244,64 @@ const countHouseholdsByDistrict = async (req, res) => {
     }
 };
 
+const searchByHouseCode = async(req,res)=>{
+    try{
+        const { search } = req.query;
+
+        let { page = 1 , limit = 30 } = req.query
+        page = parseInt(page)
+        limit = parseInt(limit)
+        const offset = (page-1) * limit;
+
+        if(!search){
+            return res.status(200).send({
+                message:'success',
+                currentPage:page,
+                totalItems:0,
+                totalPages:0,
+                results:[]
+            })
+        }
+
+        const {count,rows} = await household_model.findAndCountAll({
+            where:{
+                [Op.or]:[
+                    {
+                        house_code:{
+                            [Op.iLike]:`%${search}%`
+                        }
+                    },
+                    {
+                        host_fname:{
+                            [Op.iLike]:`%${search}%`
+                        }
+                    }
+                ]
+                
+            },
+            limit,
+            offset,
+            order:[['house_code','ASC']]
+        })
+
+        const totalPages = Math.ceil(count/limit);
+        
+        return res.status(200).send({
+            message:'success',
+            currentPage:page,
+            totalPages,
+            totalItems:count,
+            results:rows
+        })
+
+    }catch(error){
+        return res.status(500).send({
+            message:'Sever errors',
+            error: error.message
+        })
+    }
+}
+
 
 
 
@@ -254,5 +315,6 @@ module.exports = {
     updateHouse,
     deleteHouse,
     countHouseholds,
-    countHouseholdsByDistrict
+    countHouseholdsByDistrict,
+    searchByHouseCode
 };
