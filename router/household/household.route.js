@@ -6,11 +6,15 @@ const HouseholdController = require('../../controllers/household.controller')
 
 
 router
+    //CRUD
     .get("/lists", HouseholdController.houseList)
     .get("/findOne/:id", HouseholdController.findOneHouse)
     .post("/create", HouseholdController.create)
     .patch("/update/:id", HouseholdController.updateHouse)
     .delete("/delete/:id", HouseholdController.deleteHouse)
+
+    //Others
     .get("/count", HouseholdController.countHouseholds)
-    .get("/countByDistrict", HouseholdController.countHouseholdsByDistrict);
+    .get("/countByDistrict", HouseholdController.countHouseholdsByDistrict)
+    .get('/searchByHouseCode',HouseholdController.searchByHouseCode)
 module.exports = router;
