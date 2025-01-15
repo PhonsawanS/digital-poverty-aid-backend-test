@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   
     static associate(models) {
       Household.belongsTo(models.Form,{foreignKey:'form_id'}),
-      Household.hasOne(models.MemberHousehold,{foreignKey:'houseId'})
+      Household.hasMany(models.MemberHousehold,{foreignKey:'houseId'})
       Household.hasOne(models.MemberActivity,{foreignKey:'houseId'})
       Household.hasOne(models.HouseHoldProblem,{foreignKey:'houseId'})
     }
