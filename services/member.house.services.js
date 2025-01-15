@@ -3,33 +3,63 @@ const db = require("../models");
 const memberHouse_model = db.MemberHousehold;
 const household_model = db.Household;
 const humanCapital_model = db.HumanCapital;
-const socialWelfare_model = db.SocialWelfare
-const carrer_model = db.Career
-
+const socialWelfare_model = db.SocialWelfare;
+const carrer_model = db.Career;
 
 exports.getMember = () => {
   try {
-    return memberHouse_model.findAll({include:household_model});
+    return memberHouse_model.findAll({ include: household_model });
   } catch (err) {
     return err;
   }
 };
 
 exports.findOneById = async (id) => {
-  
-  return  await memberHouse_model.findOne({
-    where: { id: id },
-    include: [
-      household_model,
-      socialWelfare_model,
-      {
-        model: carrer_model,
-        separate: true,
-        order:[['createdAt', 'DESC']]
-      }
-    ],
-  
-  }) 
+  try {
+    const result = await memberHouse_model.findOne({
+      where: { id: id },
+      include: [
+        household_model,
+        socialWelfare_model,
+        {
+          model: carrer_model,
+          separate: true,
+          order: [["createdAt", "DESC"]],
+        },
+      ],
+    });
+
+    if (!result) {
+      throw new Error("ไม่พบข้อมูลสมาชิก");
+    }
+
+    // แปลง Sequelize Model เป็น plain object
+    const plainResult = result.get({ plain: true });
+    
+    // คำนวณอายุ
+    const today = new Date();
+    const yearBE = today.getFullYear() + 543;
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+
+    const birthdate = new Date(plainResult.birthdate);
+
+    let age = yearBE - (birthdate.getFullYear() );
+
+    if (
+      month < birthdate.getMonth() + 1 ||
+      (month === birthdate.getMonth() + 1 && day < birthdate.getDate())
+    ) {
+      age--;
+    }
+
+    // เพิ่มค่า age เป็น property ใหม่
+    plainResult.age = age;
+    
+    return plainResult;
+  } catch (error) {
+    throw error;
+  }
 };
 
 exports.create = async (houseObj) => {
@@ -41,7 +71,6 @@ exports.create = async (houseObj) => {
 };
 
 exports.update = async (houseObj, id) => {
-
   return await memberHouse_model
     .update(houseObj, {
       where: { id: id },
@@ -109,17 +138,19 @@ exports.createCombined = async (data) => {
       );
 
       // สร้างข้อมูลใน SocialWelfare (หลายรายการ)
-      const socialWelfarePromises = data.SocialWelfare.map(async (welfareData) => {
-        return await socialWelfare_model.create(
-          {
-            welfare: welfareData.welfare,
-            amount: welfareData.amount,
-            frequency: welfareData.frequency,
-            human_capital_id: humanCapital.id,
-          },
-          { transaction: t }
-        );
-      });
+      const socialWelfarePromises = data.SocialWelfare.map(
+        async (welfareData) => {
+          return await socialWelfare_model.create(
+            {
+              welfare: welfareData.welfare,
+              amount: welfareData.amount,
+              frequency: welfareData.frequency,
+              human_capital_id: humanCapital.id,
+            },
+            { transaction: t }
+          );
+        }
+      );
 
       const socialWelfareArray = await Promise.all(socialWelfarePromises);
 
@@ -144,9 +175,7 @@ exports.countMemberHousehold = async () => {
     console.log(err);
     return err;
   }
-}
-
-
+};
 
 // ใน service file
 exports.countMembersByDistrict = async () => {
