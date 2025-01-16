@@ -32,24 +32,22 @@ const List = async (req, res) => {
     });
 };
 const findOneMember = async (req, res) => {
-  await memberHouseService
-    .findOneById(req.params.id)
-    .then((data) => {
-      res.send({
-        data: data,
-        msg: "success",
-        status: 200,
-        err: "",
-      });
-    })
-    .catch((err) => {
-      res.send({
-        data: null,
-        msg: "error",
-        status: 500,
-        err: err,
-      });
+  try {
+    const data = await memberHouseService.findOneById(req.params.id);
+    res.send({
+      data: data,
+      msg: "success",
+      status: 200,
+      err: "",
     });
+  } catch (error) {
+    res.send({
+      data: null,
+      msg: error.message || "error",
+      status: 500,
+      err: error,
+    });
+  }
 };
 
 const create = async (req, res) => {
