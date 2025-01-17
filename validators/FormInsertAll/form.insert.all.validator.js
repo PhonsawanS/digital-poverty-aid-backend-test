@@ -69,7 +69,10 @@ const formSchema = Joi.object({
     fname: Joi.string().required(),
     lname: Joi.string().required(),
     sex: Joi.string().required(),
-    national_id: Joi.string().length(13).required(),
+    national_id: Joi.alternatives().try(
+      Joi.string().valid('-'),
+      Joi.string().length(13).regex(/^\d{13}$/) //เอาเฉพาะตัวเลข
+    ),
     phone: Joi.string().required(),
     age_yaer: Joi.number().integer().min(0).required(),
     age_month: Joi.number().integer().min(0).required(),
