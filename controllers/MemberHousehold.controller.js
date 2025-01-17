@@ -186,6 +186,7 @@ const findByAge = async (req, res) => {
         {
           model: household_model,
           attributes: [
+            "id",
             "house_code",
             "house_number",
             "subdistrict",
