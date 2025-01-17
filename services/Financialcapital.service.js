@@ -9,6 +9,7 @@ const nonAgiIncome_model = db.NonAGIincome
 const debt_model = db.Debt
 const creditsources_model = db.Creditsources
 const memberHousehold_model = db.MemberHousehold
+const physicalCapital_model = db.PhysicalCapital;
 
 exports.getFinalcapital = () => {
   try {
@@ -323,6 +324,9 @@ exports.getAllFinancialData = async (householdId) => {
           model: form_model,
           include: [
             {
+              model: physicalCapital_model,
+            },
+            {
               model: financialcapital_model,
               include: [
                 {
@@ -343,7 +347,7 @@ exports.getAllFinancialData = async (householdId) => {
                   ],
                 },
               ],
-            },
+            }
           ],
         },
       ],
