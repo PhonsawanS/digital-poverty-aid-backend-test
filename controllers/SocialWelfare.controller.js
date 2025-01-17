@@ -6,7 +6,7 @@ const CreateSchema = Joi.object({
     welfare: Joi.string().required(),
     amount: Joi.number().required(),
     frequency: Joi.string().required(),
-    human_capital_id:Joi.number().required()
+    member_house_id:Joi.number().required()
 });
 
 
@@ -15,7 +15,7 @@ const UpdateSchema = Joi.object({
     welfare: Joi.string().optional(),
     amount: Joi.number().optional(),
     frequency: Joi.string().optional(),
-    human_capital_id:Joi.number().optional()
+    member_house_id:Joi.number().optional()
 });
 
 
@@ -75,7 +75,7 @@ const create = async (req, res) => {
             welfare: value.welfare,
             amount: value.amount,
             frequency: value.frequency,
-            human_capital_id: value.human_capital_id
+            member_house_id: value.member_house_id
         };
 
         const data = await SocialWelfareService.create(welfareObj);
