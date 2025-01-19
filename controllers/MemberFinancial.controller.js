@@ -23,6 +23,7 @@ const create = async(req,res)=>{
 
         const result = await member_finan_model.create({
             agv_income: value.agv_income,
+            avg_expenses: value.avg_expenses,
             inflation: value.inflation,
             member_house_id: value.member_house_id,
         })

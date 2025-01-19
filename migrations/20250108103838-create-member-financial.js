@@ -12,6 +12,9 @@ module.exports = {
       agv_income : {
         type: Sequelize.FLOAT
       },
+      avg_expenses : {
+        type: Sequelize.FLOAT
+      },
       inflation : {
         type: Sequelize.FLOAT
       },
