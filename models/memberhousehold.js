@@ -81,14 +81,6 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    agv_income: { 
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    inflation: { 
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
     can_write_TH: { 
       type: DataTypes.STRING,
       allowNull: false,

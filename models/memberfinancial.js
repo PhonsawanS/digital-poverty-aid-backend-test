@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   MemberFinancial.init({
     agv_income: DataTypes.FLOAT,
+    avg_expenses:DataTypes.FLOAT,
     inflation: DataTypes.FLOAT,
     member_house_id: DataTypes.INTEGER,
   }, {
