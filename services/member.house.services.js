@@ -70,18 +70,7 @@ exports.create = async (houseObj) => {
   }
 };
 
-exports.update = async (houseObj, id) => {
-  return await memberHouse_model
-    .update(houseObj, {
-      where: { id: id },
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((err) => {
-      return err;
-    });
-};
+
 
 exports.deleted = async (id) => {
   await memberHouse_model

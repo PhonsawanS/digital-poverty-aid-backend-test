@@ -97,15 +97,25 @@ const updateMember = async (req, res) => {
   try {
     const { error, value } = updateMemberSchema.validate(req.body);
     if (error) {
-      return res
-        .status(400)
-        .send({ msg: "Validation error", error: error.details });
+      return res.status(400).json({ 
+        msg: "Validation error", 
+        error: error.details 
+      });
     }
+    const memberID = req.params.id
+    const result = await member_model.update(value,{
+      where:{
+        id:memberID
+      }
+    })
+    
+    return res.status(200).send({message:'success',result})
 
-    const data = await memberHouseService.update(value, req.params.id);
-    res.send({ data, msg: "success", status: 200 });
   } catch (err) {
-    res.status(500).send({ data: null, msg: "error", status: 500, err });
+    res.status(500).json({ 
+      msg: "Update failed", 
+      error: err.message 
+    });
   }
 };
 
