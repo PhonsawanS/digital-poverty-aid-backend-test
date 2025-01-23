@@ -6,10 +6,11 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     
     static associate(models) {
-      // define association here
+      User.hasMany(models.Token,{foreignKey:'user_id'})
     }
   }
   User.init({
+
     email: DataTypes.STRING,
     username: DataTypes.STRING,
     password: DataTypes.STRING,
