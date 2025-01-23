@@ -6,11 +6,7 @@ const { auth, allowRole } = require('../../middleware/auth')
 
 
 router
-    //Auth
-    .post('/register',UserController.register)
-    .post('/login',UserController.login)
-    .get('/currrentUser',auth,UserController.currentUser)
-    
+
     //CRUD
     .get('/list',auth,UserController.userList) //Return only user that has role
     .get('/findOne/:id',UserController.findOneUser)
@@ -19,6 +15,7 @@ router
     //Others
     .get('/findNonAppove',auth,UserController.findNonApprove)
     .put('/approve/:id',auth,allowRole(['superAdmin']),UserController.approveUser)
+    .get('/login-history',auth,UserController.loginHistory)
 
 
     module.exports = router

@@ -5,7 +5,12 @@ const memberSchema = Joi.object({
   fname: Joi.string().required(),
   lname: Joi.string().required(),
   sex: Joi.string().valid("ชาย", "หญิง").required(),
-  national_id: Joi.string().length(13).required(),
+  national_id: Joi.alternatives().try(
+    Joi.string().valid("-"),
+    Joi.string()
+      .length(13)
+      .regex(/^\d{13}$/) //เอาเฉพาะตัวเลข
+  ),
   phone: Joi.string().required(),
   age_yaer: Joi.number().integer().min(0).required(),
   age_month: Joi.number().integer().min(0).required(),
@@ -35,14 +40,19 @@ const updateMemberSchema = Joi.object({
   title: Joi.string().optional(),
   fname: Joi.string().optional(),
   lname: Joi.string().optional(),
-  sex: Joi.string().valid("ชาย", "หญิง").optional(),
-  national_id: Joi.string().length(13).optional(),
-  age_yaer: Joi.number().integer().min(0).optional(),
-  age_month: Joi.number().integer().min(0).optional(),
+  phone: Joi.string().optional(),
+  national_id: Joi.alternatives().try(
+    Joi.string().valid("-"),
+    Joi.string()
+      .length(13)
+      .regex(/^\d{13}$/) //เอาเฉพาะตัวเลข
+  ),
   birthdate: Joi.date().optional(),
-  status_in_house: Joi.string().optional(),
   health: Joi.string().optional(),
-  career: Joi.array().items(Joi.string()).optional(),
+  current_edu_level: Joi.string().optional(),
+  max_education: Joi.string().optional(),
+  work_status: Joi.string().optional(),
+  status_in_house: Joi.string().optional(),
   is_leader: Joi.boolean().optional(),
   still_poor: Joi.boolean().optional(),
   houseId: Joi.number().integer().optional(),

@@ -9,7 +9,7 @@ router
     .get("/lists",auth, MemberHousController.List)
     .get("/findOne/:id",auth, MemberHousController.findOneMember)
     .post("/create",auth, MemberHousController.create)
-    .patch("/update/:id",auth, MemberHousController.updateMember)
+    .put("/update/:id",auth, MemberHousController.updateMember)
     .delete("/delete/:id",auth, MemberHousController.deleteMember)
 
     //Others
