@@ -30,6 +30,16 @@ module.exports = {
         },
         onDelete:'CASCADE'  //โดนลบตามหากทุน 1 โดนลบ
       },
+      editBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'User',      
+          key: 'id'           
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
