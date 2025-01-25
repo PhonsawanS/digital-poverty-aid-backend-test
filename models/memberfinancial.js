@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     avg_expenses:DataTypes.FLOAT,
     inflation: DataTypes.FLOAT,
     member_house_id: DataTypes.INTEGER,
+    editBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true, 
+    }
   }, {
     sequelize,
     freezeTableName:true,

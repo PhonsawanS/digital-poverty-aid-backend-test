@@ -7,6 +7,11 @@ module.exports = (sequelize, DataTypes) => {
    
     static associate(models) {
       SocialWelfare.belongsTo(models.MemberHousehold,{foreignKey:'member_house_id'})
+      SocialWelfare.belongsTo(models.User,{
+        foreignKey: 'editBy',
+        onDelete: 'SET NULL',     
+        onUpdate: 'CASCADE',      
+      })
     }
   }
   SocialWelfare.init({
@@ -26,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    editBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true, 
+    }
   }, {
     sequelize,
     freezeTableName: true,
