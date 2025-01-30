@@ -217,8 +217,8 @@ const create = async (req, res) => {
 
       const PhysicalCapital = await PhysicalCapital_model.create(
         {
-          pin_latitude: value.PhysicalCapital.pin_latitude,
-          pin_longitude: value.PhysicalCapital.pin_longitude,
+          lat: value.PhysicalCapital.lat,
+          lon: value.PhysicalCapital.lon,
           is_has_house: value.PhysicalCapital.is_has_house,
           house_rent: value.PhysicalCapital.house_rent,
           house_status_law: value.PhysicalCapital.house_status_law,
@@ -237,6 +237,7 @@ const create = async (req, res) => {
           agricultural_land: value.PhysicalCapital.agricultural_land,
           land_use_issuse: value.PhysicalCapital.land_use_issuse,
           form_id: Form.id,
+          houseId: Household.id
         },
         { transaction: t }
       );

@@ -1,4 +1,9 @@
 const physicalCapitalService = require('../services/PhysicalCapital.service')
+const db = require('../models')
+const phy_capital_model = db.PhysicalCapital
+const hosehold_model = db.Household
+
+const { Op } = require("sequelize");
 const {createSchema,updateSchema,combinedSchema } = require('../validators/PhysicalCapital/PhysicalCapital.validator')
 
 const List = async (req, res) => {
@@ -55,8 +60,6 @@ const create = async (req, res) => {
   const data = await physicalCapitalService.create(value);
   res.send({ data, msg: "success", status: 200 });
 };
-
-
 
 const updateCapital = async (req, res) => {
     try {
@@ -120,11 +123,32 @@ const createCombind = async (req, res) => {
 };
 
 
+const getLocation = async(req,res)=>{
+  try{
+    const results = await phy_capital_model.findAll({
+      where:{
+        lat:{[Op.ne]:null},
+        lon:{[Op.ne]:null}
+      },
+      attributes:['id','lat','lon'],
+      include:{
+        model:hosehold_model,
+        attributes:['id','host_fname','host_lname']
+      },
+    })
+
+    return res.status(200).send({message:'success',results})
+  }catch(err){
+    return res.status(500).send({message:'Sever error',error:err.message})
+  }
+}
+
 module.exports = {
   List,
   findOneMember,
   create,
   updateCapital,
   deleteCapital,
-  createCombind
+  createCombind,
+  getLocation
 };

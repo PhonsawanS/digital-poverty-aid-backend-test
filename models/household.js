@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       Household.belongsTo(models.Form,{foreignKey:'form_id'}),
       Household.hasMany(models.MemberHousehold,{foreignKey:'houseId'})
       Household.hasOne(models.MemberActivity,{foreignKey:'houseId'})
-      Household.hasOne(models.HouseHoldProblem,{foreignKey:'houseId'})
+      Household.hasOne(models.HouseHoldProblem,{foreignKey:'houseId'}),
+      Household.hasOne(models.PhysicalCapital,{foreignKey:'houseId'})
     }
   }
   Household.init({
