@@ -265,46 +265,49 @@ const sumCapital = async(req,res)=>{
     
     return res.status(200).send({
       message:'success',
-      HumenCapital:{
-        bedBound:countHelth,
-        Education:{
-          NoSchool: countNoSchool,
-          LowPrimary: countLowPrimary,
-          Primary: countPrimary,
-          CurrentEduNoStdy: countCurrentEdu,
-          DropOut: countDropOut
+      result:{
+        HumenCapital:{
+          bedBound:countHelth,
+          Education:{
+            NoSchool: countNoSchool,
+            LowPrimary: countLowPrimary,
+            Primary: countPrimary,
+            CurrentEduNoStdy: countCurrentEdu,
+            DropOut: countDropOut
+          },
+          WorkStatus:{
+            NotEmployed: countNotEmployed,
+            UnEmployed : countUnEmployed,
+            Employed: countEmployed,
+            NoSkill : countNoSkill
+          }
         },
-        WorkStatus:{
-          NotEmployed: countNotEmployed,
-          UnEmployed : countUnEmployed,
-          Employed: countEmployed,
-          NoSkill : countNoSkill
+        PhysicalCapital:{
+          HasHouse:countHouse,
+          HouseStatus: countStatus, //สภาพบ้านทรุดโทรม
+          ItemStorage: countItemStorage,
+          NoElectric: countNoElectric,
+          NoMeter:countNoMeter,
+          NoHomePhone:countNoHomePhone,
+          NoPhone: countNoPhone,
+          NoAgiLand : countNoAgiLand,
+          AgiLanadNoRent: countAgiLandNoRent
+        },
+        FinancialCapital:{
+          NoSaving: countNoSaving,
+          HasDebt: countDebt,
+          NoOccupationalproperty : occupation
+        },
+        NaturalCapital:{
+          HouseInDisasterArea: countHouseIndisster,
+          FarmLandInDisasterArea: countFarmlandInDisaster
+        },
+        SocialCapital:{
+          NoActivityGroup : countActivityGroup,
+          NoActivityType: countActivityType
         }
-      },
-      PhysicalCapital:{
-        HasHouse:countHouse,
-        HouseStatus: countStatus, //สภาพบ้านทรุดโทรม
-        ItemStorage: countItemStorage,
-        NoElectric: countNoElectric,
-        NoMeter:countNoMeter,
-        NoHomePhone:countNoHomePhone,
-        NoPhone: countNoPhone,
-        NoAgiLand : countNoAgiLand,
-        AgiLanadNoRent: countAgiLandNoRent
-      },
-      FinancialCapital:{
-        NoSaving: countNoSaving,
-        HasDebt: countDebt,
-        NoOccupationalproperty : occupation
-      },
-      NaturalCapital:{
-        HouseInDisasterArea: countHouseIndisster,
-        FarmLandInDisasterArea: countFarmlandInDisaster
-      },
-      SocialCapital:{
-        NoActivityGroup : countActivityGroup,
-        NoActivityType: countActivityType
       }
+      
     })
 
   }catch(err){
