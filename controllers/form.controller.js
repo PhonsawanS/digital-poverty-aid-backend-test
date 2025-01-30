@@ -1,6 +1,24 @@
 const formService = require("../services/form.services");
 const Joi = require('joi');
 
+const db = require('../models')
+const form_model = db.Form
+const member_model = db.MemberHousehold
+const phy_capital_model = db.PhysicalCapital
+const house_hygiene_model = db.HouseHygiene
+const saving_model = db.Saving
+const debt_model = db.Debt
+const occupation_model = db.Occupationalproperty
+const houseIn_disaster = db.HouseInDisasterAreas
+const farmland_model = db.Farmlandindisasterareas
+const activity_group_model = db.Activitygrouptype
+const activity_type_model = db.Activitytype
+
+//TestGPS
+const map_model = db.map
+
+const { Op } = require('sequelize');
+
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
@@ -169,54 +187,141 @@ const deleteForm = async (req, res) => {
     });
 };
 
-//create form with household
-const createFWH = async (req, res) => {
-  try {
-    //แยกข้อมูลในส่วนของ form และ HH
+const sumCapital = async(req,res)=>{
+  try{
 
-    const formObj = {
-      time_start: dayjs.tz(req.body.time_start, "Asia/Bangkok").toDate(),
-      time_end: dayjs.tz(req.body.time_end, "Asia/Bangkok").toDate(),
-    };
+    const counts = await Promise.all([
+      // HumenCapital
+      member_model.count({ where: { health: 'ผู้ป่วยติดเตียง/พิการพึ่งพาตัวเองไม่ได้' } }), // countHelth
 
-    const houseObj = {
-      house_code: req.body.house_code,
-      host_title: req.body.host_title,
-      host_fname: req.body.host_fname,
-      host_lname: req.body.host_lname,
-      host_national_id: req.body.host_national_id,
-      green_book_id: req.body.green_book_id,
-      postcode: req.body.postcode,
-      subdistrict: req.body.subdistrict,
-      district: req.body.district,
-      province: req.body.province,
-      house_number: req.body.house_number,
-      village: req.body.village,
-      alley: req.body.alley,
-      road: req.body.road,
-      total_house_member: req.body.total_house_member,
-      total_house_activity: req.body.total_house_activity,
-    };
+      // Education
+      member_model.count({ where: { max_education: 'ไม่ได้เรียน' } }), // countNoSchool
+      member_model.count({ where: { max_education: 'ต่ำกว่าประถม' } }), // countLowPrimary
+      member_model.count({ where: { max_education: 'ประถมศึกษา' } }), // countPrimary
+      member_model.count({ where: { current_edu_level: 'ไม่ได้เรียน' } }), // countCurrentEdu
+      member_model.count({ where: { edu_status: 'ออกกลางคัน(Dropout)' } }), // countDropOut
 
-    // เรียกใช้ service เพื่อสร้างข้อมูล
-    const data = await formService.createFWH(formObj, houseObj);
+      // WorkStatus
+      member_model.count({ where: { work_status: 'ไม่ทำงาน' } }), // countNotEmployed
+      member_model.count({ where: { work_status: 'ว่างงาน' } }), // countUnEmployed
+      member_model.count({ where: { work_status: 'ทำงาน' } }), // countEmployed
+      member_model.count({ where: { work_can_made_income: { [Op.contains]: ['ไม่มี'] } } }), // countNoSkill
 
-    res.status(200).send({
-      data: data,
-      msg: "success",
-      status: 200,
-      err: "",
-    });
+      // PhysicalCapital
+      phy_capital_model.count({ where: { is_has_house: 'มีบ้านและที่ดินเป็นของตนเอง' } }), // countHouse
+      phy_capital_model.count({ where: { house_status: 'บ้านทรุดโทรม หรือ วัสดุก่อสร้างไม่ถาวร' } }), // countStatus
+      house_hygiene_model.count({ where: { item_storage: 'ไม่ใช่ (รก)' } }), // countItemStorage
+      phy_capital_model.count({ where: { electricity_status: 'ไม่มีไฟฟ้าใช้' } }), // countNoElectric
+      phy_capital_model.count({ where: { electricity_status: 'ต่อพ่วงไฟฟ้าจากคนอื่น (ไม่มีมิเตอร์ไฟฟ้าของตนเอง)' } }), // countNoMeter
+      phy_capital_model.count({ where: { has_home_phone: false } }), // countNoHomePhone
+      phy_capital_model.count({ where: { phone: 'ไม่มีโทรศัทพ์มือถือ' } }), // countNoPhone
+      phy_capital_model.count({ where: { agricultural_land: { [Op.contains]: ['ไม่มีที่ทำกินทางการเกษตร/ไม่ได้ทำการเกษตร'] } } }), // countNoAgiLand
+      phy_capital_model.count({ where: { agricultural_land: { [Op.contains]: ['ไม่มีพื้นที่ทำกินเป็นของตนเองแต่อาศัยพื้นที่ของบุคคลอื่นทำโดยไม่มีค่าเช่า'] } } }), // countAgiLandNoRent
+
+      // Financial Capital
+      saving_model.count({ where: { is_has_saving: false } }), // countNoSaving
+      debt_model.count({ where: { is_has_debt: true } }), // countDebt
+      occupation_model.count({ where: { is_has_property: false } }), // occupation
+
+      // Natural Capital
+      houseIn_disaster.count({ distinct: true, col: 'national_res_id', where: { is_in_disaster: true } }), // countHouseIndisster
+      farmland_model.count({ distinct: true, col: 'national_res_id', where: { is_in_disaster: true } }), // countFarmlandInDisaster
+
+      // Social Capital
+      activity_group_model.count({ distinct: true, col: 'social_cap_id', where: { activity_group: 'ไม่เข่าร่วมกลุ่มกิจกรรม' } }), // countActivityGroup
+      activity_type_model.count({ distinct: true, col: 'social_cap_id', where: { activity: 'ไม่เข้าร่วมกิจกรรม' } }), // countActivityType
+    ]);
+
+    // แยกค่าที่นับได้ออกมา
+    const [
+      countHelth,
+      countNoSchool,
+      countLowPrimary,
+      countPrimary,
+      countCurrentEdu,
+      countDropOut,
+      countNotEmployed,
+      countUnEmployed,
+      countEmployed,
+      countNoSkill,
+      countHouse,
+      countStatus,
+      countItemStorage,
+      countNoElectric,
+      countNoMeter,
+      countNoHomePhone,
+      countNoPhone,
+      countNoAgiLand,
+      countAgiLandNoRent,
+      countNoSaving,
+      countDebt,
+      occupation,
+      countHouseIndisster,
+      countFarmlandInDisaster,
+      countActivityGroup,
+      countActivityType,
+    ] = counts;
+
     
-  } catch (e) {
-    res.status(500).send({
-      data: null,
-      msg: "error",
-      status: 500,
-      err: e.msg,
-    });
+    return res.status(200).send({
+      message:'success',
+      HumenCapital:{
+        bedBound:countHelth,
+        Education:{
+          NoSchool: countNoSchool,
+          LowPrimary: countLowPrimary,
+          Primary: countPrimary,
+          CurrentEduNoStdy: countCurrentEdu,
+          DropOut: countDropOut
+        },
+        WorkStatus:{
+          NotEmployed: countNotEmployed,
+          UnEmployed : countUnEmployed,
+          Employed: countEmployed,
+          NoSkill : countNoSkill
+        }
+      },
+      PhysicalCapital:{
+        HasHouse:countHouse,
+        HouseStatus: countStatus, //สภาพบ้านทรุดโทรม
+        ItemStorage: countItemStorage,
+        NoElectric: countNoElectric,
+        NoMeter:countNoMeter,
+        NoHomePhone:countNoHomePhone,
+        NoPhone: countNoPhone,
+        NoAgiLand : countNoAgiLand,
+        AgiLanadNoRent: countAgiLandNoRent
+      },
+      FinancialCapital:{
+        NoSaving: countNoSaving,
+        HasDebt: countDebt,
+        NoOccupationalproperty : occupation
+      },
+      NaturalCapital:{
+        HouseInDisasterArea: countHouseIndisster,
+        FarmLandInDisasterArea: countFarmlandInDisaster
+      },
+      SocialCapital:{
+        NoActivityGroup : countActivityGroup,
+        NoActivityType: countActivityType
+      }
+    })
+
+  }catch(err){
+    return res.status(500).send({message:'Sever error',error:err.message})
   }
-};
+}
+
+const getMap = async(req,res)=>{
+  try{
+    const results = await map_model.findAll()
+    return res.status(200).send({message:'succrss',results:results})
+
+  }catch(err){
+    return res.status(500).send({message:'Sever error',error:err.message})
+  }
+}
+
 
 module.exports = {
   formList,
@@ -224,5 +329,6 @@ module.exports = {
   create,
   updateForm,
   deleteForm,
-  createFWH,
+  sumCapital,
+  getMap
 };

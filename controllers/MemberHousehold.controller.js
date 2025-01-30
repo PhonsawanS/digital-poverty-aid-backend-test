@@ -103,7 +103,15 @@ const updateMember = async (req, res) => {
       });
     }
     const memberID = req.params.id
-    const result = await member_model.update(value,{
+    const user_id = req.user.id
+
+    //เพิ่มข้อมูลว่าใคร update
+    const dataToUpdate = {
+      ...value,
+      editBy: user_id
+    }
+    
+    const result = await member_model.update(dataToUpdate,{
       where:{
         id:memberID
       }

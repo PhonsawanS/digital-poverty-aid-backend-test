@@ -9,12 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      pin_latitude: {
-        type: Sequelize.STRING,
+      lat: {
+        type: Sequelize.DECIMAL,
         allowNull: true,
       },
-      pin_longitude: {
-        type: Sequelize.STRING,
+      lon: {
+        type: Sequelize.DECIMAL,
         allowNull: true,
       },
       is_has_house: {
@@ -89,6 +89,15 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
+      },
+      houseId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Household", 
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,

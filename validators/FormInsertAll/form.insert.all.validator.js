@@ -123,8 +123,8 @@ const formSchema = Joi.object({
   ),
 
   PhysicalCapital: Joi.object({
-    pin_latitude: Joi.string().allow("").optional(),
-    pin_longitude: Joi.string().allow("").optional(),
+    lat: Joi.number().allow(null).optional(),
+    lon: Joi.number().allow(null).optional(),
     is_has_house: Joi.string().required(),
     house_rent: Joi.number().optional(),
     house_status_law: Joi.string().allow("").optional(),

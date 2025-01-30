@@ -7,6 +7,27 @@ module.exports = (sequelize, DataTypes) => {
     
     static associate(models) {
       User.hasMany(models.Token,{foreignKey:'user_id'})
+      //สำหรับแก้ไข / เพิ่มข้อมูลในหน้า admin
+      User.hasMany(models.Career,{
+        foreignKey: 'editBy',
+        onDelete: 'SET NULL',  
+        onUpdate: 'CASCADE',
+      })
+      User.hasMany(models.MemberHousehold,{
+        foreignKey: 'editBy',
+        onDelete: 'SET NULL',  
+        onUpdate: 'CASCADE',
+      })
+      User.hasMany(models.SocialWelfare,{
+        foreignKey: 'editBy',
+        onDelete: 'SET NULL',  
+        onUpdate: 'CASCADE',
+      })
+      User.hasMany(models.MemberFinancial,{
+        foreignKey: 'editBy',
+        onDelete: 'SET NULL',  
+        onUpdate: 'CASCADE',
+      })
     }
   }
   User.init({

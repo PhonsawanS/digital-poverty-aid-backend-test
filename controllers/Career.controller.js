@@ -6,7 +6,7 @@ const Joi = require('joi')
 createSchema = Joi.array().items(
     Joi.object({
         career_type : Joi.string().required(),
-        member_house_id: Joi.number().required()
+        member_house_id: Joi.number().required(),
     })
 ).min(1).required()
 
@@ -30,7 +30,14 @@ const create = async(req,res)=>{
             })
         }
 
-        const result = await career_model.bulkCreate(value)
+        const user_id = req.user.id
+        //เพิ่มค่า editBy ก่อนสร้างข้อมูล
+        const dataToCreate = value.map(item=>({
+            ...item,
+            editBy: user_id
+        }))
+
+        const result = await career_model.bulkCreate(dataToCreate)
 
         return res.status(200).send({message:'success',result})
 
