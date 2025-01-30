@@ -10,11 +10,12 @@ module.exports = (sequelize, DataTypes) => {
       PhysicalCapital.hasOne(models.HouseHygiene,{foreignKey:'phy_capital_id'})
       PhysicalCapital.hasOne(models.UtilityWater,{foreignKey:'phy_capital_id'})
       PhysicalCapital.hasOne(models.UrbanArea,{foreignKey:'phy_capital_id'})
+      PhysicalCapital.belongsTo(models.Household,{foreignKey:'houseId'})
     }
   }
   PhysicalCapital.init({
-    pin_latitude: DataTypes.STRING,
-    pin_longitude: DataTypes.STRING,
+    lat: DataTypes.DECIMAL,
+    lon: DataTypes.DECIMAL,
     is_has_house: DataTypes.STRING,
     house_rent: DataTypes.FLOAT,
     house_status_law: DataTypes.STRING,
@@ -32,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     agricultural_land: DataTypes.ARRAY(DataTypes.STRING),
     land_use_issuse: DataTypes.ARRAY(DataTypes.STRING),
     form_id: DataTypes.INTEGER,
+    houseId: DataTypes.INTEGER,
 
   }, {
     sequelize,
