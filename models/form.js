@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class Form extends Model {
    
     static associate(models) {
-      Form.hasOne(models.Household,{foreignKey:'form_id'})
+      Form.hasMany(models.Household,{foreignKey:'form_id'})
       Form.hasOne(models.TeamServey,{foreignKey:'form_id'})
       Form.hasOne(models.Informant,{foreignKey:'form_id'}),
       Form.hasOne(models.MemberHousehold,{foreignKey:'form_id'})

@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   NonAGIincome.init({
     income_type:{
       type: DataTypes.STRING,
+      allowNull: false,
     }, 
     amount_per_year:{
       type: DataTypes.FLOAT

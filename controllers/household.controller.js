@@ -30,10 +30,24 @@ const UpdateHouseholdSchema = Joi.object({
     host_title: Joi.string().optional(),
     host_fname: Joi.string().optional(),
     host_lname: Joi.string().optional(),
-    host_national_id: Joi.string().length(13).optional(), // 13 characters validation
+    host_national_id: Joi.string()
+        .pattern(/^\d{13}$/) // Validate as a 13-digit number
+        .messages({
+            "string.pattern.base": "หมายเลขบัตรประชาชนต้องเป็นตัวเลข 13 หลัก",
+        })
+        .optional(),
     has_greenBook: Joi.boolean().optional(),
-    green_book_id: Joi.string().optional(),
-    postcode: Joi.string().optional(),
+    green_book_id: Joi.string()
+        .pattern(/^\d{12}$/) // Validate as a 12-digit number
+        .when('has_greenBook', {
+            is: true,
+            then: Joi.required().messages({
+                "any.required": "กรุณากรอกหมายเลขสมุดเกษตรเมื่อเลือกมีสมุดเกษตร",
+                "string.pattern.base": "หมายเลขสมุดเกษตรต้องเป็นตัวเลข 12 หลัก",
+            }),
+            otherwise: Joi.allow("").optional()
+        }),
+    postcode: Joi.number().integer().optional(),
     subdistrict: Joi.string().optional(),
     district: Joi.string().optional(),
     province: Joi.string().optional(),
@@ -244,67 +258,213 @@ const countHouseholdsByDistrict = async (req, res) => {
     }
 };
 
-const searchByHouseCode = async(req,res)=>{
-    try{
+const searchByHouseCode = async (req, res) => {
+    try {
         const { search } = req.query;
 
-        let { page = 1 , limit = 30 } = req.query
+        let { page = 1, limit = 30 } = req.query
         page = parseInt(page)
         limit = parseInt(limit)
-        const offset = (page-1) * limit;
+        const offset = (page - 1) * limit;
 
-        if(!search){
+        if (!search) {
             return res.status(200).send({
-                message:'success',
-                currentPage:page,
-                totalItems:0,
-                totalPages:0,
-                results:[]
+                message: 'success',
+                currentPage: page,
+                totalItems: 0,
+                totalPages: 0,
+                results: []
             })
         }
 
-        const {count,rows} = await household_model.findAndCountAll({
-            where:{
-                [Op.or]:[
+        const { count, rows } = await household_model.findAndCountAll({
+            where: {
+                [Op.or]: [
                     {
-                        house_code:{
-                            [Op.iLike]:`%${search}%`
+                        house_code: {
+                            [Op.iLike]: `%${search}%`
                         }
                     },
                     {
-                        host_fname:{
-                            [Op.iLike]:`%${search}%`
+                        host_fname: {
+                            [Op.iLike]: `%${search}%`
                         }
                     }
                 ]
-                
+
             },
             limit,
             offset,
-            order:[['house_code','ASC']]
+            order: [['house_code', 'ASC']]
         })
 
-        const totalPages = Math.ceil(count/limit);
-        
+        const totalPages = Math.ceil(count / limit);
+
         return res.status(200).send({
-            message:'success',
-            currentPage:page,
+            message: 'success',
+            currentPage: page,
             totalPages,
-            totalItems:count,
-            results:rows
+            totalItems: count,
+            results: rows
         })
 
-    }catch(error){
+    } catch (error) {
         return res.status(500).send({
-            message:'Sever errors',
+            message: 'Sever errors',
             error: error.message
         })
     }
 }
 
+const createNonAgiIncome = async (req, res) => {
+    const { householdId } = req.params; // Get householdId from the route parameter
+    const nonAgiIncomeData = req.body; // Data for NonAGIincome from the request body
 
+    try {
+        const result = await householdService.createNonAgiIncome(householdId, nonAgiIncomeData);
 
+        if (result.success) {
+            res.status(201).send({
+                data: result.data,
+                message: result.message,
+                status: 201,
+            });
+        } else {
+            res.status(400).send({
+                data: null,
+                message: result.error,
+                status: 400,
+            });
+        }
+    } catch (error) {
+        res.status(500).send({
+            data: null,
+            message: "Internal server error",
+            status: 500,
+            error: error.message,
+        });
+    }
+};
 
+const createHouseholdExpenses = async (req, res) => {
+    const { householdId } = req.params; // Get householdId from the route parameter
+    const householdExpensesData = req.body; // Data for HouseholdExpenses from the request body
+
+    try {
+        const result = await householdService.createHouseholdExpenses(householdId, householdExpensesData);
+
+        if (result.success) {
+            res.status(201).send({
+                data: result.data,
+                message: result.message,
+                status: 201,
+            });
+        } else {
+            res.status(400).send({
+                data: null,
+                message: result.error,
+                status: 400,
+            });
+        }
+    } catch (error) {
+        res.status(500).send({
+            data: null,
+            message: "Internal server error",
+            status: 500,
+            error: error.message,
+        });
+    }
+};
+
+const createSaving = async (req, res) => {
+    const { householdId } = req.params; // Get householdId from the route parameter
+    const savingData = req.body; // Data for Saving from the request body
+
+    try {
+        const result = await householdService.createSaving(householdId, savingData);
+
+        if (result.success) {
+            res.status(201).send({
+                data: result.data,
+                message: result.message,
+                status: 201,
+            });
+        } else {
+            res.status(400).send({
+                data: null,
+                message: result.error,
+                status: 400,
+            });
+        }
+    } catch (error) {
+        res.status(500).send({
+            data: null,
+            message: "Internal server error",
+            status: 500,
+            error: error.message,
+        });
+    }
+};
+
+const createCreditsource = async (req, res) => {
+    const { householdId } = req.params; // Get householdId from the route parameter
+    const creditsourceData = req.body; // Data for Creditsource from the request body
+
+    try {
+        const result = await householdService.createCreditsource(householdId, creditsourceData);
+
+        if (result.success) {
+            res.status(201).send({
+                data: result.data,
+                message: result.message,
+                status: 201,
+            });
+        } else {
+            res.status(400).send({
+                data: null,
+                message: result.error,
+                status: 400,
+            });
+        }
+    } catch (error) {
+        res.status(500).send({
+            data: null,
+            message: "Internal server error",
+            status: 500,
+            error: error.message,
+        });
+    }
+}
+
+const createMember = async (req, res) => {
+    const { householdId } = req.params; // Get householdId from the route parameter
+    const memberData = req.body; // Data for Member from the request body
+
+    try {
+        const result = await householdService.createMember(householdId, memberData);
+
+        if (result.success) {
+            res.status(201).send({
+                data: result.data,
+                message: result.message,
+                status: 201,
+            });
+        } else {
+            res.status(400).send({
+                data: null,
+                message: result.error,
+                status: 400,
+            });
+        }
+    } catch (error) {
+        res.status(500).send({
+            data: null,
+            message: "Internal server error",
+            status: 500,
+            error: error.message,
+        });
+    }
+}
 
 
 
@@ -316,5 +476,10 @@ module.exports = {
     deleteHouse,
     countHouseholds,
     countHouseholdsByDistrict,
-    searchByHouseCode
+    searchByHouseCode,
+    createNonAgiIncome,
+    createHouseholdExpenses,
+    createSaving,
+    createCreditsource,
+    createMember
 };

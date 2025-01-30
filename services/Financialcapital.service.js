@@ -365,24 +365,52 @@ exports.getAllFinancialData = async (householdId) => {
 
     const financialCapital = household.Form?.Financialcapital;
 
-    // Calculate expenses
+    // Calculate expenses (เฉพาะข้อมูลล่าสุด)
     let totalExpenses = 0;
     if (financialCapital?.Householdexpenses) {
-      totalExpenses = financialCapital.Householdexpenses.reduce(
+      // เรียงลำดับ Householdexpenses ตาม createdAt จากใหม่ไปเก่า
+      const sortedExpenses = financialCapital.Householdexpenses.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      // หา createdAt ของข้อมูลล่าสุด
+      const latestCreatedAt = sortedExpenses[0]?.createdAt;
+
+      // กรองข้อมูลเฉพาะชุดล่าสุด
+      const latestExpenses = sortedExpenses.filter(
+        (expense) => expense.createdAt.getTime() === latestCreatedAt.getTime()
+      );
+
+      // คำนวณ totalExpenses จากข้อมูลล่าสุด
+      totalExpenses = latestExpenses.reduce(
         (sum, expense) => sum + (expense.amount_per_month || 0),
         0
       );
     }
 
-    // Calculate income
+    // Calculate income (เฉพาะข้อมูลล่าสุด)
     let totalAmountPerYear = 0;
     let totalCostPerYear = 0;
     if (financialCapital?.NonAGIincomes) {
-      totalAmountPerYear = financialCapital.NonAGIincomes.reduce(
+      // เรียงลำดับ NonAGIincomes ตาม createdAt จากใหม่ไปเก่า
+      const sortedIncomes = financialCapital.NonAGIincomes.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      // หา createdAt ของข้อมูลล่าสุด
+      const latestCreatedAt = sortedIncomes[0]?.createdAt;
+
+      // กรองข้อมูลเฉพาะชุดล่าสุด
+      const latestIncomes = sortedIncomes.filter(
+        (income) => income.createdAt.getTime() === latestCreatedAt.getTime()
+      );
+
+      // คำนวณ totalAmountPerYear และ totalCostPerYear จากข้อมูลล่าสุด
+      totalAmountPerYear = latestIncomes.reduce(
         (sum, income) => sum + (income.amount_per_year || 0),
         0
       );
-      totalCostPerYear = financialCapital.NonAGIincomes.reduce(
+      totalCostPerYear = latestIncomes.reduce(
         (sum, income) => sum + (income.cost_per_year || 0),
         0
       );
@@ -410,9 +438,9 @@ exports.getAllFinancialData = async (householdId) => {
     return {
       ...household.toJSON(), // Convert household data to JSON
       financialSummary: {
-        totalExpenses, // Total expenses
-        totalAmountPerYear, // Total annual income
-        totalCostPerYear, // Total annual cost
+        totalExpenses, // Total expenses (เฉพาะข้อมูลล่าสุด)
+        totalAmountPerYear, // Total annual income (เฉพาะข้อมูลล่าสุด)
+        totalCostPerYear, // Total annual cost (เฉพาะข้อมูลล่าสุด)
         totalSaving, // Total savings
         totalDebt, // Total debt
       },
