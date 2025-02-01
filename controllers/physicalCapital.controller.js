@@ -2,6 +2,7 @@ const physicalCapitalService = require('../services/PhysicalCapital.service')
 const db = require('../models')
 const phy_capital_model = db.PhysicalCapital
 const hosehold_model = db.Household
+const subdis_cordinate_model = db.SubdistrictCoordinates //หาพิกัดหากไม่มีข้อมูล pin
 
 const { Op } = require("sequelize");
 const {createSchema,updateSchema,combinedSchema } = require('../validators/PhysicalCapital/PhysicalCapital.validator')
@@ -123,7 +124,7 @@ const createCombind = async (req, res) => {
 };
 
 
-const getLocation = async(req,res)=>{
+const getAllLocation = async(req,res)=>{
   try{
     const results = await phy_capital_model.findAll({
       where:{
@@ -143,6 +144,49 @@ const getLocation = async(req,res)=>{
   }
 }
 
+const getLocationById = async (req,res)=>{
+  try{
+
+    const { id } = req.params;
+
+    let result = await hosehold_model.findByPk(id, {
+      attributes:['id','host_fname','host_lname','subdistrict','district'],
+      include: {
+        model: phy_capital_model,
+        attributes:['id','lat','lon']
+      }
+    });
+
+    // แปลง result เป็น plain object
+    result = result.get({ plain: true });
+
+    //หากไม่มีข้อมูล pin ไปค้นหา pin ที่เตรียมไว้ใน DB
+    if(!result.PhysicalCapital?.lat || !result.PhysicalCapital?.lon){
+
+      const cordinates = await subdis_cordinate_model.findOne({
+        where:{
+          subdistrict: result.subdistrict,
+          district: result.district
+        },
+        attributes:['lat','lon']
+      })
+      //แทนที่ค่า lat lon
+      if (cordinates) {
+        result.PhysicalCapital.lat = cordinates.lat;
+        result.PhysicalCapital.lon = cordinates.lon;
+      }
+    }
+
+    return res.status(200).send({
+      message:'success',
+      result: result
+    });
+
+  }catch(err){
+    return res.status(500).send({message:'Server error',error:err.message})
+  }
+}
+
 module.exports = {
   List,
   findOneMember,
@@ -150,5 +194,6 @@ module.exports = {
   updateCapital,
   deleteCapital,
   createCombind,
-  getLocation
+  getAllLocation,
+  getLocationById
 };
