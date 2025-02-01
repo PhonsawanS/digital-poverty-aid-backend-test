@@ -15,6 +15,7 @@ router
 
     // สร้างข้อมูล 3ตาราง
     .post('/create-combind', PhysicalController.createCombind)
-    .get('/location',PhysicalController.getLocation)
+    .get('/location',PhysicalController.getAllLocation)
+    .get('/locationById/:id',PhysicalController.getLocationById)
 
 module.exports = router;
