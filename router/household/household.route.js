@@ -23,4 +23,5 @@ router
     .post("/create-debt/:householdId", HouseholdController.createCreditsource)
     .post("/create-creditsource/:householdId", HouseholdController.createCreditsource)
     .post("/create-member/:householdId", HouseholdController.createMember)
+    .get('/:householdId/predict',HouseholdController.predict)
 module.exports = router;
