@@ -27,6 +27,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('User', { email: 'Admin@sradss.com' }, {});
+    await queryInterface.bulkDelete('User', { email: 'sradss.digitalproverty@gmail.com' }, {});
   }
 };
