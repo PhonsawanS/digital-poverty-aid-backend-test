@@ -58,6 +58,26 @@ const UpdateHouseholdSchema = Joi.object({
     form_id: Joi.number().optional()
 });
 
+const List = async (req, res) => {
+    try {
+        const data = await householdService.getCapital();
+
+        return res.status(200).json({
+            data: data,
+            msg: "success",
+            status: 200
+        });
+    } catch (err) {
+        console.error("Error in List controller:", err);
+        return res.status(500).json({
+            data: null,
+            msg: "error",
+            status: 500,
+            error: err.message
+        });
+    }
+};
+
 
 const houseList = async (req, res) => {
     await householdService.getHouse()
@@ -466,9 +486,32 @@ const createMember = async (req, res) => {
     }
 }
 
+const createPin = async (req, res) => {
+    try {
+        // Extract householdId from URL parameters
+        const { householdId } = req.params;
+        const { lat, lon } = req.body; // lat and lon are still received from request body
+
+        if (!lat || !lon) {
+            return res.status(400).json({ message: "Latitude (lat) and Longitude (lon) are required" });
+        }
+
+        const updatedPhysicalCapital = await householdService.createPin(householdId, lat, lon);
+
+        return res.status(200).json({
+            message: "Pin created/updated successfully",
+            data: updatedPhysicalCapital
+        });
+    } catch (error) {
+        console.error("Error in createPin controller:", error);
+        return res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
+
 
 
 module.exports = {
+    List,
     houseList,
     findOneHouse,
     create,
@@ -481,5 +524,6 @@ module.exports = {
     createHouseholdExpenses,
     createSaving,
     createCreditsource,
-    createMember
+    createMember,
+    createPin,
 };

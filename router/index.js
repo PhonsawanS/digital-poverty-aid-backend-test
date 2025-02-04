@@ -40,6 +40,7 @@ const MemberFinancial = require('./MemberFinancial/memberFinancial.route')
 const Career = require('./Career/career.route')
 
 const formInsertAll = require('./FormInsertAll/form.insert.all')
+const District = require('../router/District/district.router');
 
 const RouterList = [
     {
@@ -194,9 +195,10 @@ const RouterList = [
         path: '/career',
         route:Career
     },
-
-    
-    
+    {
+        path: '/district',
+        route:District
+    },
 ];
 
 RouterList.forEach((route) => {
