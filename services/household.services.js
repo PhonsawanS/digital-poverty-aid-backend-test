@@ -12,6 +12,21 @@ const memberHouse_model = db.MemberHousehold;
 const socialWelfare_model = db.SocialWelfare;
 const carrer_model = db.Career;
 const memberfinancial_model = db.MemberFinancial;
+const physical_model = db.PhysicalCapital;
+exports.getCapital = async () => {
+  try {
+    const capitals = await physical_model.findAll({ include: form_model });
+
+    return capitals.map(capital => ({
+      ...capital.toJSON(), // Convert Sequelize object to JSON
+      lat: parseFloat(capital.lat),
+      lon: parseFloat(capital.lon)
+    }));
+  } catch (err) {
+    console.error("Error in getCapital:", err);
+    throw err;
+  }
+};
 
 exports.getHouse = () => {
   try {
@@ -425,4 +440,40 @@ exports.createMember = async (householdId, memberDataArray) => {
   }
 };
 
+exports.createPin = async (householdId, lat, lon) => {
+  try {
+    // Find the Household
+    const household = await household_model.findOne({
+      where: { id: householdId },
+      include: [{ model: physical_model }],
+    });
 
+    if (!household) {
+      throw new Error("Household not found");
+    }
+
+    // Get associated PhysicalCapital
+    let physicalCapital = await physical_model.findOne({
+      where: { houseId: householdId }
+    });
+
+    // If PhysicalCapital does not exist, create a new entry
+    if (!physicalCapital) {
+      physicalCapital = await physical_model.create({
+        houseId: householdId,
+        lat,
+        lon
+      });
+    } else {
+      // Update the existing PhysicalCapital entry
+      physicalCapital.lat = lat;
+      physicalCapital.lon = lon;
+      await physicalCapital.save();
+    }
+
+    return physicalCapital;
+  } catch (error) {
+    console.error("Error in createPin:", error);
+    throw error;
+  }
+};

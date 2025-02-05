@@ -41,6 +41,7 @@ const Career = require('./Career/career.route')
 const LineOA = require('./LineOA/LineOA.route')
 
 const formInsertAll = require('./FormInsertAll/form.insert.all')
+const District = require('../router/District/district.router');
 
 const RouterList = [
     {
@@ -199,8 +200,10 @@ const RouterList = [
         path: '/line-oa',
         route:LineOA
     },
-    
-    
+    {
+        path: '/district',
+        route:District
+    },
 ];
 
 RouterList.forEach((route) => {
