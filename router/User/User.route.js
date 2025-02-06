@@ -10,6 +10,7 @@ router
     //CRUD
     .get('/list',auth,UserController.userList) //Return only user that has role
     .get('/findOne/:id',UserController.findOneUser)
+    .put('/update/:id', UserController.updateUser)
     .delete('/delete/:id',auth,allowRole(['superAdmin']),UserController.deleteUser)
 
     //Others
