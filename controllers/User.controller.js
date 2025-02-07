@@ -131,6 +131,50 @@ const approveUser = async(req,res)=>{
     return res.status(500).send({message:'Sever Error',errors:err.message})
   }
 }
+// ฟังก์ชันสำหรับการอัปเดตข้อมูลผู้ใช้
+const updateUser = async (req, res) => {
+  try {
+    // ตรวจสอบค่าข้อมูลที่รับเข้ามา
+    const { error, value } = updateUserSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({
+        msg: "Validation error",
+        error: error.details,
+      });
+    }
+
+    // const user_id = req.user.id; // ดึงข้อมูล ID ของผู้ที่ทำการแก้ไข
+    const user_id = req.params.id
+
+        // ตรวจสอบว่ามีการเปลี่ยนแปลงรหัสผ่านหรือไม่
+        if (value.password) {
+          // แฮชรหัสผ่านใหม่
+          value.password = await bcrypt.hash(value.password, 10);
+        }
+
+    // เพิ่มข้อมูลว่าใครเป็นผู้แก้ไข
+    const dataToUpdate = {
+      ...value,
+      editBy: user_id, // <- ใช้ตัวแปรที่ดึงจาก Token
+    };
+
+    // อัปเดตข้อมูลในฐานข้อมูล
+    const result = await user_model.update(dataToUpdate, {
+      where: {
+        id: user_id,
+      },
+    });
+    
+
+    return res.status(200).send({ message: 'User updated successfully', result });
+  } catch (err) {
+    // จับข้อผิดพลาด
+    res.status(500).json({
+      msg: "Update failed",
+      error: err.message,
+    });
+  }
+};
 
 module.exports = { 
    userList,
@@ -138,5 +182,6 @@ module.exports = {
    deleteUser,
    findNonApprove,
    approveUser,
-   loginHistory
+   loginHistory,
+   updateUser
    };
