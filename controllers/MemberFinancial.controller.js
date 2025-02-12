@@ -97,6 +97,11 @@ const predict = async(req,res)=>{
         }
       }
     )
+
+    if(!financial){
+      return res.status(404).send({message:'ไม่พบข้อมูลสมาชิก'})
+    }
+
     financial.forEach(item=>{
       value.push(item.agv_income);
       year.push(item.createdAt.getFullYear());
