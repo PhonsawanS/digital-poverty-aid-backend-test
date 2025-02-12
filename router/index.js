@@ -38,6 +38,7 @@ const user = require('./User/User.route')
 const mail = require('./Mail/Mail.route')
 const MemberFinancial = require('./MemberFinancial/memberFinancial.route')
 const Career = require('./Career/career.route')
+const ExportExcel = require('./ExportExcel/ExportExcel.route')
 
 const formInsertAll = require('./FormInsertAll/form.insert.all')
 const District = require('../router/District/district.router');
@@ -199,6 +200,10 @@ const RouterList = [
         path: '/district',
         route:District
     },
+    {
+        path:'/export',
+        route:ExportExcel
+    }
 ];
 
 RouterList.forEach((route) => {
