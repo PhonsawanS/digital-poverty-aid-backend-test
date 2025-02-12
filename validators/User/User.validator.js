@@ -20,7 +20,7 @@ const loginSchema = Joi.object({
 const updateUserSchema = Joi.object({
     email: Joi.string().optional(),
     username: Joi.string().optional(),
-    password: Joi.string().optional(),
+    password: Joi.string().allow('').optional(),
     phone: Joi.string().optional(),
     title: Joi.string().optional(),
     fname: Joi.string().optional(),
