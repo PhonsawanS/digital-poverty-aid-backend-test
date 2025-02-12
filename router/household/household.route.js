@@ -18,6 +18,7 @@ router
     .get("/countByDistrict", HouseholdController.countHouseholdsByDistrict)
     .get('/searchByHouseCode',HouseholdController.searchByHouseCode)
     .post("/create-nonagiincome/:householdId", HouseholdController.createNonAgiIncome)
+    .post("/create-agi-financial/:householdId",HouseholdController.createAgiFinancial)
     .post("/create-expenses/:householdId", HouseholdController.createHouseholdExpenses)
     .post("/create-saving/:householdId", HouseholdController.createSaving)
     .post("/create-debt/:householdId", HouseholdController.createCreditsource)
@@ -25,4 +26,5 @@ router
     .post("/create-member/:householdId", HouseholdController.createMember)
     .post("/createPin/:householdId", HouseholdController.createPin)
     .get("/getPin", HouseholdController.List)
+    .get('/:householdId/predict',HouseholdController.predict)
 module.exports = router;
