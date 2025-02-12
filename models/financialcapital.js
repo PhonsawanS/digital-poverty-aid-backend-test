@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       Financialcapital.hasMany(models.NonAGIincome,{foreignKey:'finan_capital_id'})
       Financialcapital.hasOne(models.Occupationalproperty,{foreignKey:'finan_capital_id'})
       Financialcapital.hasMany(models.Saving,{foreignKey:'finan_capital_id'})
+      Financialcapital.hasMany(models.AGIFinancial,{foreignKey:'finan_capital_id'})
       Financialcapital.belongsTo(models.Form, { foreignKey: 'formId' });
     }
   }

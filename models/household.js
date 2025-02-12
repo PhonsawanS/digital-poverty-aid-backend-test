@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       Household.hasMany(models.MemberHousehold,{foreignKey:'houseId'})
       Household.hasOne(models.MemberActivity,{foreignKey:'houseId'})
       Household.hasOne(models.HouseHoldProblem,{foreignKey:'houseId'}),
-      Household.hasOne(models.PhysicalCapital,{foreignKey:'houseId'})
+      Household.hasOne(models.PhysicalCapital,{foreignKey:'houseId'}),
+      Household.hasMany(models.LineOA,{foreignKey:'house_code'})
     }
   }
   Household.init({

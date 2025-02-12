@@ -2,13 +2,14 @@ const { where } = require("sequelize");
 const db = require("../models");
 const financialcapital_model = db.Financialcapital;
 const form_model = db.Form;
-const saving_model = db.Saving
+const saving_model = db.Saving;
 const household_model = db.Household;
 const householdexpenses_model = db.Householdexpenses;
-const nonAgiIncome_model = db.NonAGIincome
-const debt_model = db.Debt
-const creditsources_model = db.Creditsources
-const memberHousehold_model = db.MemberHousehold
+const nonAgiIncome_model = db.NonAGIincome;
+const AGI_financial_model = db.AGIFinancial; //เก็บข้อมูลรายได้จากการเกษตร
+const debt_model = db.Debt;
+const creditsources_model = db.Creditsources;
+const memberHousehold_model = db.MemberHousehold;
 const physicalCapital_model = db.PhysicalCapital;
 
 exports.getFinalcapital = () => {
@@ -22,7 +23,7 @@ exports.getFinalcapital = () => {
 exports.findOneById = async (id) => {
   return financialcapital_model.findOne({
     where: { id: id },
-    include: form_model
+    include: form_model,
   });
 };
 
@@ -32,7 +33,7 @@ exports.create = async (financialcapitalObj) => {
   } catch (err) {
     return err;
   }
-}
+};
 
 exports.update = async (financialcapitalObj, id) => {
   return await financialcapital_model
@@ -57,33 +58,31 @@ exports.deleted = async (id) => {
     })
     .catch((err) => {
       return err;
-    })
+    });
 };
-
 
 exports.createCombined = async (data) => {
   try {
     // เริ่ม transaction เพื่อให้แน่ใจว่าข้อมูลทุกส่วนถูกบันทึกพร้อมกัน
     const result = await db.sequelize.transaction(async (t) => {
-
       // สร้างข้อมูลในตาราง financialcapita
       const financialcapital = await financialcapital_model.create(
         {
           formId: data.formId,
         },
-        { transaction: t }  // ใช้ transaction เพื่อทำให้แน่ใจว่าการบันทึกข้อมูลนี้จะถูกม้วนกลับหากเกิดปัญหา
+        { transaction: t } // ใช้ transaction เพื่อทำให้แน่ใจว่าการบันทึกข้อมูลนี้จะถูกม้วนกลับหากเกิดปัญหา
       );
 
       // สร้างข้อมูลในตาราง Saving (หลายรายการ)
       const savingPromises = data.Saving.map(async (savingData) => {
         return await saving_model.create(
           {
-            is_has_saving: savingData.is_has_saving,   // บันทึกว่ามีการออมเงินหรือไม่
-            saving_type: savingData.saving_type,       // ประเภทการออม
-            amount: savingData.amount,                 // จำนวนเงินออม
+            is_has_saving: savingData.is_has_saving, // บันทึกว่ามีการออมเงินหรือไม่
+            saving_type: savingData.saving_type, // ประเภทการออม
+            amount: savingData.amount, // จำนวนเงินออม
             finan_capital_id: financialcapital.id,
           },
-          { transaction: t }  // ใช้ transaction
+          { transaction: t } // ใช้ transaction
         );
       });
 
@@ -97,9 +96,9 @@ exports.createCombined = async (data) => {
       };
     });
 
-    return result;  // ส่งผลลัพธ์สุดท้ายกลับไป
+    return result; // ส่งผลลัพธ์สุดท้ายกลับไป
   } catch (err) {
-    throw new Error(err.message);  // ถ้ามีข้อผิดพลาดเกิดขึ้น ให้โยนข้อผิดพลาดนั้น
+    throw new Error(err.message); // ถ้ามีข้อผิดพลาดเกิดขึ้น ให้โยนข้อผิดพลาดนั้น
   }
 };
 
@@ -125,7 +124,7 @@ exports.findAllByHouseholdId = async (householdId) => {
   });
 
   if (!household) {
-    throw new Error('Household not found');
+    throw new Error("Household not found");
   }
 
   // ตรวจสอบว่ามีข้อมูล Householdexpenses หรือไม่
@@ -158,8 +157,13 @@ exports.findIncome = async (householdId) => {
             model: financialcapital_model, // เชื่อมกับ Financialcapital
             include: [
               {
-                model: nonAgiIncome_model, // เชื่อมกับ Householdexpenses
+                model: nonAgiIncome_model,
+                order: [['createdAt', 'DESC']], 
               },
+              {
+                model: AGI_financial_model,
+                order: [['createdAt', 'DESC']],
+              }
             ],
           },
         ],
@@ -168,7 +172,7 @@ exports.findIncome = async (householdId) => {
   });
 
   if (!household) {
-    throw new Error('Household not found');
+    throw new Error("Household not found");
   }
 
   const financialCapital = household.Form?.Financialcapital;
@@ -191,7 +195,7 @@ exports.findIncome = async (householdId) => {
     };
   }
   return household;
-}
+};
 
 exports.findSaving = async (householdId) => {
   const household = await household_model.findOne({
@@ -214,7 +218,7 @@ exports.findSaving = async (householdId) => {
   });
 
   if (!household) {
-    throw new Error('Household not found');
+    throw new Error("Household not found");
   }
 
   const financialCapital = household.Form?.Financialcapital;
@@ -233,7 +237,7 @@ exports.findSaving = async (householdId) => {
   }
 
   return household;
-}
+};
 
 exports.findDebt = async (householdId) => {
   const household = await household_model.findOne({
@@ -336,6 +340,9 @@ exports.getAllFinancialData = async (householdId) => {
                   model: nonAgiIncome_model, // เชื่อมกับ NonAGIincome
                 },
                 {
+                  model: AGI_financial_model, //เชื่อมต่อรายรับจากการเกษตร
+                },
+                {
                   model: saving_model, // เชื่อมกับ Saving
                 },
                 {
@@ -347,7 +354,7 @@ exports.getAllFinancialData = async (householdId) => {
                   ],
                 },
               ],
-            }
+            },
           ],
         },
       ],
@@ -388,7 +395,7 @@ exports.getAllFinancialData = async (householdId) => {
       );
     }
 
-    // Calculate income (เฉพาะข้อมูลล่าสุด)
+    // Calculate income (เฉพาะข้อมูลล่าสุด ของรายได้นอกการเกษตร)
     let totalAmountPerYear = 0;
     let totalCostPerYear = 0;
     if (financialCapital?.NonAGIincomes) {
@@ -416,6 +423,23 @@ exports.getAllFinancialData = async (householdId) => {
       );
     }
 
+    //Cal รายได้จากการเกษตร
+    let totalAGIincomePerYear = 0;
+    if (
+      financialCapital?.AGIFinancials &&
+      financialCapital.AGIFinancials.length > 0
+    ) {
+      //เรียงลำดับเอาอันล่าสุดออกมา
+      const sortedAGIincome = financialCapital.AGIFinancials.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      // ตรวจสอบว่ามีข้อมูลหลังจากเรียงแล้ว
+      if (sortedAGIincome.length > 0) {
+        totalAGIincomePerYear = sortedAGIincome[0].amount_per_year || 0;
+      }
+    }
+
     // Calculate savings
     let totalSaving = 0;
     if (financialCapital?.Savings) {
@@ -439,7 +463,9 @@ exports.getAllFinancialData = async (householdId) => {
       ...household.toJSON(), // Convert household data to JSON
       financialSummary: {
         totalExpenses, // Total expenses (เฉพาะข้อมูลล่าสุด)
-        totalAmountPerYear, // Total annual income (เฉพาะข้อมูลล่าสุด)
+        totalAmountPerYear, //รายได้นอกการเกษตรล่าสุด
+        totalAGIincomePerYear: totalAGIincomePerYear, //รายได้จากการเกษตร
+        totalIncomePerYear: totalAmountPerYear + totalAGIincomePerYear , //รายได้รวม นอก+ใน การเกษตรล่าสุด
         totalCostPerYear, // Total annual cost (เฉพาะข้อมูลล่าสุด)
         totalSaving, // Total savings
         totalDebt, // Total debt
@@ -451,6 +477,3 @@ exports.getAllFinancialData = async (householdId) => {
     throw error;
   }
 };
-
-
-

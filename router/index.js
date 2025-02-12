@@ -38,6 +38,8 @@ const user = require('./User/User.route')
 const mail = require('./Mail/Mail.route')
 const MemberFinancial = require('./MemberFinancial/memberFinancial.route')
 const Career = require('./Career/career.route')
+const LineOA = require('./LineOA/LineOA.route')
+const AGIFinancial = require('./AGIFinancial/AGIFinancial.route')
 const ExportExcel = require('./ExportExcel/ExportExcel.route')
 
 const formInsertAll = require('./FormInsertAll/form.insert.all')
@@ -197,13 +199,22 @@ const RouterList = [
         route:Career
     },
     {
+        path: '/line-oa',
+        route:LineOA
+    },
+    {
         path: '/district',
         route:District
+    },
+    {
+        path: '/agi-financial',
+        route:AGIFinancial
     },
     {
         path:'/export',
         route:ExportExcel
     }
+
 ];
 
 RouterList.forEach((route) => {
