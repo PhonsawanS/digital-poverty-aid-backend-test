@@ -41,9 +41,10 @@ const Career = require('./Career/career.route')
 const LineOA = require('./LineOA/LineOA.route')
 const AGIFinancial = require('./AGIFinancial/AGIFinancial.route')
 const ExportExcel = require('./ExportExcel/ExportExcel.route')
-
 const formInsertAll = require('./FormInsertAll/form.insert.all')
 const District = require('../router/District/district.router');
+const HelpMember = require('./HelpMember/HelpMember.route')
+
 
 const RouterList = [
     {
@@ -213,7 +214,13 @@ const RouterList = [
     {
         path:'/export',
         route:ExportExcel
+    },
+    {
+        path:'/help-member',
+        route:HelpMember
     }
+
+    
 
 ];
 
