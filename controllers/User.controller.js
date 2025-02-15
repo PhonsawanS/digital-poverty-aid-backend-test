@@ -3,35 +3,62 @@ const user_model = db.User;
 const token_model = db.Token;
 
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const secret = process.env.SECRET; //for gen token
 const { Op } = require("sequelize");
 
 //validate input
 const {
-  createUserSchema,
   updateUserSchema,
   loginSchema,
 } = require("../validators/User/User.validator");
-const { errors } = require("pg-promise");
 
-
-
+//ดึงข้อมูลการ login ของ user ทั้งหมด
 const loginHistory = async(req,res)=>{
   try{
-    const results = await token_model.findAll({
-      where:{
-        user_id: req.user.id
-      },
-      order:[["createdAt","DESC"]], //ล่าสุดมาก่อน
-      attributes:["createdAt","expiresAt"]
-    })
+    const { month , year} = req.params;
 
-    if (results.length === 0) {
-      return res.status(404).send({ message: "ไม่พบประวัติการเข้าสู่ระบบ" });
+
+    if(month && year){
+      //หา startDate & endDate
+      const startDate = new Date(year , month-1 , 1) //month start at 0
+      const endDate = new Date(year , month, 0) // วันที่0ของเดือนถัดไป
+    
+    
+      const results = await user_model.findAll({
+        attributes:['id','email','username','title','fname','lname'],
+        include:[
+          {
+            model:token_model,
+            where:{
+              createdAt:{
+                [Op.between]: [startDate,endDate]
+              }
+            },
+            require: false //แสดงข้อมูล user แม้จะไม่ได้ login ในช่วงเวลานั้น
+          }
+        ]
+      })
+  
+      if (results.length === 0) {
+        return res.status(404).send({ message: "ไม่พบประวัติการเข้าสู่ระบบ" ,results:[]});
+      }
+  
+      //แปลงข้อมูลเป็น {} เพื่อคำนวนจำนวนการ login
+      const formattedResults = results.map(user=>{
+        const plainUser = user.get({plain:true})
+  
+        return{
+          ...plainUser,
+          totalLogin: plainUser.Tokens.length
+        }
+      })
+  
+      return res.status(200).send({message:'success',results:formattedResults})
+    
+    
+    }else{
+      return res.status(404).send({message:'ไม่พบวันที่ค้นหากรุณากรอกวันที่'})
     }
-
-    return res.status(200).send({message:'success',results:results})
+    
 
   }catch(err){
     return res.status(500).send({message:"Sever error",errors:err.message})
