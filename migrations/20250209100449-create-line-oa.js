@@ -12,6 +12,12 @@ module.exports = {
       userId: {
         type: Sequelize.STRING
       },
+      fname: {
+        type: Sequelize.STRING
+      },
+      lname: {
+        type: Sequelize.STRING
+      },
       house_code: {
         type: Sequelize.STRING
       },
