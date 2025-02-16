@@ -1,12 +1,16 @@
 require("dotenv").config();
 const line = require("@line/bot-sdk");
 const db = require("../../models");
+const { createSchema , updateSchema} = require('../../validators/LineOA/LineOA.validator')
+const { Op } = require("sequelize");
+
 
 //model
 const houshold_model = db.Household;
 const member_house_model = db.MemberHousehold;
 const social_welfare_model = db.SocialWelfare;
 const line_oa_model = db.LineOA; //เก็บข้อมูล user id คู่กับ housecode
+const line_log_model = db.LineUserLog;
 
 //Controller
 const MemberFinancialController = require("../MemberFinancial.controller"); //สำหรับ predict รายรับ
@@ -82,6 +86,11 @@ email: sradss.digitalproverty@gmail.com`
   if (event.type === "message" && event.message.text === "ออกจากระบบ") {
     const userId = event.source.userId;
 
+    await line_log_model.create({
+      userId: event.source.userId,
+      action:'ออกจากระบบ'
+    })
+
     client.unlinkRichMenuFromUser([userId]);
 
     return client.replyMessage(event.replyToken, [
@@ -115,6 +124,7 @@ const webHook = async (req, res) => {
   }
 };
 
+
 const test = async (req, res) => {
   try {
     console.log(config);
@@ -123,6 +133,33 @@ const test = async (req, res) => {
     return res.status(500).send({ message: "Sever error", error: err.message });
   }
 };
+
+//log report per month
+const Loging = async(req,res)=>{
+  try{
+    const {month , year} = req.params;
+    
+    //หา start,end Date
+    const startDate = new Date(year,month-1,1);
+    const endDate = new Date(year,month,0)
+
+    const results = await line_log_model.findAll(
+      {
+        where:{
+          createdAt:{
+            [Op.between]:[startDate,endDate]
+          }
+        },
+        include: line_oa_model
+      }
+    )
+
+    return res.status(200).send({message:'success',results})
+
+  }catch(err){
+    return res.status(500).send({message:'Sever error',error:err.message})
+  }
+}
 
 //Push message
 const pushMessage = async (req, res) => {
@@ -171,9 +208,18 @@ const register = async (req, res) => {
       });
     }
 
-    //save to DB
+    const {error,value} = createSchema.validate(req.body);
+    if(error){
+      return res.status(400).send({message:"Validation error",error:error.details})
+    }
 
-    const result = await line_oa_model.create(req.body);
+    //save to DB
+    const result = await line_oa_model.create(value);
+
+    const log = await line_log_model.create({
+      userId: value.userId,
+      action:'สมัครเข้าสู่ระบบ'
+    })
 
     if (!result) {
       return res.status(400).send({ message: "error" });
@@ -185,7 +231,7 @@ const register = async (req, res) => {
       "richmenu-b10075cc1bb67f28effbb5b2e1653f93"
     );
 
-    return res.status(200).send({ message: "success", result });
+    return res.status(200).send({ message: "success", result,log });
   } catch (err) {
     return res
       .status(500)
@@ -222,13 +268,18 @@ const login = async (req, res) => {
       });
     }
 
+    const log = await line_log_model.create({
+      userId,
+      action:'เข้าสู่ระบบ'
+    })
+
     //all valid -> change rich menu
     client.linkRichMenuToUser(
       [userId],
       "richmenu-b10075cc1bb67f28effbb5b2e1653f93"
     );
 
-    return res.status(200).send({ message: "success" });
+    return res.status(200).send({ message: "success" ,log});
   } catch (err) {
     return res
       .status(500)
@@ -306,6 +357,12 @@ const householdInfo = async (event) => {
       },
     });
 
+    //log
+   await line_log_model.create({
+      userId: event.source.userId,
+      action:'ดูข้อมูลครัวเรือน'
+    })
+
     const message = formatHousehold(household);
 
     return client.replyMessage(event.replyToken, [
@@ -368,6 +425,12 @@ const memberInfo = async (event) => {
     //แปลงค่าเป็น Obj
     const membersPlain = members.map((member) => member.toJSON());
     console.log(membersPlain);
+
+    //log
+    await line_log_model.create({
+      userId: event.source.userId,
+      action: 'ดูข้อมูลสมาชิกครัวเรือน'
+    })
 
     const message = formatMemberInfo(membersPlain);
 
@@ -514,6 +577,12 @@ const calculateMemberIncome = async (event) => {
         \n\n ──────────────`;
       })
       .join("\n");
+      
+      //log
+      await line_log_model.create({
+        userId: event.source.userId,
+        action: 'วิเคราะห์รายได้บุคคล'
+      })
 
     return client.replyMessage(event.replyToken, [
       {
@@ -542,6 +611,12 @@ const householdFinancial = async (event) => {
     const household = await houshold_model.findOne({
       where: { house_code: lineUser.house_code },
     });
+
+    //log
+    await line_log_model.create({
+      userId: event.source.userId,
+      action:'ดูรายรับของครัวเรือน'
+    })
 
     //ดึง financial summary
     const financialData = await financialcapitalService.getAllFinancialData(
@@ -656,6 +731,11 @@ const DebtAndSaving = async (event) => {
     const household = await houshold_model.findOne({
       where: { house_code: lineUser.house_code },
     });
+    //log
+    await line_log_model.create({
+      userId: event.source.userId,
+      action: 'ดูหนี้สินและการออมครัวเรือน'
+    })
 
     //ข้อมูลหนี้สิน
     const resultDebt = await financialcapitalService.findDebt(household.id);
@@ -770,4 +850,5 @@ module.exports = {
   register,
   changeMenu,
   login,
+  Loging
 };

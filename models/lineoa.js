@@ -7,10 +7,16 @@ module.exports = (sequelize, DataTypes) => {
 
     static associate(models) {
       LineOA.belongsTo(models.Household,{foreignKey:'house_code'})
+      LineOA.hasMany(models.LineUserLog, {
+        foreignKey: 'userId',
+        sourceKey: 'userId'  // เพิ่ม sourceKey
+      })
     }
   }
   LineOA.init({
     userId: DataTypes.STRING,
+    fname: DataTypes.STRING,
+    lname: DataTypes.STRING,
     house_code: DataTypes.STRING,
   }, {
     sequelize,
