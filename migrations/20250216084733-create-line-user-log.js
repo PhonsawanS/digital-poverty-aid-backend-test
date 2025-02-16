@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('LineOA', {
+    await queryInterface.createTable('LineUserLog', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,13 +12,7 @@ module.exports = {
       userId: {
         type: Sequelize.STRING
       },
-      fname: {
-        type: Sequelize.STRING
-      },
-      lname: {
-        type: Sequelize.STRING
-      },
-      house_code: {
+      action: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -32,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('LineOA');
+    await queryInterface.dropTable('LineUserLog');
   }
 };
