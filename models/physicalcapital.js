@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       PhysicalCapital.hasOne(models.UtilityWater,{foreignKey:'phy_capital_id'})
       PhysicalCapital.hasOne(models.UrbanArea,{foreignKey:'phy_capital_id'})
       PhysicalCapital.belongsTo(models.Household,{foreignKey:'houseId'})
+      PhysicalCapital.hasMany(models.Log,{foreignKey:'record_id'})
     }
   }
   PhysicalCapital.init({
@@ -34,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     land_use_issuse: DataTypes.ARRAY(DataTypes.STRING),
     form_id: DataTypes.INTEGER,
     houseId: DataTypes.INTEGER,
+    editBy:  DataTypes.INTEGER
 
   }, {
     sequelize,

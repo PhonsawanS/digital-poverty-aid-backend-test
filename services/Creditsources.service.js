@@ -1,16 +1,17 @@
 const { where } = require("sequelize");
 const db = require("../models");
-const creditsources_model = db.creditsources
+const creditsources_model = db.Creditsources
 const debt_model = db.Debt;
 
 
-exports.get = () => {
-    try {
-        return creditsources_model.findAll({ include: debt_model });
-      } catch (err) {
-        return err;
-      }
+exports.get = async () => {
+  try {
+      return await creditsources_model.findAll({ include: debt_model });
+  } catch (err) {
+      throw err; // ใช้ throw error เพื่อให้ error ออกไปจัดการที่ controller
+  }
 };
+
 
 exports.findOneById = async (id) => {
   return creditsources_model.findOne({

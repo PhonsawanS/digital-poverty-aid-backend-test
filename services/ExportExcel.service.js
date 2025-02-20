@@ -56,7 +56,7 @@ exports.gethousehold = async () => {
 };
 
 
-exports.getFindHouseHold = async (year, houseCode, page = 1, pageSize = 10, getAll = false) => {
+exports.getFindHouseHold = async (year, houseCode, subdistrict, district, page = 1, pageSize = 10, getAll = false) => {
   try {
     const whereClause = {};
 
@@ -86,6 +86,18 @@ exports.getFindHouseHold = async (year, houseCode, page = 1, pageSize = 10, getA
           ],
         },
       ];
+    }
+
+    if (subdistrict) {
+      whereClause.subdistrict = {
+        [Op.like]: `%${subdistrict}%`,
+      };
+    }
+
+    if (district) {
+      whereClause.district = {
+        [Op.like]: `%${district}%`,
+      };
     }
 
     // ✅ ถ้า `getAll=true` ดึงข้อมูลทั้งหมด ไม่ใช้ Pagination
@@ -130,6 +142,7 @@ exports.getFindHouseHold = async (year, houseCode, page = 1, pageSize = 10, getA
     throw err;
   }
 };
+
 
 exports.getAvailableYears = async () => {
   try {

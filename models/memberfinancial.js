@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
 
     static associate(models) {
       MemberFinancial.belongsTo(models.MemberHousehold,{foreignKey:'member_house_id'})
+      MemberFinancial.hasMany(models.Log, { foreignKey: 'record_id' })
     }
   }
   MemberFinancial.init({

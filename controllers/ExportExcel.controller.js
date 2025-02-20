@@ -40,11 +40,11 @@ const gethousehold = async (req, res) => {
 
 const getFindhousehold = async (req, res) => {
   try {
-    const { year, houseCode, page, getAll } = req.query;
+    const { year, houseCode, subdistrict, district, page, getAll } = req.query;
     const pageNum = parseInt(page) || 1;
     const getAllData = getAll === "true"; // ✅ แปลงค่า getAll เป็น Boolean
 
-    const data = await ExportService.getFindHouseHold(year, houseCode, pageNum, 10, getAllData);
+    const data = await ExportService.getFindHouseHold(year, houseCode, subdistrict, district, pageNum, 10, getAllData);
 
     if (getAllData) {
       // ✅ สร้างไฟล์ Excel และส่งคืนให้ดาวน์โหลด
@@ -65,14 +65,14 @@ const getFindhousehold = async (req, res) => {
       data.data.forEach((row) => {
         const newRow = worksheet.addRow(row);
         newRow.eachCell((cell) => {
-          cell.alignment = { horizontal: "center", vertical: "middle" }; // ✅ จัดข้อความให้อยู่ตรงกลาง
+          cell.alignment = { horizontal: "center", vertical: "middle" };
         });
       });
 
       // ✅ จัดให้ Header อยู่ตรงกลางด้วย
       worksheet.getRow(1).eachCell((cell) => {
-        cell.font = { bold: true }; // ทำให้หัวข้อหนาขึ้น
-        cell.alignment = { horizontal: "center", vertical: "middle" }; // ✅ จัดให้อยู่ตรงกลาง
+        cell.font = { bold: true };
+        cell.alignment = { horizontal: "center", vertical: "middle" };
       });
 
       const buffer = await workbook.xlsx.writeBuffer();
@@ -100,6 +100,7 @@ const getFindhousehold = async (req, res) => {
     });
   }
 };
+
 
 const getYears = async (req, res) => {
   try {

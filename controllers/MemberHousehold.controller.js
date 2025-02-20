@@ -4,7 +4,7 @@ const {
   updateMemberSchema,
   combinedSchema,
 } = require("../validators/MemberHousehold/member.house.validator"); //Validator
-
+const logService = require("../services/log.service");
 const db = require("../models");
 const member_model = db.MemberHousehold;
 const household_model = db.Household;
@@ -116,6 +116,11 @@ const updateMember = async (req, res) => {
         id:memberID
       }
     })
+
+    if (result[0] > 0) {
+      // สร้าง Log หลังจากอัปเดตสำเร็จ
+      await logService.createLog(user_id, 'update', 'MemberHousehold', memberID);
+    }
     
     return res.status(200).send({message:'success',result})
 

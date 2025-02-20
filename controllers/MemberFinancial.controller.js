@@ -6,7 +6,7 @@ const {
   createSchema,
   updateSchema,
 } = require("../validators/MemberFinancial/member.financial.validator");
-
+const logService = require("../services/log.service");
 //test
 // const { SimpleLinearRegression } = require("ml-regression");
 
@@ -40,7 +40,7 @@ const create = async (req, res) => {
       member_house_id: value.member_house_id,
       editBy: user_id,
     });
-
+    await logService.createLog(user_id, "create", "MemberFinancial", result.id);
     return res.status(200).send({ message: "success", result: result });
   } catch (errors) {
     return res
@@ -66,43 +66,43 @@ const getLastFinancial = async (req, res) => {
   }
 };
 
-const predict = async(req,res)=>{
+const predict = async (req, res) => {
   const ML = require('ml-regression')
   const SLR = ML.SLR // Simple Linear Regression
 
-  try{
+  try {
     const { id } = req.params;
     const { district } = req.query; //อำเภอ
 
     //ดึงข้อมูลของอำเภอนึงย้อนหลัง 4 ปี ตามอำเภอที่ส่งมา
     const data = await avg_mem_income.findAll({
-      where:{
-        district_name:district,
-        createdAt:{
+      where: {
+        district_name: district,
+        createdAt: {
           [Op.gte]: new Date('2021-01-01'),
           [Op.lte]: new Date('2024-12-31')
         }
       },
-      order: [['createdAt', 'ASC']], 
+      order: [['createdAt', 'ASC']],
     })
     //แปลงค่าเป็น Arr 
-    const year = data.map(item=> item.createdAt.getFullYear())
-    const value = data.map(item=> item.amount)
+    const year = data.map(item => item.createdAt.getFullYear())
+    const value = data.map(item => item.amount)
 
     //ดึงข้อมูลfinancial ของ member ไปต่อท้าย value เพื่อเอาไว้เทรน
     const financial = await member_finan_model.findAll(
       {
-        where:{
-          member_house_id:id
+        where: {
+          member_house_id: id
         }
       }
     )
 
-    if(!financial){
-      return res.status(404).send({message:'ไม่พบข้อมูลสมาชิก'})
+    if (!financial) {
+      return res.status(404).send({ message: 'ไม่พบข้อมูลสมาชิก' })
     }
 
-    financial.forEach(item=>{
+    financial.forEach(item => {
       value.push(item.agv_income);
       year.push(item.createdAt.getFullYear());
     })
@@ -111,26 +111,26 @@ const predict = async(req,res)=>{
     const lastYear = Math.max(...year)
 
     //สร้าง model และ predict ค่า
-    const regression = new SLR(year,value)
+    const regression = new SLR(year, value)
     const prediction = regression.predict(lastYear + 1)
 
 
     return res.status(200).send({
-      message:'success',
-      results:{
+      message: 'success',
+      results: {
         financial,
         prediction: parseFloat(prediction.toFixed(2))
       },
     })
 
-  }catch(err){
-    return res.status(500).send({message:"Sever error",error:err.message})
+  } catch (err) {
+    return res.status(500).send({ message: "Sever error", error: err.message })
   }
 }
 
 const testLinear = async (req, res) => {
-    const ML = require('ml-regression');
-    const SLR = ML.SLR; // Simple Linear Regression
+  const ML = require('ml-regression');
+  const SLR = ML.SLR; // Simple Linear Regression
 
   try {
     // สร้าง model
@@ -141,15 +141,15 @@ const testLinear = async (req, res) => {
     // const predict_val = regression.predict(6) //12
 
     // เทสข้อมูลจริง
-    const X = [64,65,66,67] //ปีของวัดโบส
-    const Y = [519.22,739.29,1518.5,999.63]
-    
+    const X = [64, 65, 66, 67] //ปีของวัดโบส
+    const Y = [519.22, 739.29, 1518.5, 999.63]
+
     //สร้าง model
-    const regression = new SLR(X,Y)
+    const regression = new SLR(X, Y)
     const prediction = regression.predict(68)
 
 
-    return res.status(200).send({message:'success',predict:prediction})
+    return res.status(200).send({ message: 'success', predict: prediction })
 
   } catch (err) {
     return res.status(500).send({ message: "Sever error", error: err.message });
