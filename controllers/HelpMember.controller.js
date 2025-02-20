@@ -92,7 +92,9 @@ const searchMemberForHelp = async (req, res) => {
       memberCondition.national_id = national_id;
     }
     if (fname) {
-      memberCondition.fname = fname;
+      memberCondition.fname = {
+        [Op.like] : `%${fname}%`
+      }
     }
 
     //เงื่อนไขหาครัวเรือน
@@ -104,7 +106,9 @@ const searchMemberForHelp = async (req, res) => {
       householdCondition.subdistrict = subdistrict;
     }
     if (house_code) {
-      householdCondition.house_code = house_code;
+      householdCondition.house_code = {
+        [Op.iLike]: `%${house_code}%`,
+      }
     }
 
     if (year) {
