@@ -12,6 +12,7 @@ module.exports = (sequelize) => {
       MemberHousehold.hasMany(models.SocialWelfare,{foreignKey:'member_house_id'})
       MemberHousehold.hasMany(models.MemberFinancial,{foreignKey:'member_house_id'})
       MemberHousehold.hasMany(models.Career,{foreignKey:'member_house_id'})
+      MemberHousehold.hasMany(models.HelpMember,{foreignKey:'member_house_id'})
       MemberHousehold.belongsTo(models.User,{
         foreignKey: 'editBy',
         onDelete: 'SET NULL',     
