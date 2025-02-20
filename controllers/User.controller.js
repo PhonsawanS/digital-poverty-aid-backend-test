@@ -15,45 +15,59 @@ const {
 const loginHistory = async(req,res)=>{
   try{
     const { month , year} = req.params;
-
+    
+    let {page,limit} = req.query; //pagination
+    page = parseInt(page)
+    limit = parseInt(limit)
+    const offset = (page-1) * limit
 
     if(month && year){
       //หา startDate & endDate
       const startDate = new Date(year , month-1 , 1) //month start at 0
-      const endDate = new Date(year , month, 0) // วันที่0ของเดือนถัดไป
+      const endDate = new Date(year , month, 0) 
     
-    
-      const results = await user_model.findAll({
-        attributes:['id','email','username','title','fname','lname'],
-        include:[
-          {
-            model:token_model,
-            where:{
-              createdAt:{
-                [Op.between]: [startDate,endDate]
-              }
-            },
-            require: false //แสดงข้อมูล user แม้จะไม่ได้ login ในช่วงเวลานั้น
-          }
-        ]
-      })
+      const {count , rows} = await user_model.findAndCountAll({
+        distinct: true, // เพิ่ม distinct เพื่อนับจำนวน users ที่ไม่ซ้ำกัน
+        attributes: ['id', 'email', 'username', 'title', 'fname', 'lname', 'role', 'status'],
+        include: [{
+          model: token_model,
+          where: {
+            createdAt: {
+              [Op.between]: [startDate, endDate]
+            }
+          },
+          required: true
+        }],
+        limit: limit,
+        offset: offset
+      });
   
-      if (results.length === 0) {
-        return res.status(404).send({ message: "ไม่พบประวัติการเข้าสู่ระบบ" ,results:[]});
+      if (rows.length === 0) {
+        return res.status(200).send({ 
+          message: "success",
+          results: [],
+          totalPages: 0,
+          currentPage: page,
+          totalItems: 0
+        });
       }
   
       //แปลงข้อมูลเป็น {} เพื่อคำนวนจำนวนการ login
-      const formattedResults = results.map(user=>{
-        const plainUser = user.get({plain:true})
-  
-        return{
+      const formattedResults = rows.map(user => {
+        const plainUser = user.get({plain: true});
+        return {
           ...plainUser,
           totalLogin: plainUser.Tokens.length
         }
-      })
+      });
   
-      return res.status(200).send({message:'success',results:formattedResults})
-    
+      return res.status(200).send({
+        message: 'success',
+        results: formattedResults,
+        totalPages: Math.ceil(count/limit),
+        currentPage: page,
+        totalItems: count
+      });
     
     }else{
       return res.status(404).send({message:'ไม่พบวันที่ค้นหากรุณากรอกวันที่'})
