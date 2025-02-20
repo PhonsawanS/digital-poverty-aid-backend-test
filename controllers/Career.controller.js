@@ -1,6 +1,7 @@
 const db = require('../models')
 const career_model = db.Career
 const Joi = require('joi')
+const logService = require("../services/log.service");
 
 //Validator input must be []
 createSchema = Joi.array().items(
@@ -20,31 +21,41 @@ const list = async(req,res)=>{
     }
 }
 
-const create = async(req,res)=>{
-    try{
-        const {error,value} = createSchema.validate(req.body)
-        if(error){
-            return res.status(400).send({
-                message:'Validation error',
-                error: error.details
-            })
-        }
-
-        const user_id = req.user.id
-        //เพิ่มค่า editBy ก่อนสร้างข้อมูล
-        const dataToCreate = value.map(item=>({
-            ...item,
-            editBy: user_id
-        }))
-
-        const result = await career_model.bulkCreate(dataToCreate)
-
-        return res.status(200).send({message:'success',result})
-
-    }catch(erros){
-        return res.status(500).send({message:'Sever errors',erros:erros.message})
+const create = async (req, res) => {
+    try {
+      const { error, value } = createSchema.validate(req.body);
+      if (error) {
+        return res.status(400).send({
+          message: "Validation error",
+          error: error.details,
+        });
+      }
+  
+      const user_id = req.user.id;
+  
+      // ✅ เพิ่มค่า editBy ก่อนสร้างข้อมูล
+      const dataToCreate = value.map(item => ({
+        ...item,
+        editBy: user_id
+      }));
+  
+      // ✅ ใช้ bulkCreate และดึงข้อมูลที่ถูกสร้างขึ้นมา
+      const results = await career_model.bulkCreate(dataToCreate, {
+        returning: true // ให้ Sequelize คืนค่าข้อมูลที่ถูกสร้างขึ้น (รองรับใน PostgreSQL)
+      });
+  
+      // ✅ สร้าง Log ทีละรายการ
+      const logPromises = results.map(record => 
+        logService.createLog(user_id, "create", "Career", record.id)
+      );
+      await Promise.all(logPromises);
+  
+      return res.status(200).send({ message: "success", results });
+    } catch (errors) {
+      return res.status(500).send({ message: "Server error", errors: errors.message });
     }
-}
+  };
+  
 
 
 module.exports = {

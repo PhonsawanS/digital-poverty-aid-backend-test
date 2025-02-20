@@ -27,15 +27,25 @@ module.exports = {
         onUpdate: 'CASCADE', // เมื่ออัปเดตจะทำการอัปเดตที่เชื่อมโยงด้วย
         onDelete: 'SET NULL' // เมื่อถูกลบจะตั้งค่าเป็น NULL
       },
-        createdAt: {
-          allowNull: false,
-          type: Sequelize.DATE
+      editBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'User',
+          key: 'id'
         },
-        updatedAt: {
-          allowNull: false,
-          type: Sequelize.DATE
-        }
-      });
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Creditsources');

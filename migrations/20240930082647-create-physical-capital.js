@@ -65,7 +65,7 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: true,
       },
-      benefit_form_tech : {
+      benefit_form_tech: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
       },
@@ -73,18 +73,18 @@ module.exports = {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
-      agricultural_land:{
+      agricultural_land: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
-      land_use_issuse :{
+      land_use_issuse: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
       form_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Form", 
+          model: "Form",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -93,11 +93,21 @@ module.exports = {
       houseId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Household", 
+          model: "Household",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+      },
+      editBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'User',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       },
       createdAt: {
         allowNull: false,

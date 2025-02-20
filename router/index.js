@@ -41,6 +41,9 @@ const Career = require('./Career/career.route')
 const LineOA = require('./LineOA/LineOA.route')
 const AGIFinancial = require('./AGIFinancial/AGIFinancial.route')
 const ExportExcel = require('./ExportExcel/ExportExcel.route')
+const Log = require('./Log/log.route')
+
+
 const formInsertAll = require('./FormInsertAll/form.insert.all')
 const District = require('../router/District/district.router');
 const HelpMember = require('./HelpMember/HelpMember.route')
@@ -118,24 +121,24 @@ const RouterList = [
     },
     {
         path: '/physical-capital',
-        route:physicalCapitalRoute
+        route: physicalCapitalRoute
     },
     {
         path: '/house-hygiene',
-        route:houseHygineRoute
+        route: houseHygineRoute
     },
     {
         path: '/util-water',
-        route:utilWaterRoute
+        route: utilWaterRoute
     },
     {
         path: '/urban-area',
-        route:urbanAreaRoute
+        route: urbanAreaRoute
     },
     {
         path: '/unresIn-3Southern',
-        route:unresIn3Southern
-    },{
+        route: unresIn3Southern
+    }, {
         path: '/agriculturalincome',
         route: agriculturalincomeRoute
     },
@@ -169,52 +172,63 @@ const RouterList = [
     },
     {
         path: '/houseindisasterareas',
-        route:houseindisasterareasRoute
+        route: houseindisasterareasRoute
     },
     {
         path: '/unrestIn-3Southern',
-        route:unrestIn3Southern
+        route: unrestIn3Southern
     },
     {
         path: '/suggestions',
-        route:suggestions
+        route: suggestions
     },
     {
         path: '/formInsertAll',
-        route:formInsertAll
+        route: formInsertAll
     },
     {
         path: '/user',
-        route:user
+        route: user
     },
     {
         path: '/mail',
-        route:mail
+        route: mail
     },
     {
         path: '/member-financial',
-        route:MemberFinancial
+        route: MemberFinancial
     },
     {
         path: '/career',
-        route:Career
+        route: Career
     },
     {
         path: '/line-oa',
-        route:LineOA
+        route: LineOA
     },
     {
         path: '/district',
-        route:District
+        route: District
     },
     {
         path: '/agi-financial',
-        route:AGIFinancial
+        route: AGIFinancial
     },
+    {
+        path: '/export',
+        route: ExportExcel
+    },
+    {
+
+        path: '/log',
+        route: Log
+    },
+  
     {
         path:'/export',
         route:ExportExcel
     },
+  
     {
         path:'/help-member',
         route:HelpMember

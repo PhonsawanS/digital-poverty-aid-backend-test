@@ -68,6 +68,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "SET NULL", // ถ้า Form ถูกลบ Household จะไม่ถูกลบ แต่ formId จะถูกตั้งค่าเป็น NULL
       },
+      editBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'User',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

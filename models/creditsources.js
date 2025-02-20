@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Creditsources.belongsTo(models.Debt,{foreignKey:'debt_id'})
+      Creditsources.belongsTo(models.Debt, { foreignKey: 'debt_id' })
+      Creditsources.hasMany(models.Log, { foreignKey: 'record_id' })
     }
   }
   Creditsources.init({
@@ -26,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
     debt_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    editBy: {
+      type: DataTypes.INTEGER
     }
   }, {
     sequelize,

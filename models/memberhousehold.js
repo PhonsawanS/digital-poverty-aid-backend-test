@@ -15,42 +15,43 @@ module.exports = (sequelize) => {
       MemberHousehold.hasMany(models.HelpMember,{foreignKey:'member_house_id'})
       MemberHousehold.belongsTo(models.User,{
         foreignKey: 'editBy',
-        onDelete: 'SET NULL',     
-        onUpdate: 'CASCADE',      
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       })
+      MemberHousehold.hasMany(models.Log, { foreignKey: 'record_id' })
     }
 
   }
   MemberHousehold.init({
-    title: { 
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    fname: { 
+    fname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lname: { 
+    lname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    sex:{ 
+    sex: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    national_id: { 
+    national_id: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    phone: { 
+    phone: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    age_yaer:{ 
+    age_yaer: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    age_month:{ 
+    age_month: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -58,54 +59,54 @@ module.exports = (sequelize) => {
       type: DataTypes.DATEONLY, // ใช้ DATEONLY สำหรับการเก็บวันเกิด
       allowNull: false, // หรือ false ถ้าต้องการให้วันเกิดเป็นข้อมูลที่ต้องกรอก
     },
-    status_in_house: { 
+    status_in_house: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    health: { 
+    health: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     work_can_made_income: {
-      type: DataTypes.ARRAY(DataTypes.STRING), 
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
     },
     //แก้ไข
-    max_education: { 
+    max_education: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    current_edu_level: { 
+    current_edu_level: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    edu_status: { 
+    edu_status: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    work_status: { 
+    work_status: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    can_write_TH: { 
+    can_write_TH: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    can_read_TH: { 
+    can_read_TH: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    can_speak_TH: { 
+    can_speak_TH: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     is_leader: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false, 
+      defaultValue: false,
     },
     still_poor: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true, 
+      defaultValue: true,
     },
     houseId: {
       type: DataTypes.INTEGER,

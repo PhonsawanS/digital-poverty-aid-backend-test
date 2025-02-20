@@ -2,6 +2,7 @@ const SocialWelfareService = require("../services/SocialWelfare.services");
 const db = require("../models");
 const socialWelfare_model = db.SocialWelfare;
 const Joi = require("joi");
+const logService = require("../services/log.service");
 
 //Create Validators
 const CreateSchema = Joi.object({
@@ -115,6 +116,30 @@ const create = async (req, res) => {
 };
 
 // [ {}, {}]
+// const createArr = async (req, res) => {
+//   try {
+//     const { error, value } = CreateSchemaArr.validate(req.body);
+
+//     if (error) {
+//       return res
+//         .status(400)
+//         .send({ message: "Validation error", error: error.details });
+//     }
+
+//     const user_id = req.user.id
+//     //เพิ่มค่าว่าใครบันทึก
+//     const dataToCreate = value.map(item=>({
+//       ...item,
+//       editBy: user_id
+//     }))
+
+//     const results = await socialWelfare_model.bulkCreate(dataToCreate);
+
+//     return res.status(200).send({ message: "success", results });
+//   } catch (err) {
+//     return res.status(500).send({ message: "Sever error", error: err.message });
+//   }
+// };
 const createArr = async (req, res) => {
   try {
     const { error, value } = CreateSchemaArr.validate(req.body);
@@ -125,20 +150,31 @@ const createArr = async (req, res) => {
         .send({ message: "Validation error", error: error.details });
     }
 
-    const user_id = req.user.id
-    //เพิ่มค่าว่าใครบันทึก
-    const dataToCreate = value.map(item=>({
+    const user_id = req.user.id;
+
+    // ✅ เพิ่มค่าว่าใครบันทึก
+    const dataToCreate = value.map(item => ({
       ...item,
       editBy: user_id
-    }))
-    
-    const results = await socialWelfare_model.bulkCreate(dataToCreate);
+    }));
+
+    // ✅ บันทึกข้อมูลหลายแถว
+    const results = await socialWelfare_model.bulkCreate(dataToCreate, {
+      returning: true // ให้ Sequelize คืนค่ารายการที่ถูกสร้าง
+    });
+
+    // ✅ บันทึก Log ทีละรายการ
+    const logPromises = results.map(record =>
+      logService.createLog(user_id, "create", "SocialWelfare", record.id)
+    );
+    await Promise.all(logPromises);
 
     return res.status(200).send({ message: "success", results });
   } catch (err) {
-    return res.status(500).send({ message: "Sever error", error: err.message });
+    return res.status(500).send({ message: "Server error", error: err.message });
   }
 };
+
 
 const update = async (req, res) => {
   const id = req.params.id;

@@ -1,5 +1,6 @@
 const { where } = require("sequelize");
 const db = require("../models");
+const logService = require("./log.service");
 const household_model = db.Household;
 const form_model = db.Form;
 const nonAgiIncome_model = db.NonAGIincome
@@ -52,17 +53,20 @@ exports.create = async (houseObj) => {
 };
 
 exports.update = async (houseObj, id) => {
-  return await household_model
-    .update(houseObj, {
-      where: { id: id },
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((err) => {
-      return err;
-    });
+  try {
+    const result = await household_model.update(
+      houseObj,
+      {
+        where: { id: id },
+        returning: true, // ✅ ให้ Sequelize คืนค่าข้อมูลที่อัปเดต
+      }
+    );
+    return result; // Sequelize update() จะคืนค่าเป็น [1] ถ้าอัปเดตสำเร็จ
+  } catch (error) {
+    throw error;
+  }
 };
+
 
 exports.deleted = async (id) => {
   await household_model
@@ -106,7 +110,7 @@ exports.countHouseholdsByDistrict = async () => {
   }
 };
 
-exports.createNonAgiIncome = async (householdId, nonAgiIncomeDataArray) => {
+exports.createNonAgiIncome = async (householdId, nonAgiIncomeDataArray, adminId) => {
   try {
     // Find the household by ID
     const household = await household_model.findByPk(householdId, {
@@ -141,13 +145,17 @@ exports.createNonAgiIncome = async (householdId, nonAgiIncomeDataArray) => {
 
     // Create all NonAGIincome records and associate them with the financialcapital
     const newNonAgiIncomeRecords = await Promise.all(
-      nonAgiIncomeDataArray.map((nonAgiIncomeData) =>
-        nonAgiIncome_model.create({
+      nonAgiIncomeDataArray.map(async (nonAgiIncomeData) => {
+        const record = await nonAgiIncome_model.create({
           ...nonAgiIncomeData,
           finan_capital_id: financialCapital.id,
-        })
-      )
+          editBy: adminId,
+        });
+        await logService.createLog(adminId, "CREATE", "NonAGIincome", record.id);
+        return record;
+      })
     );
+
 
     return {
       success: true,
@@ -163,7 +171,7 @@ exports.createNonAgiIncome = async (householdId, nonAgiIncomeDataArray) => {
 };
 
 
-exports.createHouseholdExpenses = async (householdId, householdExpensesDataArray) => {
+exports.createHouseholdExpenses = async (householdId, householdExpensesDataArray, adminId) => {
   try {
     // Find the household by ID
     const household = await household_model.findByPk(householdId, {
@@ -197,12 +205,15 @@ exports.createHouseholdExpenses = async (householdId, householdExpensesDataArray
     }
     // Create the new Householdexpenses and associate it with the financialcapital
     const newHouseholdExpenses = await Promise.all(
-      householdExpensesDataArray.map((householdExpensesData) =>
-        householdexpenses_model.create({
+      householdExpensesDataArray.map(async (householdExpensesData) => {
+        const record = await householdexpenses_model.create({
           ...householdExpensesData,
           finan_capital_id: financialCapital.id,
-        })
-      )
+          editBy: adminId,
+        });
+        await logService.createLog(adminId, "CREATE", "Householdexpenses", record.id);
+        return record;
+      })
     )
 
     return {
@@ -218,7 +229,7 @@ exports.createHouseholdExpenses = async (householdId, householdExpensesDataArray
   }
 }
 
-exports.createSaving = async (householdId, savingDataArray) => {
+exports.createSaving = async (householdId, savingDataArray, adminId) => {
   try {
     // Find the household by ID
     const household = await household_model.findByPk(householdId, {
@@ -253,12 +264,16 @@ exports.createSaving = async (householdId, savingDataArray) => {
 
     // Create the new Saving and associate it with the financialcapital
     const newSaving = await Promise.all(
-      savingDataArray.map((savingData) =>
-        saving_model.create({
+      savingDataArray.map(async (savingData) => {
+        const record = await saving_model.create({
           ...savingData,
           finan_capital_id: financialCapital.id,
+          editBy: adminId,
         })
-      )
+        await logService.createLog(adminId, "CREATE", "Saving", record.id)
+
+        return record
+      })
     )
 
 
@@ -276,7 +291,7 @@ exports.createSaving = async (householdId, savingDataArray) => {
   }
 }
 
-exports.createCreditsource = async (householdId, creditsourceDataArray) => {
+exports.createCreditsource = async (householdId, creditsourceDataArray, adminId) => {
   try {
     // Find the household by ID
     const household = await household_model.findByPk(householdId, {
@@ -318,12 +333,16 @@ exports.createCreditsource = async (householdId, creditsourceDataArray) => {
     }
 
     const newCreditsource = await Promise.all(
-      creditsourceDataArray.map((creditsourceData) =>
-        creditsources_model.create({
+      creditsourceDataArray.map(async (creditsourceData) => {
+        const record = await creditsources_model.create({
           ...creditsourceData,
           debt_id: debt.id,
+          editBy: adminId,
         })
-      )
+        await logService.createLog(adminId, "CRATE", "Creditsources", record.id)
+
+        return record
+      })
     );
     // Create the new creditsource and associate it with the debt
     // const newCreditsource = await creditsources_model.create({
@@ -344,7 +363,7 @@ exports.createCreditsource = async (householdId, creditsourceDataArray) => {
   }
 };
 
-exports.createMember = async (householdId, memberDataArray) => {
+exports.createMember = async (householdId, memberDataArray, adminId) => {
   try {
     // ค้นหา household ตาม householdId
     const household = await household_model.findByPk(householdId);
@@ -370,6 +389,7 @@ exports.createMember = async (householdId, memberDataArray) => {
             {
               ...memberData,
               houseId: household.id,
+              editBy: adminId,
             },
             { transaction }
           );
@@ -421,6 +441,11 @@ exports.createMember = async (householdId, memberDataArray) => {
 
       // Commit Transaction ถ้าทุกอย่างสำเร็จ
       await transaction.commit();
+      await Promise.all(
+        newMemberRecords.map(async (member) => {
+          await logService.createLog(adminId, "CREATE", "MemberHousehold", member.id);
+        })
+      );
 
       return {
         success: true,
@@ -440,7 +465,7 @@ exports.createMember = async (householdId, memberDataArray) => {
   }
 };
 
-exports.createPin = async (householdId, lat, lon) => {
+exports.createPin = async (householdId, lat, lon, adminId) => {
   try {
     // Find the Household
     const household = await household_model.findOne({
@@ -462,14 +487,18 @@ exports.createPin = async (householdId, lat, lon) => {
       physicalCapital = await physical_model.create({
         houseId: householdId,
         lat,
-        lon
+        lon,
+        editBy: adminId,
       });
     } else {
       // Update the existing PhysicalCapital entry
       physicalCapital.lat = lat;
       physicalCapital.lon = lon;
+      physicalCapital.editBy = adminId;
       await physicalCapital.save();
     }
+    // บันทึก Log
+    await logService.createLog(adminId, "UPDATE", "PhysicalCapital", physicalCapital.id);
 
     return physicalCapital;
   } catch (error) {

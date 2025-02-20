@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.FLOAT,     // เพิ่มฟิลด์ amount เป็น float
       },
-      finan_capital_id:{
+      finan_capital_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
@@ -30,6 +30,16 @@ module.exports = {
         },
         onUpdate: 'CASCADE', // อัปเดตเมื่อมีการเปลี่ยนแปลง
         onDelete: 'SET NULL', // ตั้งค่าเป็น NULL หากบันทึกใน Financialcapital ถูกลบ
+      },
+      editBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'User',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       },
       createdAt: {
         allowNull: false,
