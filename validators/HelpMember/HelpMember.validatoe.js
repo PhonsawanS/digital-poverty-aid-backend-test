@@ -5,9 +5,10 @@ const createSchema = Joi.object({
     components: Joi.string().required(),
     help_name: Joi.string().required(),
     amount: Joi.number().required(),
-    description: Joi.string().required(),
+    description: Joi.string().allow('').optional(),
     agency: Joi.string().required(),
-    member_house_id: Joi.number().optional(),
+    help_date: Joi.date().required(),
+    member_house_id: Joi.number().required(),
 })
 
 const updateSchema = Joi.object({
@@ -17,6 +18,7 @@ const updateSchema = Joi.object({
     amount: Joi.number().optional(),
     description: Joi.string().allow('').optional(),
     agency: Joi.string().allow('').optional(),
+    help_date: Joi.date().optional(),
     member_house_id: Joi.number().optional(),
 })
 

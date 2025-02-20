@@ -4,6 +4,7 @@ const memberHouse_model = db.MemberHousehold;
 const household_model = db.Household;
 const humanCapital_model = db.HumanCapital;
 const socialWelfare_model = db.SocialWelfare;
+const help_member_model = db.HelpMember;
 const carrer_model = db.Career;
 
 exports.getMember = () => {
@@ -21,6 +22,7 @@ exports.findOneById = async (id) => {
       include: [
         household_model,
         socialWelfare_model,
+        help_member_model,
         {
           model: carrer_model,
           separate: true,
