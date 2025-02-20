@@ -6,7 +6,7 @@ const {
   createSchema,
   updateSchema,
 } = require("../validators/MemberFinancial/member.financial.validator");
-
+const logService = require("../services/log.service");
 //test
 // const { SimpleLinearRegression } = require("ml-regression");
 
@@ -40,7 +40,7 @@ const create = async (req, res) => {
       member_house_id: value.member_house_id,
       editBy: user_id,
     });
-
+    await logService.createLog(user_id, "create", "MemberFinancial", result.id);
     return res.status(200).send({ message: "success", result: result });
   } catch (errors) {
     return res
@@ -149,6 +149,7 @@ const testLinear = async (req, res) => {
     return res.status(500).send({ message: "Sever error", error: err.message });
   }
 };
+
 
 module.exports = {
   create,

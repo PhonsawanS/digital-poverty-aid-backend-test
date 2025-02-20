@@ -2,24 +2,23 @@ const creditsourcesService = require('../services/Creditsources.service')
 const {CreateSchema,UpdateSchema} = require('../validators/creditsources/creditsources.validator')
 
 
-const  CreditsourcesList = async (req, res) => {
-    await creditsourcesService.get()
-        .then(data => {
-            res.send({
-                data: data,
-                msg: "success",
-                status: 200
-            });
-        })
-        .catch(err => {
-            res.send({
-                data: null,
-                msg: "error",
-                status: 500,
-                err: err
-            });
+const CreditsourcesList = async (req, res) => {
+    try {
+        const data = await creditsourcesService.get(); // ใช้ await เรียก service
+        res.send({
+            data: data,
+            msg: "success",
+            status: 200
         });
-}
+    } catch (err) {
+        res.status(500).send({
+            data: null,
+            msg: "error",
+            status: 500,
+            err: err.message
+        });
+    }
+};
 
 const findOneCreditsources= async (req, res) => {
     await creditsourcesService.findOneById(req.params.id)

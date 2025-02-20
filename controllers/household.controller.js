@@ -1,4 +1,5 @@
 const householdService = require("../services/household.services");
+const logService = require("../services/log.service");
 const db = require("../models");
 const household_model = db.Household;
 const avg_house_income = db.AvgHouseIncome;
@@ -173,6 +174,7 @@ const create = async (req, res) => {
 
 const updateHouse = async (req, res) => {
   const id = req.params.id;
+  const adminId = req.user.id; // ดึง ID ของ admin ที่อัปเดตข้อมูล
 
   // Validate request body
   const { error, value } = UpdateHouseholdSchema.validate(req.body);
@@ -201,25 +203,37 @@ const updateHouse = async (req, res) => {
     alley: value.alley,
     road: value.road,
     form_id: value.form_id,
+    editBy: adminId,
   };
-  await householdService
-    .update(houseObj, id)
-    .then((data) => {
-      res.send({
-        data: data,
+
+  try {
+    const result = await householdService.update(houseObj, id);
+
+    if (result[0] === 1) { // Sequelize update() returns an array, [1] means update success
+      // บันทึก Log
+      await logService.createLog(adminId, "UPDATE", "Household", id);
+
+      return res.send({
+        data: result,
         msg: "success",
         status: 200,
         err: "",
       });
-    })
-    .catch((err) => {
-      res.send({
+    } else {
+      return res.status(400).send({
         data: null,
-        msg: "error",
-        status: 500,
-        err: err,
+        msg: "No changes applied or Household not found",
+        status: 400,
       });
+    }
+  } catch (err) {
+    return res.status(500).send({
+      data: null,
+      msg: "error",
+      status: 500,
+      err: err.message,
     });
+  }
 };
 
 const deleteHouse = async (req, res) => {
@@ -347,11 +361,13 @@ const searchByHouseCode = async (req, res) => {
 const createNonAgiIncome = async (req, res) => {
   const { householdId } = req.params; // Get householdId from the route parameter
   const nonAgiIncomeData = req.body; // Data for NonAGIincome from the request body
+  const adminId = req.user.id; // ดึง id ของ admin ที่ทำการเพิ่มข้อมูล
 
   try {
     const result = await householdService.createNonAgiIncome(
       householdId,
-      nonAgiIncomeData
+      nonAgiIncomeData,
+      adminId
     );
 
     if (result.success) {
@@ -377,57 +393,62 @@ const createNonAgiIncome = async (req, res) => {
   }
 };
 
-const createAgiFinancial = async (req,res)=>{
-  try{
+const createAgiFinancial = async (req, res) => {
+  try {
     const { householdId } = req.params;
+    const adminId = req.user.id;
 
     //find HH -> form -> financial
-    const household = await household_model.findByPk(householdId,{
-      include:[
+    const household = await household_model.findByPk(householdId, {
+      include: [
         {
           model: form_model
         }
       ]
     });
 
-    if(!household){
-      return res.status(400).send({message:"Household not found"})
+    if (!household) {
+      return res.status(400).send({ message: "Household not found" })
     }
     const form = household.Form;
-    if(!form){
-      return res.status(400).send({message:'No associated form found for the household'})
+    if (!form) {
+      return res.status(400).send({ message: 'No associated form found for the household' })
     }
 
     const financialCapital = await financialcapital_model.findOne({
-      where:{formId: form.id}
+      where: { formId: form.id }
     })
-    if(!financialCapital){
-      return res.status(400).send({message:'No associated financialcapital found in the form'})
+    if (!financialCapital) {
+      return res.status(400).send({ message: 'No associated financialcapital found in the form' })
     }
 
     const result = await agi_financial_model.create({
       ...req.body,
       finan_capital_id: financialCapital.id,
+      editBy:adminId
     })
 
-    return res.status(200).send({message:'success',result})
+    // บันทึก Log
+    await logService.createLog(adminId, "CREATE", "AgiFinancial", result.id);
+
+    return res.status(200).send({ message: 'success', result })
 
 
-  }catch(err){
-    return res.status(500).send({message:'Sever error',error:err.message})
+  } catch (err) {
+    return res.status(500).send({ message: 'Sever error', error: err.message })
   }
 }
-
-
 
 const createHouseholdExpenses = async (req, res) => {
   const { householdId } = req.params; // Get householdId from the route parameter
   const householdExpensesData = req.body; // Data for HouseholdExpenses from the request body
+  const adminId = req.user.id; // ดึง id ของ admin ที่ทำการเพิ่มข้อมูล
 
   try {
     const result = await householdService.createHouseholdExpenses(
       householdId,
-      householdExpensesData
+      householdExpensesData,
+      adminId
     );
 
     if (result.success) {
@@ -456,9 +477,10 @@ const createHouseholdExpenses = async (req, res) => {
 const createSaving = async (req, res) => {
   const { householdId } = req.params; // Get householdId from the route parameter
   const savingData = req.body; // Data for Saving from the request body
+  const adminId = req.user.id
 
   try {
-    const result = await householdService.createSaving(householdId, savingData);
+    const result = await householdService.createSaving(householdId, savingData, adminId);
 
     if (result.success) {
       res.status(201).send({
@@ -486,11 +508,13 @@ const createSaving = async (req, res) => {
 const createCreditsource = async (req, res) => {
   const { householdId } = req.params; // Get householdId from the route parameter
   const creditsourceData = req.body; // Data for Creditsource from the request body
+  const adminId = req.user.id
 
   try {
     const result = await householdService.createCreditsource(
       householdId,
-      creditsourceData
+      creditsourceData,
+      adminId
     );
 
     if (result.success) {
@@ -519,9 +543,10 @@ const createCreditsource = async (req, res) => {
 const createMember = async (req, res) => {
   const { householdId } = req.params; // Get householdId from the route parameter
   const memberData = req.body; // Data for Member from the request body
+  const adminId = req.user.id
 
   try {
-    const result = await householdService.createMember(householdId, memberData);
+    const result = await householdService.createMember(householdId, memberData, adminId);
 
     if (result.success) {
       res.status(201).send({
@@ -551,6 +576,7 @@ const createPin = async (req, res) => {
     // Extract householdId from URL parameters
     const { householdId } = req.params;
     const { lat, lon } = req.body; // lat and lon are still received from request body
+    const adminId = req.user.id
 
     if (!lat || !lon) {
       return res
@@ -561,7 +587,8 @@ const createPin = async (req, res) => {
     const updatedPhysicalCapital = await householdService.createPin(
       householdId,
       lat,
-      lon
+      lon,
+      adminId
     );
 
     return res.status(200).json({

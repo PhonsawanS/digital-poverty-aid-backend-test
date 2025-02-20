@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'SET NULL',     
         onUpdate: 'CASCADE',      
       })
+      SocialWelfare.hasMany(models.Log, { foreignKey: 'record_id' })
     }
   }
   SocialWelfare.init({

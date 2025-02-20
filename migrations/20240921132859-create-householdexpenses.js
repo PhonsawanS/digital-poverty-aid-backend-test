@@ -13,19 +13,29 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      amount_per_month:{
+      amount_per_month: {
         type: Sequelize.FLOAT,
         allowNull: false,
       },
-      finan_capital_id:{
+      finan_capital_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Financialcapital', 
-          key: 'id' 
+          model: 'Financialcapital',
+          key: 'id'
         },
         onUpdate: 'CASCADE', // เมื่ออัปเดตจะทำการอัปเดตที่เชื่อมโยงด้วย
         onDelete: 'SET NULL' // เมื่อถูกลบจะตั้งค่าเป็น NULL
+      },
+      editBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'User',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       },
       createdAt: {
         allowNull: false,

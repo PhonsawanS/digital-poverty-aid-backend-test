@@ -4,14 +4,15 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Household extends Model {
-  
+
     static associate(models) {
-      Household.belongsTo(models.Form,{foreignKey:'form_id'}),
-      Household.hasMany(models.MemberHousehold,{foreignKey:'houseId'})
-      Household.hasOne(models.MemberActivity,{foreignKey:'houseId'})
-      Household.hasOne(models.HouseHoldProblem,{foreignKey:'houseId'}),
-      Household.hasOne(models.PhysicalCapital,{foreignKey:'houseId'}),
-      Household.hasMany(models.LineOA,{foreignKey:'house_code'})
+      Household.belongsTo(models.Form, { foreignKey: 'form_id' }),
+        Household.hasMany(models.MemberHousehold, { foreignKey: 'houseId' })
+      Household.hasOne(models.MemberActivity, { foreignKey: 'houseId' })
+      Household.hasOne(models.HouseHoldProblem, { foreignKey: 'houseId' }),
+        Household.hasOne(models.PhysicalCapital, { foreignKey: 'houseId' }),
+        Household.hasMany(models.LineOA, { foreignKey: 'house_code' })
+      Household.hasMany(models.Log, { foreignKey: 'record_id' })
     }
   }
   Household.init({
@@ -30,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     village: DataTypes.STRING,
     alley: DataTypes.STRING,
     road: DataTypes.STRING,
-    form_id: DataTypes.INTEGER
+    form_id: DataTypes.INTEGER,
+    editBy: DataTypes.INTEGER
   }, {
     sequelize,
     freezeTableName: true,

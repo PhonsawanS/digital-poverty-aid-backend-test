@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       NonAGIincome.belongsTo(models.Financialcapital, { foreignKey: 'finan_capital_id' });
+      NonAGIincome.hasMany(models.Log, { foreignKey: 'record_id' })
     }
   }
   NonAGIincome.init({
@@ -26,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.FLOAT,
     } ,
     finan_capital_id:{
+      type: DataTypes.INTEGER,
+    },
+    editBy:{
       type: DataTypes.INTEGER,
     }
   }, {

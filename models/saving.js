@@ -12,21 +12,26 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Saving.belongsTo(models.Financialcapital, { foreignKey: 'finan_capital_id' });
+      Saving.hasMany(models.Log, { foreignKey: 'record_id' })
     }
   }
   Saving.init({
-    is_has_saving:{
-      type:DataTypes.BOOLEAN
-    } ,
-    saving_type:{
-      type:DataTypes.STRING
+    is_has_saving: {
+      type: DataTypes.BOOLEAN
     },
-    amount:{
-      type:DataTypes.FLOAT
-    } ,
-    finan_capital_id:{
-      type:DataTypes.INTEGER,
-    } 
+    saving_type: {
+      type: DataTypes.STRING
+    },
+    amount: {
+      type: DataTypes.FLOAT
+    },
+    finan_capital_id: {
+      type: DataTypes.INTEGER,
+    },
+    editBy: {
+      type: DataTypes.INTEGER
+    }
+
   }, {
     sequelize,
     freezeTableName: true,
