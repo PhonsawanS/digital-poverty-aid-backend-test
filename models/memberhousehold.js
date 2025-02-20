@@ -7,12 +7,13 @@ module.exports = (sequelize) => {
   class MemberHousehold extends Model {
 
     static associate(models) {
-      MemberHousehold.belongsTo(models.Form, { foreignKey: 'form_id' }),
-        MemberHousehold.belongsTo(models.Household, { foreignKey: 'houseId' })
-      MemberHousehold.hasMany(models.SocialWelfare, { foreignKey: 'member_house_id' })
-      MemberHousehold.hasMany(models.MemberFinancial, { foreignKey: 'member_house_id' })
-      MemberHousehold.hasMany(models.Career, { foreignKey: 'member_house_id' })
-      MemberHousehold.belongsTo(models.User, {
+      MemberHousehold.belongsTo(models.Form,{foreignKey:'form_id'}),
+      MemberHousehold.belongsTo(models.Household,{foreignKey:'houseId'})
+      MemberHousehold.hasMany(models.SocialWelfare,{foreignKey:'member_house_id'})
+      MemberHousehold.hasMany(models.MemberFinancial,{foreignKey:'member_house_id'})
+      MemberHousehold.hasMany(models.Career,{foreignKey:'member_house_id'})
+      MemberHousehold.hasMany(models.HelpMember,{foreignKey:'member_house_id'})
+      MemberHousehold.belongsTo(models.User,{
         foreignKey: 'editBy',
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',

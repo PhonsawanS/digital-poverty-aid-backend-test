@@ -2,24 +2,36 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('LineOA', {
+    await queryInterface.createTable('HelpMember', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {
+      capital: {
         type: Sequelize.STRING
       },
-      fname: {
+      components: {
         type: Sequelize.STRING
       },
-      lname: {
+      help_name: {
         type: Sequelize.STRING
       },
-      house_code: {
+      amount: {
+        type: Sequelize.FLOAT
+      },
+      description: {
+        type: Sequelize.TEXT
+      },
+      agency: {
         type: Sequelize.STRING
+      },
+      help_date: {
+        type: Sequelize.DATE
+      },
+      member_house_id: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +44,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('LineOA');
+    await queryInterface.dropTable('HelpMember');
   }
 };

@@ -1,6 +1,6 @@
 const db = require("../models");
 const member_finan_model = db.MemberFinancial;
-const avg_mem_income = db.AvgMemberIncome
+const avg_mem_income = db.AvgMemberIncome;
 const { Op } = require("sequelize");
 const {
   createSchema,
@@ -67,8 +67,8 @@ const getLastFinancial = async (req, res) => {
 };
 
 const predict = async (req, res) => {
-  const ML = require('ml-regression')
-  const SLR = ML.SLR // Simple Linear Regression
+  const ML = require("ml-regression");
+  const SLR = ML.SLR; // Simple Linear Regression
 
   try {
     const { id } = req.params;
@@ -79,87 +79,82 @@ const predict = async (req, res) => {
       where: {
         district_name: district,
         createdAt: {
-          [Op.gte]: new Date('2021-01-01'),
-          [Op.lte]: new Date('2024-12-31')
-        }
+          [Op.gte]: new Date("2021-01-01"),
+          [Op.lte]: new Date("2024-12-31"),
+        },
       },
-      order: [['createdAt', 'ASC']],
-    })
-    //แปลงค่าเป็น Arr 
-    const year = data.map(item => item.createdAt.getFullYear())
-    const value = data.map(item => item.amount)
+      order: [["createdAt", "ASC"]],
+    });
+    //แปลงค่าเป็น Arr
+    const year = data.map((item) => item.createdAt.getFullYear());
+    const value = data.map((item) => item.amount);
 
     //ดึงข้อมูลfinancial ของ member ไปต่อท้าย value เพื่อเอาไว้เทรน
-    const financial = await member_finan_model.findAll(
-      {
-        where: {
-          member_house_id: id
-        }
-      }
-    )
+    const financial = await member_finan_model.findAll({
+      where: {
+        member_house_id: id,
+      },
+    });
 
     if (!financial) {
-      return res.status(404).send({ message: 'ไม่พบข้อมูลสมาชิก' })
+      return res.status(404).send({ message: "ไม่พบข้อมูลสมาชิก" });
     }
 
-    financial.forEach(item => {
+    financial.forEach((item) => {
       value.push(item.agv_income);
       year.push(item.createdAt.getFullYear());
-    })
+    });
 
     //ดึงข้อมูลปีล่าสุด +1 ไปพยากรณ์
-    const lastYear = Math.max(...year)
+    const lastYear = Math.max(...year);
 
     //สร้าง model และ predict ค่า
-    const regression = new SLR(year, value)
-    const prediction = regression.predict(lastYear + 1)
-
+    const regression = new SLR(year, value);
+    const prediction = regression.predict(lastYear + 1);
 
     return res.status(200).send({
-      message: 'success',
+      message: "success",
       results: {
         financial,
-        prediction: parseFloat(prediction.toFixed(2))
+        prediction: parseFloat(prediction.toFixed(2)),
       },
-    })
-
-  } catch (err) {
-    return res.status(500).send({ message: "Sever error", error: err.message })
-  }
-}
-
-const testLinear = async (req, res) => {
-  const ML = require('ml-regression');
-  const SLR = ML.SLR; // Simple Linear Regression
-
-  try {
-    // สร้าง model
-    // const x = [1, 2, 3, 4, 5];
-    // const y = [2, 4, 6, 8, 10];
-    // const regression = new SimpleLinearRegression(x, y);
-
-    // const predict_val = regression.predict(6) //12
-
-    // เทสข้อมูลจริง
-    const X = [64, 65, 66, 67] //ปีของวัดโบส
-    const Y = [519.22, 739.29, 1518.5, 999.63]
-
-    //สร้าง model
-    const regression = new SLR(X, Y)
-    const prediction = regression.predict(68)
-
-
-    return res.status(200).send({ message: 'success', predict: prediction })
-
+    });
   } catch (err) {
     return res.status(500).send({ message: "Sever error", error: err.message });
   }
 };
+
+// เทสข้อมูลจริงครัวเรือนนครไทย
+// const X = [2021, 2022, 2023];
+// const Y = [2411.99, 18989.91, 1553.95];
+
+// //สร้าง model
+// const regression = new SLR(X, Y);
+// const prediction = regression.predict(2024);
+
+const testLinear = async (req, res) => {
+  const ML = require("ml-regression");
+  const SLR = ML.SLR; // Simple Linear Regression
+
+  try {
+    // สร้าง model
+    const x = [1, 2, 3, 4, 5];
+    const y = [2, 4, 6, 8, 10];
+    const regression = new SLR(x, y);
+
+    const prediction = regression.predict(10) 
+
+    return res.status(200).send({ message: "success", predict: prediction });
+  } catch (err) {
+    return res.status(500).send({ message: "Sever error", error: err.message });
+  }
+};
+
 
 module.exports = {
   create,
   list,
   getLastFinancial,
   testLinear,
-  predict
+  predict,
 };

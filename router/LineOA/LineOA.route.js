@@ -15,5 +15,6 @@ router
     .post('/register',LineOAController.register)
     .post('/login',LineOAController.login)
     .get('/change-rich',LineOAController.changeMenu)
+    .get('/log/:month/:year',LineOAController.Loging)
 
 module.exports = router;

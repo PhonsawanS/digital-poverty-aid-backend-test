@@ -16,7 +16,7 @@ router
     //Others
     .get('/findNonAppove',auth,UserController.findNonApprove)
     .put('/approve/:id',auth,allowRole(['superAdmin']),UserController.approveUser)
-    .get('/login-history',auth,UserController.loginHistory)
+    .get('/login-history/:month/:year',auth,UserController.loginHistory)
 
 
     module.exports = router
