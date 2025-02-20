@@ -27,6 +27,9 @@ module.exports = {
       agency: {
         type: Sequelize.STRING
       },
+      help_date: {
+        type: Sequelize.DATE
+      },
       member_house_id: {
         type: Sequelize.INTEGER
       },
