@@ -722,6 +722,65 @@ const predict = async (req, res) => {
   }
 };
 
+const searchHousehold = async(req,res)=>{
+  try{
+
+    const  {
+      district,
+      subdistrict,
+      host_fname,
+      house_code
+    } = req.query
+
+    let {page,limit} = req.query;
+    page = parseInt(page)
+    limit = parseInt(limit)
+    const offset = (page-1) * limit
+
+    const householdCondition = {}
+
+    if(district){
+      householdCondition.district = district
+    }
+    if(subdistrict){
+      householdCondition.subdistrict = subdistrict
+    }
+    if(host_fname){
+      householdCondition.host_fname = {
+        [Op.iLike]: `%${host_fname}%`
+      }
+    }
+    if(house_code){
+      householdCondition.house_code = {
+        [Op.iLike]: `%${house_code}%`
+      }
+    }
+
+    //ค้นหา
+    const {count,rows} = await household_model.findAndCountAll({
+      where: householdCondition,
+      limit,
+      offset
+    })
+
+    if(rows.length === 0 ){
+      return res.status(200).send({message:'success',results:[],totalPages:0,currentPage:1})
+    }
+
+
+    return res.status(200).send({
+      messaage:'success',
+      results:rows,
+      currentPage:page,
+      totalPages: Math.ceil(count/limit),
+      totalItems:count
+    })
+  
+  }catch(err){
+    return res.status(500).send({message:'Sever error',error:err.message})
+  }
+}
+
 module.exports = {
   List,
   houseList,
@@ -739,5 +798,6 @@ module.exports = {
   createMember,
   createPin,
   predict,
-  createAgiFinancial
+  createAgiFinancial,
+  searchHousehold
 };

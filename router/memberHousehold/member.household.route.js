@@ -17,6 +17,7 @@ router
     .get('/search-by-name',auth,MemberHousController.searchByName)
     .get('/search-by-houseCode',auth,MemberHousController.searchByHouseCode)
     .get('/findCapital/:id',auth,MemberHousController.findCapital) 
+    .get('/searchMemberForTrcking',auth,MemberHousController.searchMemberForTrcking)
     .get("/count", MemberHousController.conuntMemberHousehold)
     .post("/create-capital", MemberHousController.createCombined)
     .get("/district-count", MemberHousController.getMembersCountByDistrict)
