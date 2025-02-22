@@ -17,6 +17,7 @@ router
     .get("/count", HouseholdController.countHouseholds)
     .get("/countByDistrict", HouseholdController.countHouseholdsByDistrict)
     .get('/searchByHouseCode',HouseholdController.searchByHouseCode)
+    .get('/search-households',auth,HouseholdController.searchHousehold)
     .post("/create-nonagiincome/:householdId", auth,HouseholdController.createNonAgiIncome)
     .post("/create-agi-financial/:householdId",auth,HouseholdController.createAgiFinancial)
     .post("/create-expenses/:householdId", auth, HouseholdController.createHouseholdExpenses)

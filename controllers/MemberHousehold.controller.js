@@ -361,6 +361,117 @@ const searchByHouseCode = async(req,res)=>{
   }
 }
 
+const searchMemberForTrcking = async(req,res)=>{
+  try{
+    //Search filter
+    const {
+      district,
+      subdistrict,
+      fname,
+      national_id
+    } = req.query;
+
+    let {page,limit} = req.query;
+    page = parseInt(page)
+    limit = parseInt(limit)
+    const offset = (page-1) * limit
+
+    //เงื่อนไขกรองสมาชิก
+    const memberCondtion = {};
+
+    if(fname){
+      memberCondtion.fname = {
+        [Op.iLike] : `%${fname}%`
+      }
+    }
+    if(national_id){
+      memberCondtion.national_id = national_id
+    }
+
+    //เงื่อนไขกรองครัวเรือน
+    const householdCondition = {}
+
+    if(district){
+      householdCondition.district = district
+    }
+    if(subdistrict){
+      householdCondition.subdistrict = subdistrict
+    }
+
+    //ค้นหาสมาชิก
+    const {count,rows} = await member_model.findAndCountAll({
+      where : memberCondtion,
+      district:true,
+      include:[
+        {
+          model: household_model,
+          where:householdCondition,
+          required:true
+        }
+      ],
+      limit,
+      offset
+    })
+
+    // ฟังก์ชันคำนวณอายุจาก พ.ศ.
+    const calculateAge = (birthdate) => {
+      const currentDate = new Date(); // วันที่ปัจจุบัน
+      const currentYearBE = currentDate.getFullYear()+543
+      
+      // แปลง birthdate string เป็น Date object
+      const birthDate = new Date(birthdate);
+      
+      // คำนวณอายุ พศ
+      let age = currentYearBE - birthDate.getFullYear();
+      
+      // ปรับอายุตามเดือนและวัน
+      const currentMonth = currentDate.getMonth();
+      const birthMonth = birthDate.getMonth();
+      const currentDay = currentDate.getDate();
+      const birthDay = birthDate.getDate();
+    
+      if (currentMonth < birthMonth || 
+          (currentMonth === birthMonth && currentDay < birthDay)) {
+        age--;
+      }
+    
+      return age;
+    }
+
+    // แปลงผลลัพธ์โดยเพิ่มอายุ
+    const resultsWithAge = rows.map(member => {
+      const memberData = member.toJSON(); // แปลง Sequelize instance เป็น plain object
+      if (memberData.birthdate) {
+        memberData.calculatedAge = calculateAge(memberData.birthdate);
+      } else {
+        memberData.calculatedAge = null; // กรณีไม่มี birthdate
+      }
+      return memberData;
+    });
+    
+    //กรณีไม่เจอข้อมูล
+    if(rows.length === 0 ){
+      return res.status(200).send({
+        message:'success',
+        results:[],
+        totalItems:0,
+        currentPage:1
+      })
+    }
+
+    return res.status(200).send({
+      message:'success',
+      results:resultsWithAge,
+      currentPage: page,
+      totalPages: Math.ceil(count/limit),
+      totalItems: count
+    })
+
+  }catch(err){
+    return res.status(500).send({message:'Sever error', error : err.message})
+  }
+}
+
 const findCapital = async (req, res) => {
   try {
     const { id } = req.params;
@@ -425,5 +536,6 @@ module.exports = {
   getMembersCountByDistrict,
   findCapital,
   searchByName,
-  searchByHouseCode
+  searchByHouseCode,
+  searchMemberForTrcking
 };
