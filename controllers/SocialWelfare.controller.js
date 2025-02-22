@@ -165,7 +165,7 @@ const createArr = async (req, res) => {
 
     // ✅ บันทึก Log ทีละรายการ
     const logPromises = results.map(record =>
-      logService.createLog(user_id, "create", "SocialWelfare", record.id)
+      logService.createLog(user_id, "เพิ่มข้อมูลสวัสดิการสังคมของสมาชิก", "SocialWelfare", record.id)
     );
     await Promise.all(logPromises);
 

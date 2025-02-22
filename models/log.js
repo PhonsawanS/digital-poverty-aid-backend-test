@@ -60,6 +60,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'record_id',
         constraints: false
       });
+      Log.belongsTo(models.HelpMember, {
+        foreignKey: 'record_id',
+        constraints: false
+      });
     }
   }
   Log.init({

@@ -151,7 +151,7 @@ exports.createNonAgiIncome = async (householdId, nonAgiIncomeDataArray, adminId)
           finan_capital_id: financialCapital.id,
           editBy: adminId,
         });
-        await logService.createLog(adminId, "CREATE", "NonAGIincome", record.id);
+        await logService.createLog(adminId, "เพิ่มข้อมูลรายรับนอกภาคเกษตรของครัวเรือน", "NonAGIincome", record.id);
         return record;
       })
     );
@@ -211,7 +211,7 @@ exports.createHouseholdExpenses = async (householdId, householdExpensesDataArray
           finan_capital_id: financialCapital.id,
           editBy: adminId,
         });
-        await logService.createLog(adminId, "CREATE", "Householdexpenses", record.id);
+        await logService.createLog(adminId, "เพิ่มข้อมูลค่าใช้จ่ายของครัวเรือน", "Householdexpenses", record.id);
         return record;
       })
     )
@@ -270,7 +270,7 @@ exports.createSaving = async (householdId, savingDataArray, adminId) => {
           finan_capital_id: financialCapital.id,
           editBy: adminId,
         })
-        await logService.createLog(adminId, "CREATE", "Saving", record.id)
+        await logService.createLog(adminId, "เพิ่มข้อมูลการออมของครัวเรือน", "Saving", record.id)
 
         return record
       })
@@ -339,7 +339,7 @@ exports.createCreditsource = async (householdId, creditsourceDataArray, adminId)
           debt_id: debt.id,
           editBy: adminId,
         })
-        await logService.createLog(adminId, "CRATE", "Creditsources", record.id)
+        await logService.createLog(adminId, "เพิ่มข้อมูลแหล่งเงินกู้ของครัวเรือน", "Creditsources", record.id)
 
         return record
       })
@@ -443,7 +443,7 @@ exports.createMember = async (householdId, memberDataArray, adminId) => {
       await transaction.commit();
       await Promise.all(
         newMemberRecords.map(async (member) => {
-          await logService.createLog(adminId, "CREATE", "MemberHousehold", member.id);
+          await logService.createLog(adminId, "เพิ่มสมาชิกใหม่ในครัวเรือน", "MemberHousehold", member.id);
         })
       );
 
@@ -498,7 +498,7 @@ exports.createPin = async (householdId, lat, lon, adminId) => {
       await physicalCapital.save();
     }
     // บันทึก Log
-    await logService.createLog(adminId, "UPDATE", "PhysicalCapital", physicalCapital.id);
+    await logService.createLog(adminId, "เพิ่มตำแหน่งที่ตั้งของครัวเรือน", "PhysicalCapital", physicalCapital.id);
 
     return physicalCapital;
   } catch (error) {

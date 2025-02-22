@@ -40,7 +40,7 @@ const create = async (req, res) => {
       member_house_id: value.member_house_id,
       editBy: user_id,
     });
-    await logService.createLog(user_id, "create", "MemberFinancial", result.id);
+    await logService.createLog(user_id, "เพิ่มข้อมูลการเงินของสมาชิก", "MemberFinancial", result.id);
     return res.status(200).send({ message: "success", result: result });
   } catch (errors) {
     return res

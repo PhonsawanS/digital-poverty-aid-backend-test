@@ -13,6 +13,7 @@ const household_model = db.Household;
 const member_finan_model = db.MemberFinancial;
 const socialWelfare_model = db.SocialWelfare;
 const career_model = db.Career;
+const help_member_model = db.HelpMember;
 
 exports.getLog = () => {
   try {
@@ -60,7 +61,6 @@ exports.listLog = async (userId) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-
     const logAGIFinancial = await log_model.findAll({
       where: {
         user_id: userId,
@@ -78,7 +78,6 @@ exports.listLog = async (userId) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-
     const logHouseholdexpenses = await log_model.findAll({
       where: {
         user_id: userId,
@@ -97,7 +96,6 @@ exports.listLog = async (userId) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-
     const logSaving = await log_model.findAll({
       where: {
         user_id: userId,
@@ -119,7 +117,6 @@ exports.listLog = async (userId) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-
     const logCreditsources = await log_model.findAll({
       where: {
         user_id: userId,
@@ -137,7 +134,6 @@ exports.listLog = async (userId) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-
     const logMember = await log_model.findAll({
       where: {
         user_id: userId,
@@ -155,7 +151,6 @@ exports.listLog = async (userId) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-
     const logPhysicalCapital = await log_model.findAll({
       where: {
         user_id: userId,
@@ -173,7 +168,6 @@ exports.listLog = async (userId) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-
     const logHousehold = await log_model.findAll({
       where: {
         user_id: userId,
@@ -242,7 +236,23 @@ exports.listLog = async (userId) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-
+    const logHelpMember = await log_model.findAll({
+      where: {
+        user_id: userId,
+        table_name: "HelpMember"
+      },
+      include: [
+        {
+          model: user_model,
+          attributes: ["fname", "lname"]
+        },
+        {
+          model: help_member_model,
+          required: false
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
     return {
       NonAGIincomeAction: lognonAgiIncome,
       HouseholdexpensesAction: logHouseholdexpenses,
@@ -255,6 +265,7 @@ exports.listLog = async (userId) => {
       MemberFinancialAction: logMemberFinancial,
       SocialWelfareAction: logSocialWelfare,
       CareerAction: logCarreer,
+      HelpMemberAction: logHelpMember
     };
   } catch (err) {
     throw new Error(err.message);
