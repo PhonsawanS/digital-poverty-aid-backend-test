@@ -46,7 +46,7 @@ const create = async (req, res) => {
   
       // ✅ สร้าง Log ทีละรายการ
       const logPromises = results.map(record => 
-        logService.createLog(user_id, "create", "Career", record.id)
+        logService.createLog(user_id, "เพิ่มข้อมูลทักษะอาชีพของสมาชิก", "Career", record.id)
       );
       await Promise.all(logPromises);
   

@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
 const db = require("../models");
+const logService = require("../services/Log.service");
 const help_member_model = db.HelpMember;
 const member_model = db.MemberHousehold;
 const household_model = db.Household;
@@ -48,8 +49,18 @@ const create = async (req, res) => {
         error: error.details,
       });
     }
+    // ✅ เพิ่มข้อมูลว่าใครบันทึก
+    const user_id = req.user.id;
 
-    const result = await help_member_model.create(value);
+    const result = await help_member_model.create({
+      ...value,
+      editBy: user_id, // บันทึกว่าใครบันทึก
+    });
+
+    // ✅ บันทึก Log ว่าใครบันทึก (โดยใช้ user_id ใน action)
+    await logService.createLog(user_id, "เพิ่มข้อมูลการช่วยเหลือ", "HelpMember", result.id);
+
+    // const result = await help_member_model.create(value);
     return res.status(200).send({ message: "success", result });
   } catch (err) {
     return res.status(500).send({ message: "Sever error", error: err.message });
@@ -59,12 +70,18 @@ const create = async (req, res) => {
 const deleteHelp = async (req, res) => {
   try {
     const { id } = req.params;
+    const user_id = req.user.id;
 
     const result = await help_member_model.destroy({
       where: {
         id: id,
       },
     });
+
+    // ตรวจสอบว่ามีการลบข้อมูลจริงหรือไม่ (result จะเป็นจำนวนแถวที่ถูกลบ)
+    if (result > 0) {
+      await logService.createLog(user_id, "ลบข้อมูลการช่วยเหลือ", "HelpMember", id);
+    }
 
     return res.status(200).send({ message: "success", result });
   } catch (err) {
@@ -76,14 +93,14 @@ const deleteHelp = async (req, res) => {
 const searchMemberForHelp = async (req, res) => {
   try {
     //ดึงข้อมูลที่ส่งมาจาก query str
-    const { 
-      district, subdistrict, year, house_code, national_id, fname 
-    } =req.query;
+    const {
+      district, subdistrict, year, house_code, national_id, fname
+    } = req.query;
 
-    let {page,limit} = req.query;
+    let { page, limit } = req.query;
     page = parseInt(page)
     limit = parseInt(limit)
-    const offset = (page-1)*limit
+    const offset = (page - 1) * limit
 
     //เงื่อนไขหาสมาชิก
     const memberCondition = {};
@@ -93,7 +110,7 @@ const searchMemberForHelp = async (req, res) => {
     }
     if (fname) {
       memberCondition.fname = {
-        [Op.like] : `%${fname}%`
+        [Op.like]: `%${fname}%`
       }
     }
 
@@ -150,9 +167,9 @@ const searchMemberForHelp = async (req, res) => {
         },
         //ดูข้อมูลการช่วยเหลือ
         {
-          model:help_member_model,
-          attributes:['id'],
-          require:false
+          model: help_member_model,
+          attributes: ['id'],
+          require: false
         }
       ],
       limit,
@@ -169,82 +186,82 @@ const searchMemberForHelp = async (req, res) => {
     const results = rows.map((member) => {
       const household = member.Household;
       const memberCount = household.MemberHouseholds.length;
-     
+
       //สถานะการได้รับความช่วยเหลือ
       const helpStatus = member.HelpMembers && member.HelpMembers.length > 0
-      ? 'ได้รับการช่วยเหลือแล้ว'
-      : 'ยังไม่ได้รับการช่วยเหลือ'
+        ? 'ได้รับการช่วยเหลือแล้ว'
+        : 'ยังไม่ได้รับการช่วยเหลือ'
 
       return {
         ...member.toJSON(),
-          memberCount, 
-          helpStatus
+        memberCount,
+        helpStatus
       };
     });
 
     return res.status(200).send({
-       message: "success", 
-       results: results ,
-       currentPage: page,
-       totalPage: Math.ceil(totalItems/limit),
-       totalItems:totalItems
-      });
+      message: "success",
+      results: results,
+      currentPage: page,
+      totalPage: Math.ceil(totalItems / limit),
+      totalItems: totalItems
+    });
   } catch (err) {
     return res.status(500).send({ message: "Sever error", error: err.message });
   }
 };
 
 //ค้นหาการช่วยเหลือของ member ที่ได้รับ
-const findHelpMember = async(req,res)=>{
-  try{
-    const {memberId} = req.params;
-    
+const findHelpMember = async (req, res) => {
+  try {
+    const { memberId } = req.params;
+
     const result = await member_model.findOne({
-      where:{
-        id:memberId
+      where: {
+        id: memberId
       },
-      include:[
+      include: [
         {
-          model:household_model
+          model: household_model
         },
         {
-          model:help_member_model
+          model: help_member_model
         }
       ]
-    }) 
+    })
 
     //หาจำนวนการได้รับความช่วยเหลือของสมาชิกในครัวเรือนนี้
     const plainResult = result.toJSON();
-    const houseId = plainResult.Household.id   
+    const houseId = plainResult.Household.id
 
     const householdHelp = await member_model.findAll({
-      where:{
-        houseId:houseId
+      where: {
+        houseId: houseId
       },
-      include:[
+      include: [
         {
           model: help_member_model,
-          attributes:['id']
+          attributes: ['id']
         }
       ]
     })
 
     //sum help
-    const totalHelpInHousehold = householdHelp.reduce((total,member)=>{
-      return total+ member.HelpMembers.length;
-    },0)
+    const totalHelpInHousehold = householdHelp.reduce((total, member) => {
+      return total + member.HelpMembers.length;
+    }, 0)
 
 
     return res.status(200).send({
-      message:'success',
-      result:{
+      message: 'success',
+      result: {
         ...result.toJSON(),
-        totalGetHelp: totalHelpInHousehold    
+        totalGetHelp: totalHelpInHousehold
       }
     })
-    
-  }catch(err){
-    return res.status(500).send({message:'Sever error',error:err.message})
+
+  } catch (err) {
+    return res.status(500).send({ message: 'Sever error', error: err.message })
   }
 }
 

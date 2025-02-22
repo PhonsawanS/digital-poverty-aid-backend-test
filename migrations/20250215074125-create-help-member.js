@@ -33,6 +33,16 @@ module.exports = {
       member_house_id: {
         type: Sequelize.INTEGER
       },
+      editBy: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'User',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -119,7 +119,7 @@ const updateMember = async (req, res) => {
 
     if (result[0] > 0) {
       // สร้าง Log หลังจากอัปเดตสำเร็จ
-      await logService.createLog(user_id, 'update', 'MemberHousehold', memberID);
+      await logService.createLog(user_id, 'แก้ไขข้อมูลสมาชิก', 'MemberHousehold', memberID);
     }
     
     return res.status(200).send({message:'success',result})
