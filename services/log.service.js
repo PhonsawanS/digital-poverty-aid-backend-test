@@ -38,8 +38,10 @@ exports.createLog = async (userId, action, tableName, recordId) => {
   }
 };
 
-exports.listLog = async (userId) => {
+// Service: listLog.js
+exports.listLog = async (userId, paginationOptions) => {
   try {
+    // ดึงข้อมูลทั้งหมดโดยไม่ส่ง options pagination
     const lognonAgiIncome = await log_model.findAll({
       where: {
         user_id: userId,
@@ -48,7 +50,7 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: nonAgiIncome_model,
@@ -59,8 +61,9 @@ exports.listLog = async (userId) => {
           )
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logAGIFinancial = await log_model.findAll({
       where: {
         user_id: userId,
@@ -69,15 +72,16 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: agi_financial_model,
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logHouseholdexpenses = await log_model.findAll({
       where: {
         user_id: userId,
@@ -86,7 +90,7 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: householdexpenses_model,
@@ -94,8 +98,9 @@ exports.listLog = async (userId) => {
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logSaving = await log_model.findAll({
       where: {
         user_id: userId,
@@ -104,7 +109,7 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: saving_model,
@@ -115,8 +120,9 @@ exports.listLog = async (userId) => {
           )
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logCreditsources = await log_model.findAll({
       where: {
         user_id: userId,
@@ -125,15 +131,16 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: creditsources_model,
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logMember = await log_model.findAll({
       where: {
         user_id: userId,
@@ -142,15 +149,16 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: memberHouse_model,
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logPhysicalCapital = await log_model.findAll({
       where: {
         user_id: userId,
@@ -159,15 +167,16 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: physical_model,
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logHousehold = await log_model.findAll({
       where: {
         user_id: userId,
@@ -176,15 +185,16 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: household_model,
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logMemberFinancial = await log_model.findAll({
       where: {
         user_id: userId,
@@ -193,15 +203,16 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: member_finan_model,
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logSocialWelfare = await log_model.findAll({
       where: {
         user_id: userId,
@@ -210,15 +221,16 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: socialWelfare_model,
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logCarreer = await log_model.findAll({
       where: {
         user_id: userId,
@@ -227,15 +239,16 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: career_model,
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
+
     const logHelpMember = await log_model.findAll({
       where: {
         user_id: userId,
@@ -244,30 +257,44 @@ exports.listLog = async (userId) => {
       include: [
         {
           model: user_model,
-          attributes: ["fname", "lname"]
+          attributes: ["fname", "lname", "role", "status"]
         },
         {
           model: help_member_model,
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
-    return {
-      NonAGIincomeAction: lognonAgiIncome,
-      HouseholdexpensesAction: logHouseholdexpenses,
-      SavingAction: logSaving,
-      CreditsourcesAction: logCreditsources,
-      MemberAction: logMember,
-      PhysicalCapitalAction: logPhysicalCapital,
-      AGIFinancialAction: logAGIFinancial,
-      HouseholdAction: logHousehold,
-      MemberFinancialAction: logMemberFinancial,
-      SocialWelfareAction: logSocialWelfare,
-      CareerAction: logCarreer,
-      HelpMemberAction: logHelpMember
-    };
+
+    // รวมข้อมูลจากทุก category เข้าด้วยกัน
+    let allLogs = [
+      ...lognonAgiIncome,
+      ...logAGIFinancial,
+      ...logHouseholdexpenses,
+      ...logSaving,
+      ...logCreditsources,
+      ...logMember,
+      ...logPhysicalCapital,
+      ...logHousehold,
+      ...logMemberFinancial,
+      ...logSocialWelfare,
+      ...logCarreer,
+      ...logHelpMember,
+    ];
+
+    // จัดเรียงข้อมูลตาม createdAt แบบ DESC
+    allLogs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // ถ้ามีการส่ง paginationOptions ให้ทำ slicing ตาม limit และ offset
+    if (paginationOptions && paginationOptions.limit && paginationOptions.offset !== undefined) {
+      const paginatedLogs = allLogs.slice(paginationOptions.offset, paginationOptions.offset + paginationOptions.limit);
+      return { total: allLogs.length, logs: paginatedLogs };
+    } else {
+      return { total: allLogs.length, logs: allLogs };
+    }
   } catch (err) {
     throw new Error(err.message);
   }
 };
+
