@@ -141,20 +141,48 @@ const Loging = async (req, res) => {
   try {
     const { month, year } = req.params;
 
+    //pagiante
+    let { page, limit } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const offset = (page - 1) * limit;
+
     //หา start,end Date
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0);
 
-    const results = await line_log_model.findAll({
+    const { count, rows } = await line_log_model.findAndCountAll({
+      distinct: true,
       where: {
         createdAt: {
           [Op.between]: [startDate, endDate],
         },
       },
       include: line_oa_model,
+      limit: limit,
+      offset: offset,
     });
 
-    return res.status(200).send({ message: "success", results });
+    //หากไม่เจอข้อมูล
+    if (rows.length === 0) {
+      return res.status(200).send({
+        message: "success",
+        results: [],
+        totalPages: 0,
+        currentPage: page,
+        totalItems: 0,
+      });
+    }
+
+    return res.status(200).send({
+      message: "success",
+      results: rows,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      totalItems: count,
+    });
+
+
   } catch (err) {
     return res.status(500).send({ message: "Sever error", error: err.message });
   }
@@ -492,19 +520,19 @@ const formatMemberInfo = (members) => {
     message += `- อ่าน: ${member.can_read_TH}\n`;
     message += `- เขียน: ${member.can_write_TH}\n`;
     message += `- พูด: ${member.can_speak_TH}\n`;
-    
+
     //ข้อมูลการช่วยเหลือ
-    if(member.HelpMembers &&member.HelpMembers.length >0){
+    if (member.HelpMembers && member.HelpMembers.length > 0) {
       message += "\n📙 ข้อมูลการช่วยเหลือ:";
-      member.HelpMembers.forEach((help,index)=>{
+      member.HelpMembers.forEach((help, index) => {
         message += `\n\nการช่วยเหลือที่ ${index + 1}\n`;
         message += `-ทุนการดำรงชีพ: ${help.capital}\n`;
         message += `-องค์ประกอบเชิงยืนยัน: ${help.components}\n`;
         message += `-การช่วยเหลือ: ${help.help_name}\n`;
         message += `-หน่วยงานที่ช่วยเหลือ: ${help.agency}\n`;
         message += `-จำนวน: ${parseFloat(help.amount).toLocaleString()} บาท\n`;
-      })
-    }else{
+      });
+    } else {
       message += "\n📙 ไม่มีข้อมูลการช่วยเหลือ:\n\n";
     }
 
