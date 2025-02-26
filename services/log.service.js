@@ -323,8 +323,10 @@ exports.listAction = async (userId) => {
   }
 };
 
-exports.buildSummaryPDF = async (dataCallback, endCallback, actionLogs) => {
+exports.buildSummaryPDF = async (dataCallback, endCallback, actionLogs,user) => {
   try {
+    console.log(user);
+    
     const doc = new PDFDocument({
       size: "A4",
       margin: 50,
@@ -353,7 +355,7 @@ exports.buildSummaryPDF = async (dataCallback, endCallback, actionLogs) => {
     doc
       .font(bold)
       .fontSize(14)
-      .text(`ตำแหน่ง : ทีมวิจัย   นาย สุทธิภัทร ไกรกลิ่น`, 130, 80, {
+      .text(`ตำแหน่ง : ${user.status}   ${user.title} ${user.fname} ${user.lname}`, 130, 80, {
         align: "left",
       });
 

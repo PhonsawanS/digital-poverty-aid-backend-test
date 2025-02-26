@@ -6,7 +6,7 @@ const { auth } = require('../../middleware/auth');
 router
     //http://localhost:8080/api/log/
     .get("/lists", logController.getLoglist)
-    .get("/list", auth,logController.listLog)
+    .get("/list/:id", auth,logController.listLog)
     .get('/action',auth,logController.listAction)
     .get('/summary-report',auth,logController.SummaryReport)
 

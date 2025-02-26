@@ -1,4 +1,6 @@
 const log_service = require("../services/log.service");
+const db = require('../models')
+const user_model = db.User;
 
 const getLoglist = async (req, res) => {
   await log_service
@@ -48,7 +50,10 @@ const SummaryReport = async(req,res)=>{
 
     //get logs
     const logs = await log_service.listAction(userId)
-    // console.log(logs);
+
+    //get user 
+    const user = await user_model.findByPk(userId)
+    user.toJSON()
     
     if (!logs || logs.length === 0) {
       return res.status(404).send({
@@ -80,7 +85,8 @@ const SummaryReport = async(req,res)=>{
     await log_service.buildSummaryPDF(
       (chunk) => res.write(chunk),
       () => res.end(),
-      formattedLogs
+      formattedLogs,
+      user
     )
 
   }catch(err){
@@ -98,7 +104,7 @@ const SummaryReport = async(req,res)=>{
 // Controller: logController.js
 const listLog = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.params.id;
         // อ่าน query parameters สำหรับ pagination
         let { page = 1, limit = "all" } = req.query;
         let options = {};
@@ -112,8 +118,12 @@ const listLog = async (req, res) => {
         }
 
         const logsData = await log_service.listLog(userId, options);
+        const user = await user_model.findByPk(userId,{
+          attributes:{exclude:['password']}
+        })
         return res.status(200).send({
             message: "success",
+            user,
             result: logsData // ส่งทั้ง total และ logs
         });
     } catch (err) {
