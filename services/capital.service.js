@@ -15,8 +15,8 @@ exports.getCaptial = async (req, res) => {
 
         // ✅ จัดกลุ่มตามปีและคำนวณจำนวนและยอดเงินรวม
         const capitalByYear = capitalData.reduce((acc, item) => {
-            // แปลง createdAt เป็นปี พ.ศ.
-            const year = new Date(item.createdAt).getFullYear() + 543;
+            // ✨ ใช้ปีจาก `help_date` แทน `createdAt`
+            const year = new Date(item.help_date).getFullYear() + 543; // เปลี่ยนตรงนี้
 
             // ถ้ายังไม่มีปีนี้ในผลลัพธ์ ให้กำหนดค่าเริ่มต้น
             if (!acc[year]) {
@@ -43,7 +43,6 @@ exports.getCaptial = async (req, res) => {
         const totalAmount = capitalData.reduce((acc, item) => acc + item.amount, 0);
 
         return {
-            // capitalData,
             capitalAllCount,
             capitalByYear,
             totalAmount, // ✅ เพิ่มยอดรวมของ `amount` ทั้งหมด
@@ -52,6 +51,7 @@ exports.getCaptial = async (req, res) => {
         throw new Error(`Error fetching capital data: ${err}`);
     }
 };
+
 
 
 
