@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const db = require("../models");
-const logService = require("../services/Log.service");
+const logService = require("../services/log.service");
 const help_member_model = db.HelpMember;
 const member_model = db.MemberHousehold;
 const household_model = db.Household;
